@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.core.repository.mapper.GlobalRecExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.core.repository.entity.GlobalRec">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="out_job_no" jdbcType="VARCHAR" property="outJobNo" />
+        <result column="job_shard_id" jdbcType="TINYINT" property="jobShardId" />
+        <result column="job_id" jdbcType="BIGINT" property="jobId" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    </resultMap>
+
+    <select id="selectRecByOutJobNo" resultMap="BaseResultMap">
+        <![CDATA[
+        /*FORCE_MASTER*/ SELECT
+            id, out_job_no, job_shard_id, job_id, gmt_create
+        FROM
+            global_rec
+        WHERE
+            out_job_no = #{outJobNo}
+        ]]>
+    </select>
+
+    <insert id="insertRec">
+        INSERT INTO global_rec (out_job_no, job_shard_id, job_id, gmt_create)
+        VALUES (#{outJobNo}, #{jobShardId}, #{jobId}, #{gmtCreate})
+    </insert>
+
+    <insert id="insertRecs">
+        INSERT INTO global_rec (out_job_no, job_shard_id, job_id, gmt_create)
+        VALUES
+        <foreach collection="grcs" item="g" index="index" separator=",">
+          (#{g.outJobNo}, #{g.jobShardId}, #{g.jobId}, #{g.gmtCreate})
+        </foreach>
+    </insert>
+</mapper>

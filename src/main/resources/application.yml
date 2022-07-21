@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: delay-job
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://119.91.87.4:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: bbfisher
+    password: Bbfisher123!
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 100
+      pool-name: DelayJobPool
+      connection-test-query: SELECT 1
+server:
+  port: 1989
+grpc:
+  server:
+    port: 1990
+  executor:
+    num: 50
+scheduler:
+  judge-dead: 15
+  heartbeat-period: 5
+  job:
+    load-cron: 0 0/1 * * * ?
+    load-max-nums: 5000
+    allow-cancel: false
+    repeat-check-delta: 5
+    state-sync-period: 10
+    retry-period: 10
+    retry-max-nums: 1000
+    retry-seg-nums: 3
+logging:
+  file:
+    name: classpath:logback.xml
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml

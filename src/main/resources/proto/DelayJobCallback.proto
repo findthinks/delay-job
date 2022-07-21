@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package delay.job;
+option java_package = "com.findthinks.delay.job.proto.cb";
+option java_multiple_files = true;
+
+message JobCallbackReq {
+    string outJobNo = 1;
+    int64 triggerTime = 2;
+    string jobInfo = 3;
+}
+
+message CallbackResp {
+    int32 code = 1;
+    string message = 2;
+}
+
+service DelayJobCallback {
+    rpc trigger(JobCallbackReq) returns (CallbackResp) {
+    }
+}

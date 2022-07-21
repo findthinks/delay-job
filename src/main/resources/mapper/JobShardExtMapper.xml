@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.core.repository.mapper.JobShardExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.core.repository.entity.JobShard">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="TINYINT" property="id" />
+        <result column="cur_server" jdbcType="INTEGER" property="curServer" />
+        <result column="req_server" jdbcType="INTEGER" property="reqServer" />
+        <result column="is_receiving" jdbcType="BIT" property="isReceiving" />
+        <result column="is_consuming" jdbcType="BIT" property="isConsuming" />
+    </resultMap>
+
+    <select id="selectJobShardByCond" parameterType="map" resultMap="BaseResultMap">
+        /*FORCE_MASTER*/ SELECT
+            id, cur_server, req_server, is_receiving, is_consuming
+        FROM
+            job_shard
+        WHERE 1=1
+        <if test="isReceiving != null and isReceiving != ''">
+            AND is_receiving = #{isReceiving}
+        </if>
+        <if test="isConsuming != null and isConsuming != ''">
+            AND is_consuming = #{isConsuming}
+        </if>
+        <if test="schedulerId != null and schedulerId != ''">
+            AND cur_server = #{schedulerId}
+        </if>
+    </select>
+
+    <select id="selectJobShardCount" resultType="int">
+        /*FORCE_MASTER*/ SELECT
+            count(*) as cnt
+        FROM
+            job_shard
+    </select>
+
+    <update id="updateJobCurServer" parameterType="map">
+        UPDATE
+            job_shard
+        SET
+            cur_server = #{curServer}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="updateJobReqServer" parameterType="map">
+        UPDATE
+            job_shard
+        SET
+            req_server = #{reqServer}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="updateReqServerToCurServer">
+        UPDATE
+            job_shard
+        SET
+            cur_server = req_server, req_server = -1
+        WHERE
+            req_server > 0
+            AND id IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+              #{id}
+            </foreach>
+    </update>
+
+    <update id="updateCurServerByCond">
+        UPDATE
+            job_shard
+        SET
+            cur_server = -1
+        WHERE
+            cur_server NOT IN
+            <foreach collection="schedulerIds" item="schedulerId" index="index" open="(" close=")" separator=",">
+                #{schedulerId}
+            </foreach>
+    </update>
+</mapper>
