@@ -22,7 +22,6 @@
         <mysql.connector>8.0.24</mysql.connector>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version><javax.persistence.version>1.0.2</javax.persistence.version>
-        <fastjson.version>1.2.39</fastjson.version>
         <commons.collect.version>4.2</commons.collect.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
@@ -67,12 +66,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate.validator.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
