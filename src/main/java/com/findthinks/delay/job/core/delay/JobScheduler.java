@@ -88,6 +88,9 @@ public class JobScheduler {
     @Value("${scheduler.job.load-max-nums:5000}")
     private int loadMaxJobNums;
 
+    @Value("${scheduler.job.translate-max-nums:100}")
+    private int translateMaxNums;
+
     private volatile List<Integer> jobShardIds;
 
     private volatile long currentScheduleTime = 0;
@@ -259,12 +262,21 @@ public class JobScheduler {
     }
 
     /**
+     * 启用分片
+     * @param jobShardId
+     */
+    public void startJobShard(Integer jobShardId) {
+        /** 修改JobShard为数据转移中，此时改分片接受和消费任务 */
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.ENABLED.getCode());
+    }
+
+    /**
      * 停用分片
      * @param jobShardId
      */
     public void stopJobShard(Integer jobShardId) {
         /** 修改JobShard为数据转移中，此时改分片停止接受任务，且下个调度周期开始将停止任务消费 */
-        jobShardManager.updateJobShardState(jobShardId, 10);
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.TRANSLATING.getCode());
 
         /** 开始迁移当前分片任务到其它分片 */
         executor.execute(() -> translateJobShardToOtherShard(jobShardId));
@@ -277,7 +289,7 @@ public class JobScheduler {
     public void translateJobShardToOtherShard(Integer jobShardId) {
         long startTime = nextScheduleTime;
         /** 每批次处理100条 */
-        int maxJobs = 100;
+        int maxJobs = translateMaxNums;
         for (;;) {
             List<Job> jobs = jobManager.loadShardJobs(jobShardId, startTime, maxJobs);
             if (CollectionUtils.isEmpty(jobs)) {
@@ -293,7 +305,7 @@ public class JobScheduler {
         }
 
         /** 完成任务迁移后修改分片状态为停止 */
-        jobShardManager.updateJobShardState(jobShardId, 15);
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.DISABLED.getCode());
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {

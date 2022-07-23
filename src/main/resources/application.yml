@@ -28,6 +28,7 @@ scheduler:
     allow-cancel: false
     repeat-check-delta: 5
     state-sync-period: 10
+    translate-max-nums: 100
     retry-period: 10
     retry-max-nums: 1000
     retry-seg-nums: 3
