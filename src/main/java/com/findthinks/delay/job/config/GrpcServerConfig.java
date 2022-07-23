@@ -5,7 +5,6 @@ import net.devh.boot.grpc.server.serverfactory.GrpcServerConfigurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.concurrent.Executors;
 
 @Configuration
@@ -17,7 +16,7 @@ public class GrpcServerConfig {
     @Bean
     public GrpcServerConfigurer keepAliveServerConfigurer() {
         return serverBuilder -> {
-            serverBuilder.executor(Executors.newFixedThreadPool(grpcExecutorNum, new ThreadFactoryBuilder().setNameFormat("grpc-executor-dw-%d").build()));
+            serverBuilder.executor(Executors.newFixedThreadPool(grpcExecutorNum, new ThreadFactoryBuilder().setNameFormat("grpc-executor-%d").build()));
         };
     }
 }
