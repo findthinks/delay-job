@@ -20,4 +20,6 @@ public interface IJobShardManager {
     int updateReqServerToCurServer(List<Integer> ids);
 
     int updateJobShardByCondition(List<Integer> schedulerIds);
+
+    int updateJobShardState(Integer jobShardId, Integer state);
 }

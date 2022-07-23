@@ -14,11 +14,8 @@ public class JobShard {
     @Column(name = "req_server")
     private Integer reqServer;
 
-    @Column(name = "is_receiving")
-    private Boolean isReceiving;
-
-    @Column(name = "is_consuming")
-    private Boolean isConsuming;
+    @Column(name = "state")
+    private Integer state;
 
     /**
      * @return id
@@ -62,31 +59,11 @@ public class JobShard {
         this.reqServer = reqServer;
     }
 
-    /**
-     * @return is_receiving
-     */
-    public Boolean getIsReceiving() {
-        return isReceiving;
+    public Integer getState() {
+        return state;
     }
 
-    /**
-     * @param isReceiving
-     */
-    public void setIsReceiving(Boolean isReceiving) {
-        this.isReceiving = isReceiving;
-    }
-
-    /**
-     * @return is_consuming
-     */
-    public Boolean getIsConsuming() {
-        return isConsuming;
-    }
-
-    /**
-     * @param isConsuming
-     */
-    public void setIsConsuming(Boolean isConsuming) {
-        this.isConsuming = isConsuming;
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

@@ -104,8 +104,7 @@ CREATE TABLE `job_shard` (
  `id` tinyint(3) unsigned NOT NULL,
  `cur_server` int(11) NOT NULL COMMENT '当前分片持有者',
  `req_server` int(11) NOT NULL DEFAULT '0' COMMENT '分片申请者',
- `is_receiving` tinyint(1) NOT NULL COMMENT '可接受任务',
- `is_consuming` tinyint(1) unsigned zerofill NOT NULL COMMENT '可消费任务',
+ `state` tinyint(3) NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

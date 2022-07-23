@@ -18,7 +18,7 @@
     </insert>
 
     <select id="selectOneSegTrigger" resultMap="BaseResultMap">
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
         FROM
             job_seg_trigger
@@ -28,7 +28,7 @@
     </select>
 
     <select id="selectJobSegTriggerByShardId" parameterType="int" resultMap="BaseResultMap">
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
         FROM
             job_seg_trigger

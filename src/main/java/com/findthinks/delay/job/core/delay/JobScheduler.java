@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +39,8 @@ public class JobScheduler {
     private static final int BATCH_THRESHOLD = 4;
 
     protected final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(V_CPU_CORES / 2 + 1, new ThreadFactoryBuilder().setNameFormat("Delay-JobShard-%d").setDaemon(true).build());
+
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Delay-Job-Translate-%d").setDaemon(true).build());
 
     private final RoundRobinSelector queueSelector = new RoundRobinSelector();
 
@@ -129,7 +132,7 @@ public class JobScheduler {
             batchJobs.add(job);
 
             //添加全局记录
-            recs.add(buildGlobalRec(job.getOutJobNo(), jobShardId, job.getId(), new Date()));
+            recs.add(buildGlobalRec(job.getOutJobNo(), jobShardId, job.getId(), job.getTriggerTime(), new Date()));
 
             //批次处理
             if (counter < batchSize) {
@@ -165,11 +168,12 @@ public class JobScheduler {
         jobProcessor.scheduleJobs(immediate);
     }
 
-    private GlobalRec buildGlobalRec(String outJobNo, Integer jobShardId, Long jobId, Date gmtCreate) {
+    private GlobalRec buildGlobalRec(String outJobNo, Integer jobShardId, Long jobId, Long triggerTime, Date gmtCreate) {
         GlobalRec rec = new GlobalRec();
         rec.setOutJobNo(outJobNo);
         rec.setJobShardId(jobShardId);
         rec.setJobId(jobId);
+        rec.setTriggerTime(triggerTime);
         rec.setGmtCreate(gmtCreate);
         return rec;
     }
@@ -252,6 +256,44 @@ public class JobScheduler {
 
         //填充当前已经分配的分片信息
         fillSchedulerAssignedJobShard();
+    }
+
+    /**
+     * 停用分片
+     * @param jobShardId
+     */
+    public void stopJobShard(Integer jobShardId) {
+        /** 修改JobShard为数据转移中，此时改分片停止接受任务，且下个调度周期开始将停止任务消费 */
+        jobShardManager.updateJobShardState(jobShardId, 10);
+
+        /** 开始迁移当前分片任务到其它分片 */
+        executor.execute(() -> translateJobShardToOtherShard(jobShardId));
+    }
+
+    /**
+     * 抽取分片任务，重新分配到其它分片
+     * @param jobShardId
+     */
+    public void translateJobShardToOtherShard(Integer jobShardId) {
+        long startTime = nextScheduleTime;
+        /** 每批次处理100条 */
+        int maxJobs = 100;
+        for (;;) {
+            List<Job> jobs = jobManager.loadShardJobs(jobShardId, startTime, maxJobs);
+            if (CollectionUtils.isEmpty(jobs)) {
+                break;
+            }
+            List<FacadeJob> facadeJobs = jobs.stream().map(job -> buildFacadeJob(job)).collect(Collectors.toList());
+
+            /** 转移任务到其它分片 */
+            submitJobs(facadeJobs);
+
+            /** 批量删除转移的分片任务 */
+            jobManager.deleteShardJobs(jobShardId, jobs.stream().map(job -> job.getId()).collect(Collectors.toList()));
+        }
+
+        /** 完成任务迁移后修改分片状态为停止 */
+        jobShardManager.updateJobShardState(jobShardId, 15);
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {
@@ -375,6 +417,16 @@ public class JobScheduler {
         job.setGmtCreate(new Date());
         job.setJobInfo(facade.getJobInfo());
         return job;
+    }
+
+    private FacadeJob buildFacadeJob(Job job) {
+        FacadeJob facadeJob = new FacadeJob();
+        facadeJob.setOutJobNo(job.getOutJobNo());
+        facadeJob.setJobInfo(job.getJobInfo());
+        facadeJob.setTriggerTime(job.getTriggerTime());
+        facadeJob.setCallbackProtocol(job.getCallbackEndpoint());
+        facadeJob.setCallbackEndpoint(job.getCallbackEndpoint());
+        return facadeJob;
     }
 
     /**
@@ -536,7 +588,11 @@ public class JobScheduler {
                 }
 
                 Long startTime = currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
-                List<Integer> jobShards = jobShardManager.loadConsumingJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
+                List<JobShard> shards = jobShardManager.loadConsumingJobShards();
+                if (CollectionUtils.isEmpty(shards)) {
+                    return;
+                }
+                List<Integer> jobShards = shards.stream().map(shard -> shard.getId()).collect(Collectors.toList());
                 List<JobSegTriggerFlow> segments = jobSegTriggerFlowManager.loadRetryFlows(jobShards, startTime, currentScheduleTime);
                 if (CollectionUtils.isEmpty(segments)) {
                     return;

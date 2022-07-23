@@ -9,9 +9,11 @@ public interface JobShardExtMapper {
 
     List<JobShard> selectJobShardByCond(Map<String, Object> params);
 
-    int updateJobCurServer(Map<String, Object> params);
+    int updateJobShardCurServer(Map<String, Object> params);
 
-    int updateJobReqServer(Map<String, Object> params);
+    int updateJobShardReqServer(Map<String, Object> params);
+
+    int updateJobShardState(Map<String, Object> params);
 
     int updateReqServerToCurServer(@Param("ids") List<Integer> ids);
 

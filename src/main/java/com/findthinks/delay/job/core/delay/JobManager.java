@@ -65,7 +65,6 @@ public class JobManager implements IJobManager {
     public List<Job> loadJobs(Integer jobShardId, Long nextTriggerTime, Integer maxJobs) {
         try {
             for (;;) {
-
                 JobSegTrigger seg = loadJobSegTrigger(jobShardId);
                 if (null == seg) {
                     initJobSegTrigger(jobShardId);
@@ -82,6 +81,16 @@ public class JobManager implements IJobManager {
             LOG.error("Load job segment error.", ex);
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public List<Job> loadShardJobs(Integer jobShardId, Long timeStart, Integer maxJobs) {
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("jobShardId", jobShardId);
+        params.put("timeStart", timeStart);
+        params.put("maxJobs", maxJobs);
+        List<Job> jobs = jobExtMapper.selectShardJobs(params);
+        return CollectionUtils.isEmpty(jobs) ? Collections.EMPTY_LIST : jobs;
     }
 
     @Override
@@ -124,6 +133,7 @@ public class JobManager implements IJobManager {
         GlobalRec rec = new GlobalRec();
         rec.setOutJobNo(job.getOutJobNo());
         rec.setJobShardId(job.getJobShardId());
+        rec.setTriggerTime(job.getTriggerTime());
         rec.setJobId(job.getId());
         rec.setGmtCreate(new Date());
         globalRecExtMapper.insertRec(rec);
@@ -169,6 +179,14 @@ public class JobManager implements IJobManager {
         parameters.put("triggerTimeStart", triggerTimeStart);
         parameters.put("triggerTimeEnd", triggerTimeEnd);
         return jobExtMapper.selectNoneSuccessJobsCount(parameters);
+    }
+
+    @Override
+    public int deleteShardJobs(Integer jobShardId, List<Long> jobIds) {
+        Map<String, Object> parameters = new HashMap<>(4);
+        parameters.put("jobShardId", jobShardId);
+        parameters.put("ids", jobIds);
+        return jobExtMapper.deleteJobs(parameters);
     }
 
     private List<LoadDelayJob> doLoadDelayJob(List<Integer> jobShardIds, Long nextTriggerTime, Integer maxJobNums) {

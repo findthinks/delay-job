@@ -14,4 +14,5 @@ public interface ISchedulerManager {
     List<Integer> loadAllSchedulerIds();
     
     SchedulerInfo loadSchedulerInfo(Integer id);
+
 }

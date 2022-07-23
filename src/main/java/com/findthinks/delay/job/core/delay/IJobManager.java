@@ -15,6 +15,8 @@ public interface IJobManager {
 
     List<Job> loadJobs(Integer jobShardId, Long nextTriggerTime, Integer maxJobs);
 
+    List<Job> loadShardJobs(Integer jobShardId, Long nextTriggerTime, Integer maxJobs);
+
     boolean modifyJobState(Job job, int newState, int oldState, int retryTimes);
 
     void modifyJobState(int jobShardId, List<Job> jobs, int newState);
@@ -32,4 +34,6 @@ public interface IJobManager {
     List<Job> loadRetryJobs(Integer jobShardId, Long startTime, Long endTime, Integer maxJobs);
 
     int getNoneSuccessJobsCount(Integer jobShardId, long startTime, long endTime);
+
+    int deleteShardJobs(Integer jobShardId, List<Long> jobIds);
 }

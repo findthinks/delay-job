@@ -11,9 +11,7 @@ import java.util.Map;
 @Component
 public class JobShardManager implements IJobShardManager {
 
-    private static final int IS_RECEIVE_JOB = 1;
-
-    private static final int IS_CONSUME_JOB = 1;
+    private static final int NORMAL_STATE = 5;
 
     @Resource
     private JobShardExtMapper jobShardExtMapper;
@@ -26,14 +24,14 @@ public class JobShardManager implements IJobShardManager {
     @Override
     public List<JobShard> loadReceivingJobShards() {
         Map<String, Object> params = new HashMap<>();
-        params.put("isReceiving", IS_RECEIVE_JOB);
+        params.put("state", NORMAL_STATE);
         return jobShardExtMapper.selectJobShardByCond(params);
     }
 
     @Override
     public List<JobShard> loadConsumingJobShards() {
         Map<String, Object> params = new HashMap<>();
-        params.put("isConsuming", IS_CONSUME_JOB);
+        params.put("state", NORMAL_STATE);
         return jobShardExtMapper.selectJobShardByCond(params);
     }
 
@@ -41,7 +39,7 @@ public class JobShardManager implements IJobShardManager {
     public List<JobShard> loadAssignedJobShards(Integer schedulerId) {
         Map<String, Object> params = new HashMap<>();
         params.put("schedulerId", schedulerId);
-        params.put("isConsuming", IS_CONSUME_JOB);
+        params.put("state", NORMAL_STATE);
         return jobShardExtMapper.selectJobShardByCond(params);
     }
 
@@ -50,7 +48,7 @@ public class JobShardManager implements IJobShardManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", shardId);
         params.put("curServer", curServer);
-        return jobShardExtMapper.updateJobCurServer(params);
+        return jobShardExtMapper.updateJobShardCurServer(params);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class JobShardManager implements IJobShardManager {
         Map<String, Object> params = new HashMap<>();
         params.put("id", jobShardId);
         params.put("reqServer", reqServer);
-        return jobShardExtMapper.updateJobReqServer(params);
+        return jobShardExtMapper.updateJobShardReqServer(params);
     }
 
     @Override
@@ -70,5 +68,13 @@ public class JobShardManager implements IJobShardManager {
     public int updateJobShardByCondition(List<Integer> schedulerIds) {
         // update job_shard set cur_server = -1 where cur_server not in (schedulerIds);
         return jobShardExtMapper.updateCurServerByCond(schedulerIds);
+    }
+
+    @Override
+    public int updateJobShardState(Integer jobShardId, Integer state) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", jobShardId);
+        params.put("state", state);
+        return jobShardExtMapper.updateJobShardState(params);
     }
 }

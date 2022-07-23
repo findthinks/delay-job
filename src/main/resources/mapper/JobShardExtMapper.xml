@@ -8,21 +8,17 @@
         <id column="id" jdbcType="TINYINT" property="id" />
         <result column="cur_server" jdbcType="INTEGER" property="curServer" />
         <result column="req_server" jdbcType="INTEGER" property="reqServer" />
-        <result column="is_receiving" jdbcType="BIT" property="isReceiving" />
-        <result column="is_consuming" jdbcType="BIT" property="isConsuming" />
+        <result column="state" jdbcType="TINYINT" property="state" />
     </resultMap>
 
     <select id="selectJobShardByCond" parameterType="map" resultMap="BaseResultMap">
-        /*FORCE_MASTER*/ SELECT
-            id, cur_server, req_server, is_receiving, is_consuming
+        SELECT
+            id, cur_server, req_server, state
         FROM
             job_shard
         WHERE 1=1
-        <if test="isReceiving != null and isReceiving != ''">
-            AND is_receiving = #{isReceiving}
-        </if>
-        <if test="isConsuming != null and isConsuming != ''">
-            AND is_consuming = #{isConsuming}
+        <if test="state != null and state != ''">
+            AND state = #{state}
         </if>
         <if test="schedulerId != null and schedulerId != ''">
             AND cur_server = #{schedulerId}
@@ -30,13 +26,13 @@
     </select>
 
     <select id="selectJobShardCount" resultType="int">
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             count(*) as cnt
         FROM
             job_shard
     </select>
 
-    <update id="updateJobCurServer" parameterType="map">
+    <update id="updateJobShardCurServer" parameterType="map">
         UPDATE
             job_shard
         SET
@@ -45,11 +41,20 @@
             id = #{id}
     </update>
 
-    <update id="updateJobReqServer" parameterType="map">
+    <update id="updateJobShardReqServer" parameterType="map">
         UPDATE
             job_shard
         SET
             req_server = #{reqServer}
+        WHERE
+            id = #{id}
+    </update>
+
+    <update id="updateJobShardState" parameterType="map">
+        UPDATE
+            job_shard
+        SET
+            state = #{state}
         WHERE
             id = #{id}
     </update>

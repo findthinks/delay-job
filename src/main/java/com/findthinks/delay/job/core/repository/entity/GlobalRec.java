@@ -18,6 +18,9 @@ public class GlobalRec {
     @Column(name = "job_id")
     private Long jobId;
 
+    @Column(name = "trigger_time")
+    private Long triggerTime;
+
     @Column(name = "gmt_create")
     private Date gmtCreate;
 
@@ -75,6 +78,14 @@ public class GlobalRec {
      */
     public void setJobId(Long jobId) {
         this.jobId = jobId;
+    }
+
+    public Long getTriggerTime() {
+        return triggerTime;
+    }
+
+    public void setTriggerTime(Long triggerTime) {
+        this.triggerTime = triggerTime;
     }
 
     public Date getGmtCreate() {

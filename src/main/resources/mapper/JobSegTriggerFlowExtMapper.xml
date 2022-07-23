@@ -21,7 +21,7 @@
 
     <select id="loadRecentlyFlows" parameterType="map" resultMap="BaseResultMap">
         <![CDATA[
-            /*FORCE_MASTER*/ SELECT
+            SELECT
                 id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
             FROM
                 job_seg_trigger_flow
@@ -34,7 +34,7 @@
     </select>
 
     <select id="loadRetryFlows" parameterType="map" resultMap="BaseResultMap">
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
         FROM
             job_seg_trigger_flow

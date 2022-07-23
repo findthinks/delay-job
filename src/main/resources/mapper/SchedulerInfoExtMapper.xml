@@ -42,7 +42,7 @@
 
     <select id="selectAllSchedulerIds" resultType="int">
         <![CDATA[
-            /*FORCE_MASTER*/ SELECT
+            SELECT
                 id
             FROM
                 scheduler_info

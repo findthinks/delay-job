@@ -31,7 +31,7 @@
     </insert>
 
     <select id="loadJob" parameterType="map" resultMap="BaseResultMap">
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             *
         FROM
             job_${jobShardId}
@@ -41,7 +41,7 @@
 
     <select id="selectSubmitJobs" parameterType="map" resultMap="BaseResultMap">
         <![CDATA[
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             *
         FROM
             job_${jobShardId}
@@ -54,9 +54,22 @@
         ]]>
     </select>
 
+    <select id="selectShardJobs" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time > #{timeStart}
+        ORDER BY trigger_time
+            LIMIT #{maxJobs}
+        ]]>
+    </select>
+
     <select id="selectNoneSuccessJobs" parameterType="map" resultMap="BaseResultMap">
         <![CDATA[
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             *
         FROM
             job_${jobShardId}
@@ -70,7 +83,7 @@
 
     <select id="selectNoneSuccessJobsCount" parameterType="map" resultType="int">
         <![CDATA[
-        /*FORCE_MASTER*/ SELECT
+        SELECT
             count(*)
         FROM
             job_${jobShardId}
@@ -104,5 +117,33 @@
                 <foreach collection="ids" item="jobId" index="index" open="(" close=")" separator=",">
                     #{jobId}
                 </foreach>
+    </update>
+
+    <delete id="deleteJobs">
+        DELETE FROM job_${jobShardId}
+        WHERE id in
+                    <foreach collection="ids" item="jobId" index="index" open="(" close=")" separator=",">
+                        #{jobId}
+                    </foreach>
+    </delete>
+
+    <update id="createJobShardTable">
+        <![CDATA[
+        CREATE TABLE `job_${jobShardId}` (
+            `id` bigint(20) unsigned NOT NULL,
+            `job_shard_id` tinyint(3) unsigned NOT NULL COMMENT '任务分片ID',
+            `out_job_no` varchar(32) NOT NULL COMMENT '外部任务编号',
+            `trigger_time` bigint(21) NOT NULL COMMENT '计划触发时间',
+            `state` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '任务状态:10-提交 20-重试中 30-成功 40-失败 50-取消',
+            `retry_times` tinyint(1) unsigned zerofill NOT NULL COMMENT '重试次数',
+            `callback_protocol` tinyint(1) NOT NULL COMMENT '回调协议:0-HTTP 5-GRPC',
+            `callback_endpoint` varchar(64) NOT NULL COMMENT '回调地址',
+            `job_info` varchar(128) DEFAULT NULL COMMENT 'JOB附加参数',
+            `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `idx_job0_out_job_no` (`out_job_no`) USING BTREE,
+            KEY `idx_trigger_time` (`trigger_time`) USING BTREE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ]]>
     </update>
 </mapper>
