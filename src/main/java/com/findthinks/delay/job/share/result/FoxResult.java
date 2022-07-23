@@ -1,22 +1,28 @@
 package com.findthinks.delay.job.share.result;
 
-import com.alibaba.fastjson.annotation.JSONType;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.findthinks.delay.job.share.enums.ExceptionEnum;
 
 /**
  * Restful统一响应结果类
  */
-@JSONType(orders = { "code", "message", "data" })
+@JsonPropertyOrder({"code", "message", "data"})
 public class FoxResult<T> {
 
     public static final FoxResult SUCCESS = new FoxResult(ExceptionEnum.SUCCESS.getCode(), ExceptionEnum.SUCCESS.getDesc(), null);
     public static final FoxResult UNKNOWN_ERROR = new FoxResult(ExceptionEnum.UNKNOWN_ERROR.getCode(), ExceptionEnum.UNKNOWN_ERROR.getDesc(), null);
 
-    /** 状态码 */
+    /**
+     * 状态码
+     */
     private String code;
-    /** 状态详细描述 */
+    /**
+     * 状态详细描述
+     */
     private String message;
-    /** 接口返回的数据 */
+    /**
+     * 接口返回的数据
+     */
     private T data;
 
     public FoxResult() {

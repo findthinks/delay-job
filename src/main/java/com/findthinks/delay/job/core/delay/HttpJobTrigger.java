@@ -1,15 +1,17 @@
 package com.findthinks.delay.job.core.delay;
 
-import com.alibaba.fastjson.JSONObject;
 import com.findthinks.delay.job.core.repository.entity.Job;
 import com.findthinks.delay.job.share.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.exception.DelayJobException;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import javax.annotation.Resource;
 
 @Component("httpJobTrigger")
@@ -27,9 +29,13 @@ public class HttpJobTrigger implements IJobTrigger {
         ResponseEntity<JSONObject> ret = restTemplate.postForEntity(job.getCallbackEndpoint(), req, JSONObject.class);
         if (ret.getStatusCode().is2xxSuccessful()) {
             JSONObject body = ret.getBody();
-            return new TriggerResult(body.getInteger("code"), body.getString("msg"));
+            try {
+                return new TriggerResult(body.getInt("code"), body.getString("msg"));
+            } catch (JSONException e) {
+                throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
+            }
         }
-        throw  new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
+        throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
     }
 
     private class CallbackInfo {
