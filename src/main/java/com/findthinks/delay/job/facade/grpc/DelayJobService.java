@@ -1,7 +1,7 @@
 package com.findthinks.delay.job.facade.grpc;
 
-import com.findthinks.delay.job.core.delay.FacadeJob;
-import com.findthinks.delay.job.core.delay.JobScheduler;
+import com.findthinks.delay.job.scheduler.FacadeJob;
+import com.findthinks.delay.job.scheduler.JobScheduler;
 import com.findthinks.delay.job.facade.grpc.mgr.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import static com.findthinks.delay.job.share.constants.SystemConstants.*;
+import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
 
 @GrpcService
 public class DelayJobService extends DelayJobGrpc.DelayJobImplBase {

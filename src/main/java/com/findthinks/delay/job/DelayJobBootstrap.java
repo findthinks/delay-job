@@ -1,6 +1,6 @@
 package com.findthinks.delay.job;
 
-import com.findthinks.delay.job.core.repository.mapper.MapperLocation;
+import com.findthinks.delay.job.share.repository.mapper.MapperLocation;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

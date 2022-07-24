@@ -1,8 +1,8 @@
 package com.findthinks.delay.job.console.web;
 
 import com.findthinks.delay.job.console.web.rr.SchedulerInfoResp;
-import com.findthinks.delay.job.core.delay.JobShardManager;
-import com.findthinks.delay.job.core.delay.SchedulerManager;
+import com.findthinks.delay.job.scheduler.JobShardManager;
+import com.findthinks.delay.job.scheduler.SchedulerManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

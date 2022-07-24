@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.findthinks.delay.job.core.repository.mapper.JobExtMapper">
-    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.core.repository.entity.Job">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.JobExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.Job">
         <!--
           WARNING - @mbg.generated
         -->

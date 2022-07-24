@@ -1,11 +1,11 @@
 package com.findthinks.delay.job.facade.http;
 
-import com.findthinks.delay.job.core.delay.FacadeJob;
-import com.findthinks.delay.job.core.delay.JobScheduler;
+import com.findthinks.delay.job.scheduler.FacadeJob;
+import com.findthinks.delay.job.scheduler.JobScheduler;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
-import static com.findthinks.delay.job.share.constants.SystemConstants.*;
+import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
 
 @RestController
 public class DelayJobController {

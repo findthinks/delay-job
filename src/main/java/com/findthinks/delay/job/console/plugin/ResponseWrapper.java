@@ -1,7 +1,7 @@
 package com.findthinks.delay.job.console.plugin;
 
 import com.findthinks.delay.job.console.web.ControllerLocation;
-import com.findthinks.delay.job.share.result.FoxResult;
+import com.findthinks.delay.job.share.lib.result.FoxResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;

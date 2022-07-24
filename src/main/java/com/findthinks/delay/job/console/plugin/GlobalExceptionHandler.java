@@ -1,8 +1,8 @@
 package com.findthinks.delay.job.console.plugin;
 
-import com.findthinks.delay.job.share.enums.ExceptionEnum;
-import com.findthinks.delay.job.share.exception.DelayJobException;
-import com.findthinks.delay.job.share.result.FoxResult;
+import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
+import com.findthinks.delay.job.share.lib.exception.DelayJobException;
+import com.findthinks.delay.job.share.lib.result.FoxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
