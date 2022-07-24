@@ -14,5 +14,7 @@ public interface SchedulerInfoExtMapper {
 
     List<Integer> selectAllSchedulerIds();
 
+    List<SchedulerInfo> selectAllSchedulers();
+
     SchedulerInfo selectSchedulerById(@Param("schedulerId") Integer schedulerId);
 }

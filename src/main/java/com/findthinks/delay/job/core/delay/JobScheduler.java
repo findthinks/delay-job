@@ -254,7 +254,7 @@ public class JobScheduler {
             releaseJobShardOutOfControl(schedulers);
 
             //重分配任务项
-            reAssignJobShard(schedulers, jobShardManager.loadConsumingJobShards());
+            reAssignJobShard(schedulers, jobShardManager.loadEnabledJobShards());
         }
 
         //填充当前已经分配的分片信息
@@ -262,11 +262,10 @@ public class JobScheduler {
     }
 
     /**
-     * 启用分片
+     * 启用分片，分片开始接收和消费任务
      * @param jobShardId
      */
     public void startJobShard(Integer jobShardId) {
-        /** 修改JobShard为数据转移中，此时改分片接受和消费任务 */
         jobShardManager.updateJobShardState(jobShardId, JobShardState.ENABLED.getCode());
     }
 
@@ -316,7 +315,7 @@ public class JobScheduler {
      * 同步持久层任务分片到内存
      */
     private void reSyncJobShards() {
-        final List<Integer> shardIds = jobShardManager.loadReceivingJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
+        final List<Integer> shardIds = jobShardManager.loadEnabledJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
         setJobShardIds(shardIds);
     }
 
@@ -600,7 +599,7 @@ public class JobScheduler {
                 }
 
                 Long startTime = currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
-                List<JobShard> shards = jobShardManager.loadConsumingJobShards();
+                List<JobShard> shards = jobShardManager.loadEnabledJobShards();
                 if (CollectionUtils.isEmpty(shards)) {
                     return;
                 }

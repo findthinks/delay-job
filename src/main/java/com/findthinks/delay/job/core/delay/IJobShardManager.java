@@ -2,14 +2,17 @@ package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.JobShard;
 import java.util.List;
+import java.util.Map;
 
 public interface IJobShardManager {
 
     int selectJobShardCount();
 
-    List<JobShard> loadReceivingJobShards();
+    List<JobShard> loadEnabledJobShards();
 
-    List<JobShard> loadConsumingJobShards();
+    List<JobShard> loadAllJobShards();
+
+    Map<Integer, List<Integer>> loadAllJobShardsGroupByCurServer();
 
     List<JobShard> loadAssignedJobShards(Integer schedulerId);
 

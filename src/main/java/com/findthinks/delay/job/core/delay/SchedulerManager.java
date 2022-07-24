@@ -2,8 +2,10 @@ package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.SchedulerInfo;
 import com.findthinks.delay.job.core.repository.mapper.SchedulerInfoExtMapper;
+import com.findthinks.delay.job.share.utils.CollectionUtils;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -37,5 +39,11 @@ public class SchedulerManager implements ISchedulerManager {
     @Override
     public SchedulerInfo loadSchedulerInfo(Integer id) {
         return schedulerInfoExtMapper.selectSchedulerById(id);
+    }
+
+    @Override
+    public List<SchedulerInfo> loadAllSchedulers() {
+        List<SchedulerInfo> schedulers = schedulerInfoExtMapper.selectAllSchedulers();
+        return CollectionUtils.isEmpty(schedulers) ? Collections.EMPTY_LIST : schedulers;
     }
 }

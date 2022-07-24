@@ -2,11 +2,14 @@ package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.JobShard;
 import com.findthinks.delay.job.core.repository.mapper.JobShardExtMapper;
+import com.findthinks.delay.job.share.utils.CollectionUtils;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JobShardManager implements IJobShardManager {
@@ -22,17 +25,21 @@ public class JobShardManager implements IJobShardManager {
     }
 
     @Override
-    public List<JobShard> loadReceivingJobShards() {
+    public List<JobShard> loadEnabledJobShards() {
         Map<String, Object> params = new HashMap<>();
         params.put("state", NORMAL_STATE);
         return jobShardExtMapper.selectJobShardByCond(params);
     }
 
     @Override
-    public List<JobShard> loadConsumingJobShards() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("state", NORMAL_STATE);
-        return jobShardExtMapper.selectJobShardByCond(params);
+    public List<JobShard> loadAllJobShards() {
+        List<JobShard> jobShards = jobShardExtMapper.selectJobShardByCond(new HashMap<>());
+        return CollectionUtils.isEmpty(jobShards) ? Collections.EMPTY_LIST : jobShards;
+    }
+
+    @Override
+    public Map<Integer, List<Integer>> loadAllJobShardsGroupByCurServer() {
+        return loadAllJobShards().stream().collect(Collectors.groupingBy(JobShard::getCurServer, Collectors.mapping(JobShard::getId, Collectors.toList())));
     }
 
     @Override

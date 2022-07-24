@@ -40,6 +40,16 @@
         ]]>
     </update>
 
+    <select id="selectAllSchedulers" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            id, uuid, last_heartbeat_time, register, ip
+        FROM
+            scheduler_info
+        ORDER BY id
+        ]]>
+    </select>
+
     <select id="selectAllSchedulerIds" resultType="int">
         <![CDATA[
             SELECT
