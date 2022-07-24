@@ -1,9 +1,9 @@
 package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.Job;
-import com.findthinks.delay.job.proto.cb.CallbackResp;
-import com.findthinks.delay.job.proto.cb.DelayJobCallbackGrpc;
-import com.findthinks.delay.job.proto.cb.JobCallbackReq;
+import com.findthinks.delay.job.facade.grpc.cb.CallbackResp;
+import com.findthinks.delay.job.facade.grpc.cb.DelayJobCallbackGrpc;
+import com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Component;

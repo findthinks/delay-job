@@ -20,12 +20,6 @@ spec:
     spec:
       containers:
         - env:
-            - name: aliyun_logs_log-${micro_service_name}-${version_switch}_logstore
-              value: ${log_store}
-            - name: aliyun_logs_log-${micro_service_name}-${version_switch}
-              value: stdout
-            - name: aliyun_logs_${micro_service_name}-${version_switch}_tags
-              value: applog=${micro_service_name}-${version_switch}
             - name: TZ
               value: Asia/Shanghai
           name: ${micro_service_name}-${version_switch}
@@ -71,12 +65,12 @@ spec:
   selector:
     app: ${micro_service_name}
   ports:
-    - name: http-8000
-      port: 8000
+    - name: http-1989
+      port: 1989
       protocol: TCP
       targetPort: 1989
-    - name: grpc-8080
-      port: 8080
+    - name: grpc-1990
+      port: 1990
       protocol: TCP
       targetPort: 1990
   type: ClusterIP

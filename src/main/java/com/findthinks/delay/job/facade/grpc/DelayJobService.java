@@ -2,7 +2,7 @@ package com.findthinks.delay.job.facade.grpc;
 
 import com.findthinks.delay.job.core.delay.FacadeJob;
 import com.findthinks.delay.job.core.delay.JobScheduler;
-import com.findthinks.delay.job.proto.mgr.*;
+import com.findthinks.delay.job.facade.grpc.mgr.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;

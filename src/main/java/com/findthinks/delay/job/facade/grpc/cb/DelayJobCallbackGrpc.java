@@ -1,4 +1,4 @@
-package com.findthinks.delay.job.proto.cb;
+package com.findthinks.delay.job.facade.grpc.cb;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
@@ -15,29 +15,29 @@ public final class DelayJobCallbackGrpc {
   public static final String SERVICE_NAME = "delay.job.DelayJobCallback";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.proto.cb.JobCallbackReq,
-      com.findthinks.delay.job.proto.cb.CallbackResp> getTriggerMethod;
+  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq,
+      com.findthinks.delay.job.facade.grpc.cb.CallbackResp> getTriggerMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "trigger",
-      requestType = com.findthinks.delay.job.proto.cb.JobCallbackReq.class,
-      responseType = com.findthinks.delay.job.proto.cb.CallbackResp.class,
+      requestType = com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq.class,
+      responseType = com.findthinks.delay.job.facade.grpc.cb.CallbackResp.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.proto.cb.JobCallbackReq,
-      com.findthinks.delay.job.proto.cb.CallbackResp> getTriggerMethod() {
-    io.grpc.MethodDescriptor<com.findthinks.delay.job.proto.cb.JobCallbackReq, com.findthinks.delay.job.proto.cb.CallbackResp> getTriggerMethod;
+  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq,
+      com.findthinks.delay.job.facade.grpc.cb.CallbackResp> getTriggerMethod() {
+    io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq, com.findthinks.delay.job.facade.grpc.cb.CallbackResp> getTriggerMethod;
     if ((getTriggerMethod = DelayJobCallbackGrpc.getTriggerMethod) == null) {
       synchronized (DelayJobCallbackGrpc.class) {
         if ((getTriggerMethod = DelayJobCallbackGrpc.getTriggerMethod) == null) {
           DelayJobCallbackGrpc.getTriggerMethod = getTriggerMethod =
-              io.grpc.MethodDescriptor.<com.findthinks.delay.job.proto.cb.JobCallbackReq, com.findthinks.delay.job.proto.cb.CallbackResp>newBuilder()
+              io.grpc.MethodDescriptor.<com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq, com.findthinks.delay.job.facade.grpc.cb.CallbackResp>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "trigger"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.findthinks.delay.job.proto.cb.JobCallbackReq.getDefaultInstance()))
+                  com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.findthinks.delay.job.proto.cb.CallbackResp.getDefaultInstance()))
+                  com.findthinks.delay.job.facade.grpc.cb.CallbackResp.getDefaultInstance()))
               .setSchemaDescriptor(new DelayJobCallbackMethodDescriptorSupplier("trigger"))
               .build();
         }
@@ -96,8 +96,8 @@ public final class DelayJobCallbackGrpc {
 
     /**
      */
-    public void trigger(com.findthinks.delay.job.proto.cb.JobCallbackReq request,
-        io.grpc.stub.StreamObserver<com.findthinks.delay.job.proto.cb.CallbackResp> responseObserver) {
+    public void trigger(com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getTriggerMethod(), responseObserver);
     }
 
@@ -107,8 +107,8 @@ public final class DelayJobCallbackGrpc {
             getTriggerMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<
-                com.findthinks.delay.job.proto.cb.JobCallbackReq,
-                com.findthinks.delay.job.proto.cb.CallbackResp>(
+                com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq,
+                com.findthinks.delay.job.facade.grpc.cb.CallbackResp>(
                   this, METHODID_TRIGGER)))
           .build();
     }
@@ -130,8 +130,8 @@ public final class DelayJobCallbackGrpc {
 
     /**
      */
-    public void trigger(com.findthinks.delay.job.proto.cb.JobCallbackReq request,
-        io.grpc.stub.StreamObserver<com.findthinks.delay.job.proto.cb.CallbackResp> responseObserver) {
+    public void trigger(com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getTriggerMethod(), getCallOptions()), request, responseObserver);
     }
@@ -153,7 +153,7 @@ public final class DelayJobCallbackGrpc {
 
     /**
      */
-    public com.findthinks.delay.job.proto.cb.CallbackResp trigger(com.findthinks.delay.job.proto.cb.JobCallbackReq request) {
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackResp trigger(com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getTriggerMethod(), getCallOptions(), request);
     }
@@ -175,8 +175,8 @@ public final class DelayJobCallbackGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.proto.cb.CallbackResp> trigger(
-        com.findthinks.delay.job.proto.cb.JobCallbackReq request) {
+    public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> trigger(
+        com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getTriggerMethod(), getCallOptions()), request);
     }
@@ -202,8 +202,8 @@ public final class DelayJobCallbackGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_TRIGGER:
-          serviceImpl.trigger((com.findthinks.delay.job.proto.cb.JobCallbackReq) request,
-              (io.grpc.stub.StreamObserver<com.findthinks.delay.job.proto.cb.CallbackResp>) responseObserver);
+          serviceImpl.trigger((com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq) request,
+              (io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.cb.CallbackResp>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -227,7 +227,7 @@ public final class DelayJobCallbackGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return com.findthinks.delay.job.proto.cb.DelayJobCallbackOuterClass.getDescriptor();
+      return com.findthinks.delay.job.facade.grpc.cb.DelayJobCallbackOuterClass.getDescriptor();
     }
 
     @java.lang.Override

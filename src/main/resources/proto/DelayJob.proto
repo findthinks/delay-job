@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package delay.job;
-option java_package = "com.findthinks.delay.job.proto.mgr";
+option java_package = "com.findthinks.delay.job.facade.grpc.mgr";
 option java_multiple_files = true;
 
 message CreateJobReq {
