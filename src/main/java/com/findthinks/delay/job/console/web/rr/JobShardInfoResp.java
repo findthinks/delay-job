@@ -2,6 +2,13 @@ package com.findthinks.delay.job.console.web.rr;
 
 public class JobShardInfoResp {
 
+    public JobShardInfoResp(Integer id, Integer curServer, Integer reqServer, Integer state) {
+        this.id = id;
+        this.curServer = curServer;
+        this.reqServer = reqServer;
+        this.state = state;
+    }
+
     private Integer id;
 
     private Integer curServer;

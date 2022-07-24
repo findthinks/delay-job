@@ -1,6 +1,7 @@
 package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.JobShard;
+import com.findthinks.delay.job.core.repository.mapper.JobExtMapper;
 import com.findthinks.delay.job.core.repository.mapper.JobShardExtMapper;
 import com.findthinks.delay.job.share.utils.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,22 @@ public class JobShardManager implements IJobShardManager {
 
     @Resource
     private JobShardExtMapper jobShardExtMapper;
+
+    @Resource
+    private JobExtMapper jobExtMapper;
+
+    @Override
+    public void createJobShard() {
+        /** 添加任务分片注册信息 */
+        JobShard shard = new JobShard();
+        shard.setCurServer(-1);
+        shard.setReqServer(-1);
+        shard.setState(JobShardState.DISABLED.getCode());
+        jobShardExtMapper.insertJobShard(shard);
+
+        /** 创建任务分片表 */
+        jobExtMapper.createJobShardTable(shard.getId());
+    }
 
     @Override
     public int selectJobShardCount() {

@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface IJobShardManager {
 
+    void createJobShard();
+
     int selectJobShardCount();
 
     List<JobShard> loadEnabledJobShards();

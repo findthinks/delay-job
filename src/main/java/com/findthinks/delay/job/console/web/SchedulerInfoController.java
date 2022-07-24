@@ -25,7 +25,8 @@ public class SchedulerInfoController {
     public List<SchedulerInfoResp> listSchedulers() {
         Map<Integer, List<Integer>> jobShardIds = jobShardManager.loadAllJobShardsGroupByCurServer();
         return schedulerManager.loadAllSchedulers().stream().map(scheduler ->
-                new SchedulerInfoResp(scheduler.getId(),
+                new SchedulerInfoResp(
+                        scheduler.getId(),
                         scheduler.getUuid(),
                         scheduler.getLastHeartbeatTime(),
                         scheduler.getRegister(),

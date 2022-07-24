@@ -11,6 +11,11 @@
         <result column="state" jdbcType="TINYINT" property="state" />
     </resultMap>
 
+    <insert id="insertJobShard" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO job_shard (cur_server, req_server, state)
+        VALUES (#{curServer}, #{reqServer}, #{state})
+    </insert>
+
     <select id="selectJobShardByCond" parameterType="map" resultMap="BaseResultMap">
         SELECT
             id, cur_server, req_server, state
@@ -23,6 +28,7 @@
         <if test="schedulerId != null and schedulerId != ''">
             AND cur_server = #{schedulerId}
         </if>
+        ORDER BY id
     </select>
 
     <select id="selectJobShardCount" resultType="int">

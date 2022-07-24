@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface JobShardExtMapper {
 
+    int insertJobShard(JobShard jobShard);
+
     List<JobShard> selectJobShardByCond(Map<String, Object> params);
 
     int updateJobShardCurServer(Map<String, Object> params);
