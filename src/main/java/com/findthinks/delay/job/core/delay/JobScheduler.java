@@ -59,7 +59,10 @@ public class JobScheduler {
     private JobProcessor jobProcessor;
 
     @Resource
-    private JobSegTriggerFlowManager jobSegTriggerFlowManager;
+    private IJobSegTriggerFlowManager jobSegTriggerFlowManager;
+
+    @Resource
+    private IJobSegTriggerManager jobSegTriggerManager;
 
     @Resource
     private KeyGeneratorManager keyGeneratorManager;
@@ -285,7 +288,7 @@ public class JobScheduler {
      * 抽取分片任务，重新分配到其它分片
      * @param jobShardId
      */
-    public void translateJobShardToOtherShard(Integer jobShardId) {
+    private void translateJobShardToOtherShard(Integer jobShardId) {
         long startTime = nextScheduleTime;
         /** 每批次处理100条 */
         int maxJobs = translateMaxNums;
@@ -305,6 +308,9 @@ public class JobScheduler {
 
         /** 完成任务迁移后修改分片状态为停止 */
         jobShardManager.updateJobShardState(jobShardId, JobShardState.DISABLED.getCode());
+
+        /** 删除JobSegTrigger分段信息 */
+        jobSegTriggerManager.deleteSegTrigger(jobShardId);
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {

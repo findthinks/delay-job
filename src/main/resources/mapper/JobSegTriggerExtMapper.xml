@@ -49,4 +49,8 @@
             AND trigger_time_start = #{timeStart}
             AND trigger_time_end = #{timeEnd}
     </update>
+
+    <delete id="deleteSegTrigger">
+        DELETE FROM job_seg_trigger WHERE job_shard_id = #{jobShardId}
+    </delete>
 </mapper>

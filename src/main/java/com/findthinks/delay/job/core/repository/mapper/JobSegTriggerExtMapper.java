@@ -13,4 +13,6 @@ public interface JobSegTriggerExtMapper {
     JobSegTrigger selectJobSegTriggerByShardId(@Param("jobShardId") Integer jobShardId);
 
     int compareAndSet(Map<String, Object> params);
+
+    int deleteSegTrigger(@Param("jobShardId") Integer jobShardId);
 }

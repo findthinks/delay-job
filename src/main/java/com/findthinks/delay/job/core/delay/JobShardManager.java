@@ -1,7 +1,6 @@
 package com.findthinks.delay.job.core.delay;
 
 import com.findthinks.delay.job.core.repository.entity.JobShard;
-import com.findthinks.delay.job.core.repository.mapper.JobExtMapper;
 import com.findthinks.delay.job.core.repository.mapper.JobShardExtMapper;
 import com.findthinks.delay.job.core.repository.mapper.TableExtMapper;
 import com.findthinks.delay.job.share.utils.CollectionUtils;
