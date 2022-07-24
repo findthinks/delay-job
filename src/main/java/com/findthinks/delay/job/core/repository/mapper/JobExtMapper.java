@@ -7,8 +7,6 @@ import java.util.Map;
 
 public interface JobExtMapper {
 
-    void createJobShardTable(@Param("jobShardId") Integer jobShardId);
-
     List<Job> selectSubmitJobs(Map<String, Object> parameters);
 
     List<Job> selectShardJobs(Map<String, Object> parameters);

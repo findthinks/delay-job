@@ -3,6 +3,7 @@ package com.findthinks.delay.job.core.delay;
 import com.findthinks.delay.job.core.repository.entity.JobShard;
 import com.findthinks.delay.job.core.repository.mapper.JobExtMapper;
 import com.findthinks.delay.job.core.repository.mapper.JobShardExtMapper;
+import com.findthinks.delay.job.core.repository.mapper.TableExtMapper;
 import com.findthinks.delay.job.share.utils.CollectionUtils;
 import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
@@ -21,7 +22,7 @@ public class JobShardManager implements IJobShardManager {
     private JobShardExtMapper jobShardExtMapper;
 
     @Resource
-    private JobExtMapper jobExtMapper;
+    private TableExtMapper tableExtMapper;
 
     @Override
     public void createJobShard() {
@@ -33,7 +34,7 @@ public class JobShardManager implements IJobShardManager {
         jobShardExtMapper.insertJobShard(shard);
 
         /** 创建任务分片表 */
-        jobExtMapper.createJobShardTable(shard.getId());
+        tableExtMapper.createJobShardTable(shard.getId());
     }
 
     @Override
