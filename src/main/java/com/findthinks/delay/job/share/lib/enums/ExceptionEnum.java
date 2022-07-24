@@ -5,10 +5,10 @@ package com.findthinks.delay.job.share.lib.enums;
  */
 public enum ExceptionEnum {
 
-    SUCCESS("ok", "成功"),
-    INVALID_PARAMS("invalid_params", "参数错误"),
-    AUTHENTICATION_NOT_EXIST("authentication_not_exist", "请先登录"),
-    UNKNOWN_ERROR( "unknown_error", "未知异常");
+    SUCCESS("ok", "success"),
+    INVALID_PARAMS("invalid_params", "param error"),
+    AUTHENTICATION_NOT_EXIST("authentication_not_exist", "user not logged in"),
+    UNKNOWN_ERROR( "unknown_error", "unknown exception");
 
     /** 枚举编码 */
     private String code;
