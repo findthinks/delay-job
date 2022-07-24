@@ -4,6 +4,7 @@ import com.findthinks.delay.job.console.web.rr.SchedulerInfoResp;
 import com.findthinks.delay.job.core.delay.JobShardManager;
 import com.findthinks.delay.job.core.delay.SchedulerManager;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(value = "/api/v1")
 public class SchedulerInfoController {
 
     @Resource
@@ -19,7 +21,7 @@ public class SchedulerInfoController {
     @Resource
     private JobShardManager jobShardManager;
 
-    @GetMapping(value = "/api/v1/list/scheduler")
+    @GetMapping(value = "/schedulers")
     public List<SchedulerInfoResp> listSchedulers() {
         Map<Integer, List<Integer>> jobShardIds = jobShardManager.loadAllJobShardsGroupByCurServer();
         return schedulerManager.loadAllSchedulers().stream().map(scheduler ->
