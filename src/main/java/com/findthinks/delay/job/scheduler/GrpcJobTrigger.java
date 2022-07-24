@@ -1,9 +1,9 @@
 package com.findthinks.delay.job.scheduler;
 
-import com.findthinks.delay.job.share.repository.entity.Job;
+import com.findthinks.delay.job.facade.grpc.cb.CallbackReq;
 import com.findthinks.delay.job.facade.grpc.cb.CallbackResp;
-import com.findthinks.delay.job.facade.grpc.cb.DelayJobCallbackGrpc;
-import com.findthinks.delay.job.facade.grpc.cb.JobCallbackReq;
+import com.findthinks.delay.job.facade.grpc.cb.JobCallbackGrpc;
+import com.findthinks.delay.job.share.repository.entity.Job;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Component;
@@ -17,11 +17,11 @@ public class GrpcJobTrigger implements IJobTrigger {
     private Object locker = new Object();
 
     /** 缓存各个回调创建的grpc长链接*/
-    private final ConcurrentMap<String, DelayJobCallbackGrpc.DelayJobCallbackBlockingStub> stubs = new ConcurrentHashMap();
+    private final ConcurrentMap<String, JobCallbackGrpc.JobCallbackBlockingStub> stubs = new ConcurrentHashMap();
 
     @Override
     public TriggerResult triggerJob(Job job) {
-        JobCallbackReq req = JobCallbackReq.newBuilder()
+        CallbackReq req = CallbackReq.newBuilder()
                 .setJobInfo(job.getJobInfo())
                 .setOutJobNo(job.getOutJobNo())
                 .setTriggerTime(job.getTriggerTime())
@@ -30,13 +30,13 @@ public class GrpcJobTrigger implements IJobTrigger {
         return new TriggerResult(resp.getCode(), resp.getMessage());
     }
 
-    private DelayJobCallbackGrpc.DelayJobCallbackBlockingStub getTriggerStub(String endpoint) {
-        DelayJobCallbackGrpc.DelayJobCallbackBlockingStub stub = stubs.get(endpoint);
+    private JobCallbackGrpc.JobCallbackBlockingStub getTriggerStub(String endpoint) {
+        JobCallbackGrpc.JobCallbackBlockingStub stub = stubs.get(endpoint);
         if (null == stub) {
             synchronized (locker) {
                 if (null == (stub = stubs.get(endpoint))) {
                     ManagedChannel channel = ManagedChannelBuilder.forTarget(endpoint).usePlaintext().build();
-                    stub = DelayJobCallbackGrpc.newBlockingStub(channel);
+                    stub = JobCallbackGrpc.newBlockingStub(channel);
                     stubs.put(endpoint, stub);
                 }
             }

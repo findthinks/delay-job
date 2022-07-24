@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.Executors;
 
 @Configuration
-public class GrpcServerConfig {
+public class ServerConfig {
 
     @Value("${grpc.executor.num:50}")
     private int grpcExecutorNum;

@@ -13,7 +13,7 @@ import java.util.List;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
 
 @GrpcService
-public class DelayJobService extends DelayJobGrpc.DelayJobImplBase {
+public class DelayJobService extends JobGrpc.JobImplBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DelayJobService.class);
 

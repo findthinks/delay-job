@@ -25,7 +25,7 @@ message JobResp {
     string message = 2;
 }
 
-service DelayJob {
+service Job {
     rpc submitJob (CreateJobReq) returns (JobResp) {
     }
 
