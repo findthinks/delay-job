@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = DelayJobException.class)
     public FoxResult error(DelayJobException cause) {
         LOG.error("Business exception, errorCode: {}, errorDesc: {}", cause.getExceptionEnum().getCode(), cause.getMessage());
-        return FoxResult.fail(cause.getExceptionEnum());
+        return FoxResult.fail(cause.getExceptionEnum(), cause.getMessage());
     }
 
     /**

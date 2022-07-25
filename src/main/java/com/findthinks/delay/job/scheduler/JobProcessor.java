@@ -177,7 +177,7 @@ public class JobProcessor {
             if (!resp.isSuccessful()) {
                 throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, resp.getMsg());
             }
-            LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000);
+            LOG.debug("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000);
         } catch (Exception ex) {
             LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger error.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000, ex);
         }

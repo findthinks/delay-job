@@ -3,6 +3,8 @@ package com.findthinks.delay.job.scheduler;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpEntity;
@@ -15,6 +17,8 @@ import javax.annotation.Resource;
 
 @Component("httpJobTrigger")
 public class HttpJobTrigger implements IJobTrigger {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HttpJobTrigger.class);
 
     @Resource
     private RestTemplate restTemplate;

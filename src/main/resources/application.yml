@@ -12,6 +12,8 @@ spring:
       maximum-pool-size: 100
       pool-name: DelayJobPool
       connection-test-query: SELECT 1
+  jackson:
+    default-property-inclusion: non_null
 server:
   port: 1989
 grpc:

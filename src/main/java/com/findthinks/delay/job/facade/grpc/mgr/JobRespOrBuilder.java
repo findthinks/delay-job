@@ -8,10 +8,16 @@ public interface JobRespOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 code = 1;</code>
+   * <code>string code = 1;</code>
    * @return The code.
    */
-  int getCode();
+  java.lang.String getCode();
+  /**
+   * <code>string code = 1;</code>
+   * @return The bytes for code.
+   */
+  com.google.protobuf.ByteString
+      getCodeBytes();
 
   /**
    * <code>string message = 2;</code>

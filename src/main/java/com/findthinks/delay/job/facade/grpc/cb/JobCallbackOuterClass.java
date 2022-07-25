@@ -36,7 +36,7 @@ public final class JobCallbackOuterClass {
       "\n\021JobCallback.proto\022\tdelay.job\"E\n\013Callba" +
       "ckReq\022\020\n\010outJobNo\030\001 \001(\t\022\023\n\013triggerTime\030\002" +
       " \001(\003\022\017\n\007jobInfo\030\003 \001(\t\"-\n\014CallbackResp\022\014\n" +
-      "\004code\030\001 \001(\005\022\017\n\007message\030\002 \001(\t2K\n\013JobCallb" +
+      "\004code\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2K\n\013JobCallb" +
       "ack\022<\n\007trigger\022\026.delay.job.CallbackReq\032\027" +
       ".delay.job.CallbackResp\"\000B+\n\'com.findthi" +
       "nks.delay.job.facade.grpc.cbP\001b\006proto3"

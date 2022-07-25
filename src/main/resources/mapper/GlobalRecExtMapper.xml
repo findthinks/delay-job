@@ -33,7 +33,7 @@
         INSERT INTO global_rec (out_job_no, job_shard_id, job_id, trigger_time, gmt_create)
         VALUES
         <foreach collection="grcs" item="g" index="index" separator=",">
-          (#{g.outJobNo}, #{g.jobShardId}, #{g.jobId}, #{triggerTime}, #{g.gmtCreate})
+          (#{g.outJobNo}, #{g.jobShardId}, #{g.jobId}, #{g.triggerTime}, #{g.gmtCreate})
         </foreach>
     </insert>
 </mapper>

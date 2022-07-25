@@ -1,6 +1,7 @@
 package com.findthinks.delay.job.scheduler;
 
 import com.findthinks.delay.job.share.id.KeyGeneratorManager;
+import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.repository.entity.*;
 import com.findthinks.delay.job.share.lib.exception.JobCanceledException;
 import com.findthinks.delay.job.share.lib.exception.ParamsException;
@@ -22,6 +23,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.CANNOT_CANCEL_JOB;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.JOB_IS_CANCEL;
 
 @Component
 public class JobScheduler {
@@ -192,15 +195,14 @@ public class JobScheduler {
     public void cancelJob(String outJobNo) {
         Job job = jobManager.loadJob(outJobNo);
         if (null != job) {
-            // 已经进入内存调度阶段的任务不支持取消
-            if (nextScheduleTime >= job.getTriggerTime()) {
-                throw new JobCanceledException("Can not cancel a job in next schedule window.");
-            }
             if (JobState.getStateByCode(job.getState()) == JobState.CANCEL) {
-                throw new JobCanceledException("Job is canceled.");
+                throw new DelayJobException(JOB_IS_CANCEL, "Job is canceled.");
+            }
+            if (job.getState() > JobState.SUBMIT.getCode()) {
+                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered.");
             }
             if (!jobManager.modifyJobState(job, JobState.CANCEL.getCode(), JobState.SUBMIT.getCode(), 0)) {
-                throw new JobCanceledException("Job is triggered.");
+                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered.");
             }
         }
     }

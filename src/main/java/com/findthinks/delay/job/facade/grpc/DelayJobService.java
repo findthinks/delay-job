@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.SUCCESS;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.UNKNOWN_ERROR;
 
 @GrpcService
 public class DelayJobService extends JobGrpc.JobImplBase {
@@ -69,13 +70,13 @@ public class DelayJobService extends JobGrpc.JobImplBase {
     }
 
     private void sendSuccessResponse(StreamObserver<JobResp> responseObserver) {
-        JobResp resp = JobResp.newBuilder().setCode(JOB_SUCCESS).setMessage(JOB_SUCCESS_MSG).build();
+        JobResp resp = JobResp.newBuilder().setCode(SUCCESS.getCode()).setMessage(SUCCESS.getDesc()).build();
         responseObserver.onNext(resp);
         responseObserver.onCompleted();
     }
 
     private void sendFailResponse(Exception ex, StreamObserver<JobResp> responseObserver) {
-        JobResp resp = JobResp.newBuilder().setCode(JOB_FAIL).setMessage(JOB_FAIL_MSG).build();
+        JobResp resp = JobResp.newBuilder().setCode(UNKNOWN_ERROR.getCode()).setMessage(UNKNOWN_ERROR.getDesc()).build();
         responseObserver.onNext(resp);
         responseObserver.onCompleted();
     }

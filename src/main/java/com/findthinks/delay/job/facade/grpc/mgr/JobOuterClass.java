@@ -49,7 +49,7 @@ public final class JobOuterClass {
       "int\030\004 \001(\t\022\017\n\007jobInfo\030\005 \001(\t\"6\n\rCreateJobs" +
       "Req\022%\n\004jobs\030\001 \003(\0132\027.delay.job.CreateJobR" +
       "eq\" \n\014CancelJobReq\022\020\n\010outJobNo\030\001 \001(\t\"(\n\007" +
-      "JobResp\022\014\n\004code\030\001 \001(\005\022\017\n\007message\030\002 \001(\t2\273" +
+      "JobResp\022\014\n\004code\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2\273" +
       "\001\n\003Job\022:\n\tsubmitJob\022\027.delay.job.CreateJo" +
       "bReq\032\022.delay.job.JobResp\"\000\022<\n\nsubmitJobs" +
       "\022\030.delay.job.CreateJobsReq\032\022.delay.job.J" +
