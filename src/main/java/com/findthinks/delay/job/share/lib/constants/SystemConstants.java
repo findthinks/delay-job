@@ -14,4 +14,6 @@ public interface SystemConstants {
     String JOB_SUCCESS_MSG = "OK";
 
     String JOB_FAIL_MSG = "ERROR";
+
+    String API_PREFIX = "/api/v1";
 }

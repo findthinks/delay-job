@@ -10,9 +10,10 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import static com.findthinks.delay.job.share.lib.constants.SystemConstants.API_PREFIX;
 
 @RestController
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = API_PREFIX)
 public class SchedulerInfoController {
 
     @Resource
