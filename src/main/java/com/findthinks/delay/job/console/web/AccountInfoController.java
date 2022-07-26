@@ -32,24 +32,26 @@ public class AccountInfoController {
     }
 
     @PostMapping(value = "/login")
-    public void login(@RequestBody AccountInfo account, HttpServletResponse response) {
+    public boolean login(@RequestBody AccountInfo account, HttpServletResponse response) {
         accountService.authentication(account);
         Cookie cookie = new Cookie(JWT_COOKIE_NAME, AuthenticationUtils.createJWT(account));
         cookie.setPath("/");
         cookie.setMaxAge(-1);
         response.addCookie(cookie);
+        return true;
     }
 
     @PostMapping(value = "/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
+    public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         String jwt = CookieUtils.getCookieValue(request.getCookies(), JWT_COOKIE_NAME);
         if (StringUtils.isEmpty(jwt)) {
-            return;
+            return true;
         }
 
         Cookie cookie = new Cookie(JWT_COOKIE_NAME, jwt);
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+        return true;
     }
 }
