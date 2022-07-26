@@ -10,7 +10,7 @@ import static com.findthinks.delay.job.share.lib.constants.SystemConstants.API_P
 
 @RestController
 @RequestMapping(value = API_PREFIX)
-public class JobController {
+public class JobInfoController {
 
     @Resource
     private IJobManager jobManager;

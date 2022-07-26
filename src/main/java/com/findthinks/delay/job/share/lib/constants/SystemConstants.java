@@ -7,13 +7,7 @@ public interface SystemConstants {
 
     int V_CPU_CORES = Runtime.getRuntime().availableProcessors();
 
-    int JOB_SUCCESS = 0;
-
-    int JOB_FAIL = -1;
-
-    String JOB_SUCCESS_MSG = "OK";
-
-    String JOB_FAIL_MSG = "ERROR";
-
     String API_PREFIX = "/api/v1";
+
+    String JWT_COOKIE_NAME = "AuthorizationT";
 }

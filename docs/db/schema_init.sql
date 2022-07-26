@@ -1,3 +1,12 @@
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `account` varchar(32) NOT NULL,
+ `passwd` varchar(32) NOT NULL,
+ `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `global_rec`;
 CREATE TABLE `global_rec` (
  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

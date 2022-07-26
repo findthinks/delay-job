@@ -33,8 +33,9 @@ public class HttpJobTrigger implements IJobTrigger {
         if (ret.getStatusCode().is2xxSuccessful()) {
             JSONObject body = ret.getBody();
             try {
-                return new TriggerResult(body.getInt("code"), body.getString("msg"));
+                return new TriggerResult(body.getString("code"), body.getString("msg"));
             } catch (JSONException e) {
+                LOG.error("Parse callback result error.", e);
                 throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
             }
         }

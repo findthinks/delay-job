@@ -1,5 +1,8 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.facade.grpc.cb.CallbackReq;
+import com.findthinks.delay.job.facade.grpc.cb.CallbackResp;
+import com.findthinks.delay.job.facade.grpc.cb.JobCallbackGrpc;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -11,8 +14,6 @@ import java.util.concurrent.ConcurrentMap;
 
 @Component("grpcJobTrigger")
 public class GrpcJobTrigger implements IJobTrigger {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GrpcJobTrigger.class);
 
     /** double check*/
     private Object locker = new Object();

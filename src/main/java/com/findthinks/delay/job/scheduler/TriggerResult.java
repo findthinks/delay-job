@@ -1,23 +1,25 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
+
 public class TriggerResult {
 
-    public static final TriggerResult SUCCESS = new TriggerResult(0, "OK");
+    public static final TriggerResult SUCCESS = new TriggerResult("ok", "Success");
 
-    private Integer code;
+    private String code;
 
     private String msg;
 
-    public TriggerResult(Integer code, String msg) {
+    public TriggerResult(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
     public boolean isSuccessful() {
-        return 0 == code;
+        return ExceptionEnum.SUCCESS.getCode().equals(code);
     }
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
