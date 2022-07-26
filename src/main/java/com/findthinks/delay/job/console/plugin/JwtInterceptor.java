@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private static List<String> SKIP_AUTH_URL=  Arrays.asList("/api/v1/submit/jobs", "/api/v1/submit/job" ,"/service", "/router", "/login", "/" ,"/favicon.ico","/index.html");
+    private static List<String> SKIP_AUTH_URL= Arrays.asList("/api/v1/submit/jobs", "/api/v1/submit/job" , "/login", "/" ,"/favicon.ico","/index.html");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -27,7 +27,8 @@ public class JwtInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI().replaceFirst(ctx, "");
         if (SKIP_AUTH_URL.contains(uri) ||
                 uri.startsWith("/assets") ||
-                uri.contains("/service-") ) {
+                uri.startsWith("/resource") ||
+                uri.startsWith("/_app.config.js")) {
             return true;
         }
         String jwt = CookieUtils.getCookieValue(request.getCookies(), SystemConstants.JWT_COOKIE_NAME);

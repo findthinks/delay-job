@@ -5,12 +5,12 @@ package com.findthinks.delay.job.share.lib.enums;
  */
 public enum ExceptionEnum {
 
-    SUCCESS("ok", "Success"),
-    INVALID_PARAMS("invalid_params", "Param error"),
-    AUTHENTICATION_NOT_EXIST("authentication_not_exist", "User not logged in"),
-    CANNOT_CANCEL_JOB("cannot_cancel_job", "Can not cancel job"),
-    JOB_IS_CANCEL("job_is_cancel", "Job is cancel"),
-    UNKNOWN_ERROR( "unknown_error", "Unknown exception");
+    SUCCESS("ok", "Success."),
+    INVALID_PARAMS("invalid_params", "Parameter error."),
+    AUTHENTICATION_NOT_EXIST("authentication_not_exist", "User do not login."),
+    CANNOT_CANCEL_JOB("cannot_cancel_job", "Cannot cancel job."),
+    JOB_IS_CANCEL("job_is_cancel", "Job is canceled."),
+    UNKNOWN_ERROR( "unknown_error", "Unknown error.");
 
     /** 枚举编码 */
     private String code;
