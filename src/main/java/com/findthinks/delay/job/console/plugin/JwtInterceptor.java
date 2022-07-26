@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private static List<String> SKIP_AUTH_URL=  Arrays.asList("/service", "/router", "/login", "/" ,"/favicon.ico","/index.html");
+    private static List<String> SKIP_AUTH_URL=  Arrays.asList("/api/v1/submit/jobs", "/api/v1/submit/job" ,"/service", "/router", "/login", "/" ,"/favicon.ico","/index.html");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
