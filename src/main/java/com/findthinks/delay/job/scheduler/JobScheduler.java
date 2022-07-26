@@ -428,7 +428,7 @@ public class JobScheduler {
         Job job = new Job();
         job.setId(generateJobId());
         job.setState(JobState.SUBMIT.getCode());
-        job.setTriggerTime(facade.getTriggerTime());
+        job.setTriggerTime(facade.getTriggerTime() * 1000);
         job.setOutJobNo(facade.getOutJobNo());
         job.setCallbackProtocol(CallbackProtocol.valueOf(facade.getCallbackProtocol()).getProtocol());
         job.setCallbackEndpoint(facade.getCallbackEndpoint());
