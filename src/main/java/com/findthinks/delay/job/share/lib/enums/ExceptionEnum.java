@@ -17,7 +17,7 @@ public enum ExceptionEnum {
     /** 枚举描述 */
     private String desc;
 
-    private ExceptionEnum(String code, String desc) {
+    ExceptionEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
