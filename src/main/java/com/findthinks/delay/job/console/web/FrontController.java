@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class FrontController {
     @RequestMapping(value = {
             "/login",
+            "/dashboard/analysis",
+            "/dashboard/workbench",
+            "/cluster/index",
+            "/shard/index",
+            "/job/index",
+            "/about/index",
             "/"})
     public String front() {
         return "forward:/index.html";
