@@ -6,6 +6,9 @@ import com.findthinks.delay.job.scheduler.JobScheduler;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.API_PREFIX;
 
 @RestController
@@ -19,9 +22,9 @@ public class JobInfoController {
     private JobScheduler jobScheduler;
 
     @GetMapping(value = "/job/{outJobNo}")
-    public JobInfoResp getJobInfo(@PathVariable("outJobNo") String outJobNo) {
+    public List<JobInfoResp> getJobInfo(@PathVariable("outJobNo") String outJobNo) {
         Job job = jobManager.loadJob(outJobNo);
-        return null == job ? null: convert(job);
+        return null == job ? null: Arrays.asList(convert(job));
     }
 
     @PutMapping(value = "/job/{outJobNo}/cancel")
