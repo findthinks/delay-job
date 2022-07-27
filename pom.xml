@@ -19,6 +19,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <jaxb-core.version>2.3.0</jaxb-core.version>
+        <activation.version>1.1.1</activation.version>
         <mysql.connector>8.0.24</mysql.connector>
         <commons.lang.version>2.6</commons.lang.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version><javax.persistence.version>1.0.2</javax.persistence.version>
@@ -37,22 +39,21 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
-            <version>2.3.0</version>
+            <version>${javax-jaxb.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
-            <version>2.3.0</version>
+            <version>${jaxb-core.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <version>${activation.version}</version>
         </dependency>
 
         <dependency>
