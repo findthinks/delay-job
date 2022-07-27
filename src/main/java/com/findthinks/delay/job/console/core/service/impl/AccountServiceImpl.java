@@ -21,11 +21,11 @@ public class AccountServiceImpl implements AccountService {
     public void authentication(AccountInfo info) {
         List<Account> select = accountExtMapper.loadAccount(info.getAccount());
         if (CollectionUtils.isEmpty(select)) {
-            throw new DelayJobException(ExceptionEnum.INVALID_PARAMS, "账号不存在");
+            throw new DelayJobException(ExceptionEnum.USERNAME_PWD_ERROR);
         }
         Account persist = select.get(0);
         if (!persist.getPasswd().equals(info.getPwd())) {
-            throw new DelayJobException(ExceptionEnum.INVALID_PARAMS, "密码错误");
+            throw new DelayJobException(ExceptionEnum.USERNAME_PWD_ERROR);
         }
     }
 }

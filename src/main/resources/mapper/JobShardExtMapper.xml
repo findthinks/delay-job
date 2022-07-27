@@ -28,7 +28,7 @@
         <if test="schedulerId != null and schedulerId != ''">
             AND cur_server = #{schedulerId}
         </if>
-        ORDER BY id
+        ORDER BY id ASC
     </select>
 
     <select id="selectJobShardCount" resultType="int">
