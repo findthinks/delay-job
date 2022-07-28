@@ -505,7 +505,7 @@ public class JobScheduler {
     private Integer getOneJobShardId() {
         List<Integer> shardIds = getJobShardIds();
         if (CollectionUtils.isEmpty(shardIds)) {
-            throw new DelayJobException(NO_AVAILABLE_JOB_SHARD, "无可用任务分片，请先创建或启用任务分片");
+            throw new DelayJobException(NO_AVAILABLE_JOB_SHARD);
         }
         return queueSelector.chooseOne(shardIds);
     }
