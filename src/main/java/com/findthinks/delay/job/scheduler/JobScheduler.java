@@ -3,7 +3,6 @@ package com.findthinks.delay.job.scheduler;
 import com.findthinks.delay.job.share.id.KeyGeneratorManager;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.repository.entity.*;
-import com.findthinks.delay.job.share.lib.exception.JobCanceledException;
 import com.findthinks.delay.job.share.lib.exception.ParamsException;
 import com.findthinks.delay.job.share.lib.utils.CollectionUtils;
 import com.findthinks.delay.job.share.lib.utils.CronExpression;
@@ -23,8 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
-import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.CANNOT_CANCEL_JOB;
-import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.JOB_IS_CANCEL;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.*;
 
 @Component
 public class JobScheduler {
@@ -34,8 +32,6 @@ public class JobScheduler {
     private static final String JOB_ID_GENERATE_KEY = "JOB_ID";
 
     private static final int CLOSE_HANDLER_TIMEOUT = 60;
-
-    private static final int DEFAULT_QUEUE_NUM = 0;
 
     private static final int BATCH_JOBS_SIZE = 100;
 
@@ -509,7 +505,7 @@ public class JobScheduler {
     private Integer getOneJobShardId() {
         List<Integer> shardIds = getJobShardIds();
         if (CollectionUtils.isEmpty(shardIds)) {
-            return DEFAULT_QUEUE_NUM;
+            throw new DelayJobException(NO_AVAILABLE_JOB_SHARD, "无可用任务分片，请先创建或启用任务分片");
         }
         return queueSelector.chooseOne(shardIds);
     }

@@ -2,7 +2,6 @@ package com.findthinks.delay.job.facade.http;
 
 import com.findthinks.delay.job.scheduler.FacadeJob;
 import com.findthinks.delay.job.scheduler.JobScheduler;
-import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.lib.result.FoxResult;
 import org.slf4j.Logger;
