@@ -211,7 +211,7 @@ public class JobScheduler {
         this.scheduler.schedule(new HeartBeatJob(), 0, TimeUnit.SECONDS);
 
         // 启动延迟任务扫描
-        this.scheduler.schedule(new LoadDelayJob(), 0, TimeUnit.MILLISECONDS);
+        this.scheduler.schedule(new LoadDelayJob(true), 0, TimeUnit.MILLISECONDS);
 
         // 启动任务状态同步到DB
         this.jobProcessor.startSyncCompletionJobToDB();
@@ -529,7 +529,33 @@ public class JobScheduler {
         this.jobShardIds = jobShardIds;
     }
 
+    private class LoadDelayInternalJob implements Runnable {
+        private final long triggerEndTime;
+
+        private final int maxJobNums;
+
+        public LoadDelayInternalJob(long triggerEndTime, int maxJobNums) {
+            this.triggerEndTime = triggerEndTime;
+            this.maxJobNums = maxJobNums;
+        }
+
+        @Override
+        public void run() {
+            /** 加载任务*/
+            scheduleDelayJob(triggerEndTime, maxJobNums);
+
+            /** 释放被其它节点申请的任务 */
+            releaseJobShardReqByOther();
+        }
+    }
+
     private class LoadDelayJob implements Runnable {
+        private volatile boolean first;
+
+        public LoadDelayJob(boolean first) {
+            this.first = first;
+        }
+
         @Override
         public void run() {
             Date current = new Date();
@@ -547,14 +573,19 @@ public class JobScheduler {
                 //计算下次调度时间，并加载延迟任务到内存排队
                 CronExpression cron = new CronExpression(loadJobCron);
                 nextScheduleTime = cron.getNextValidTimeAfter(current).getTime();
-                scheduleDelayJob(nextScheduleTime, loadMaxJobNums);
 
-                /** 释放被其它节点申请的任务 */
-                releaseJobShardReqByOther();
+                /** 首次加载直接执行 */
+                if (first) {
+                    new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums).run();
+                    first = false;
+                }
             } catch (Throwable thrown) {
                 LOG.error(thrown.getMessage(), thrown);
             } finally {
-                //尽可能保证工作节点时间同步，让各个节点能同时触发任务调度
+                /** 从DB加载数据时本身存在一定的延时，提前加载提供精确性 */
+                scheduler.schedule(new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums), nextScheduleTime - 10 * 1000 - current.getTime(), TimeUnit.MILLISECONDS)
+
+                /** 维护调度周期信息 */
                 scheduler.schedule(this, nextScheduleTime - current.getTime(), TimeUnit.MILLISECONDS);
             }
         }

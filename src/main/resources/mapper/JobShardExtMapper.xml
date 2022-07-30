@@ -60,7 +60,8 @@
         UPDATE
             job_shard
         SET
-            state = #{state}
+            state = #{state},
+            cur_server = -1
         WHERE
             id = #{id}
     </update>
