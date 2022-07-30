@@ -76,7 +76,7 @@ public class KeyGeneratorManager {
     }
 
     private class KeyGeneratorImpl implements KeyGenerator {
-        private static final int FIRE_BUF_THRESHOLD_RATIO = 90;
+        private static final int FIRE_BUF_THRESHOLD_RATIO = 80;
         private final Lock keyLocker = new ReentrantLock();
         private volatile long fireThreshold;
         private boolean switched = false;
