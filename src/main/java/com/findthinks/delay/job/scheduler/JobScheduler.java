@@ -278,6 +278,9 @@ public class JobScheduler {
         /** 修改JobShard为数据转移中，此时改分片停止接受任务，且下个调度周期开始将停止任务消费 */
         jobShardManager.updateJobShardState(jobShardId, JobShardState.TRANSLATING.getCode());
 
+        /** 同步最新可用分片到内存，确保不会将任务迁移到停用分片上 */
+        reSyncJobShards();
+
         /** 开始迁移当前分片任务到其它分片 */
         executor.execute(() -> translateJobShardToOtherShard(jobShardId));
     }
