@@ -26,7 +26,7 @@ scheduler:
   heartbeat-period: 5
   job:
     load-cron: 0 0/1 * * * ?
-    load-max-nums: 5000
+    load-max-nums: 15000
     allow-cancel: false
     repeat-check-delta: 5
     state-sync-period: 10
