@@ -145,9 +145,7 @@ public class JobProcessor {
      * 补偿失败任务
      */
     public void retryOneJob(Job job) {
-        RetryJob retry = new RetryJob(job);
-        retry.job.setState(JobState.RETRY.getCode());
-        retryExecutor.execute(retry);
+        retryExecutor.execute(new RetryJob(job));
     }
 
     /**
