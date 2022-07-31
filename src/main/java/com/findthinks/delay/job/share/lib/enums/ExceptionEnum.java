@@ -12,6 +12,7 @@ public enum ExceptionEnum {
     CANNOT_CANCEL_JOB("cannot_cancel_job", "cannot cancel job"),
     JOB_IS_CANCEL("job_is_cancel", "job is cancel"),
     NO_AVAILABLE_JOB_SHARD("no_available_job_shard","no available job shard"),
+    OUT_JOB_NO_IS_EXIST("out_job_no_is_exist", "out job number is exist"),
     UNKNOWN_ERROR( "unknown_error", "unknown error");
 
     /** 枚举编码 */

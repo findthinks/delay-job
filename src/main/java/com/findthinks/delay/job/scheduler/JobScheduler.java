@@ -653,7 +653,7 @@ public class JobScheduler {
                 }
 
                 Long startTime = currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
-                List<JobShard> shards = jobShardManager.loadEnabledJobShards();
+                List<JobShard> shards = jobShardManager.loadAllJobShards();
                 if (CollectionUtils.isEmpty(shards)) {
                     return;
                 }

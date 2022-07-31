@@ -1,5 +1,6 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.repository.entity.GlobalRec;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.repository.entity.JobSegTrigger;
@@ -11,6 +12,7 @@ import com.findthinks.delay.job.share.lib.utils.CollectionUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -18,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.OUT_JOB_NO_IS_EXIST;
 
 /**
  * @author YuBo
@@ -127,17 +130,24 @@ public class JobManager implements IJobManager {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int createJob(Job job) {
-        int effect = jobExtMapper.insertJob(job);
+        try {
+            int effect = jobExtMapper.insertJob(job);
 
-        //查询全局信息记录
-        GlobalRec rec = new GlobalRec();
-        rec.setOutJobNo(job.getOutJobNo());
-        rec.setJobShardId(job.getJobShardId());
-        rec.setTriggerTime(job.getTriggerTime());
-        rec.setJobId(job.getId());
-        rec.setGmtCreate(new Date());
-        globalRecExtMapper.insertRec(rec);
-        return effect;
+            //查询全局信息记录
+            GlobalRec rec = new GlobalRec();
+            rec.setOutJobNo(job.getOutJobNo());
+            rec.setJobShardId(job.getJobShardId());
+            rec.setTriggerTime(job.getTriggerTime());
+            rec.setJobId(job.getId());
+            rec.setGmtCreate(new Date());
+            globalRecExtMapper.insertRec(rec);
+            return effect;
+        } catch (Exception ex) {
+            if (ex instanceof DuplicateKeyException) {
+                throw new DelayJobException(OUT_JOB_NO_IS_EXIST, "OutJobNo:" + job.getOutJobNo());
+            }
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
