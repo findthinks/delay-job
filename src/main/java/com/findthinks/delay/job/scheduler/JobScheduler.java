@@ -78,10 +78,10 @@ public class JobScheduler {
     @Value("${scheduler.job.retry-period:10}")
     private long retryPeriod;
 
-    @Value("${scheduler.job.retry-max-nums:1000}")
+    @Value("${scheduler.job.retry-max-nums:10000}")
     private int retryMaxJobNums;
 
-    @Value("${scheduler.job.retry-seg-nums:3}")
+    @Value("${scheduler.job.retry-seg-nums:30}")
     private int retrySegNums;
 
     @Value("${scheduler.job.load-cron}")
@@ -546,6 +546,8 @@ public class JobScheduler {
         public void run() {
             /** 加载任务*/
             scheduleDelayJob(triggerEndTime, maxJobNums);
+
+            LOG.info("Complete load job.");
         }
     }
 
