@@ -141,7 +141,9 @@ public class JobProcessor {
      * 补偿失败任务
      */
     public void retryOneJob(Job job) {
-        retryExecutor.execute(new RetryJob(job));
+        RetryJob retry = new RetryJob(job);
+        retry.job.setState(JobState.RETRY.getCode());
+        retryExecutor.execute(retry);
     }
 
     /**
@@ -286,8 +288,8 @@ public class JobProcessor {
                 }
             } else if (r instanceof RetryJob) {
                 RetryJob retry = (RetryJob) r;
-                JobState destState = null != t ? JobState.SUCCESS : retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
-                if (jobManager.modifyJobState(retry.job, destState.getCode(), JobState.RETRY.getCode(), retry.job.getRetryTimes() + 1)) {
+                JobState destState = null == t ? JobState.SUCCESS : retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
+                if (jobManager.modifyJobState(retry.job, destState.getCode(), retry.job.getState(), retry.job.getRetryTimes() + 1)) {
                     retry.job.setState(destState.getCode());
                 }
             }
