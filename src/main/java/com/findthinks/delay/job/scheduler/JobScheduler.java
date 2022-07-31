@@ -650,7 +650,13 @@ public class JobScheduler {
                 if (!isLeader(getSchedulerInfo().getId(), schedulers)) {
                     return;
                 }
-                if (currentScheduleTime <=0 || nextScheduleTime <= 0) {
+
+                /** 已经有任务在重试中，当前重试调度直接结束 */
+                if (jobProcessor.getRetryingJobCount() > 0) {
+                    return;
+                }
+
+                if (currentScheduleTime <= 0 || nextScheduleTime <= 0) {
                     return;
                 }
 

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.*;
-
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
 
 @Component
@@ -42,7 +41,7 @@ public class JobProcessor {
     private final ExecutorService executor = new DelayThreadPoolExecutor(EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Executor-%d").setDaemon(true).build());
 
     /** 补偿处理器 */
-    private final ExecutorService retryExecutor = new DelayThreadPoolExecutor(RETRY_EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Retry-%d").setDaemon(true).build());
+    private final DelayThreadPoolExecutor retryExecutor = new DelayThreadPoolExecutor(RETRY_EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Retry-%d").setDaemon(true).build());
 
     /** 异步更新数据库任务状态 */
     private final ExecutorService stateExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Job-State-Sync-%d").setDaemon(true).build());
@@ -81,7 +80,6 @@ public class JobProcessor {
      */
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
-        LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
         if (jobs.size() > 0) {
             translateToMap(jobs).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
         }
@@ -146,6 +144,14 @@ public class JobProcessor {
      */
     public void retryOneJob(Job job) {
         retryExecutor.execute(new RetryJob(job));
+    }
+
+    /**
+     * 获取正在重试的任务数量
+     * @return
+     */
+    public long getRetryingJobCount() {
+        return retryExecutor.getQueue().size();
     }
 
     /**
@@ -283,7 +289,6 @@ public class JobProcessor {
 
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
-            System.out.println("");
             if (r instanceof InternalDelayJob) {
                 InternalDelayJob wrapperJob = (InternalDelayJob) r;
                 if (isSubmit(wrapperJob)) {
