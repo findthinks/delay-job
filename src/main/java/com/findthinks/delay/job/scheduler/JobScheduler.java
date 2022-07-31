@@ -87,6 +87,9 @@ public class JobScheduler {
     @Value("${scheduler.job.load-cron}")
     private String loadJobCron;
 
+    @Value("${scheduler.job.advance-seconds:10}")
+    private int loadJobAdvanceSeconds;
+
     @Value("${scheduler.job.load-max-nums:5000}")
     private int loadMaxJobNums;
 
@@ -550,10 +553,18 @@ public class JobScheduler {
     }
 
     private class LoadDelayJob implements Runnable {
+        private CronExpression cron;
+
         private volatile boolean first;
 
         public LoadDelayJob(boolean first) {
             this.first = first;
+            try {
+                cron = new CronExpression(loadJobCron);
+            } catch (Exception ex) {
+                cron = null;
+                LOG.error("Error load job cron: {}.", loadJobCron);
+            }
         }
 
         @Override
@@ -570,8 +581,8 @@ public class JobScheduler {
                 //传递调度起始时间到执行器
                 jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
 
+
                 //计算下次调度时间，并加载延迟任务到内存排队
-                CronExpression cron = new CronExpression(loadJobCron);
                 nextScheduleTime = cron.getNextValidTimeAfter(current).getTime();
 
                 /** 首次加载直接执行 */
@@ -579,16 +590,22 @@ public class JobScheduler {
                     new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums).run();
                     first = false;
                 }
+
+                LOG.info("Current schedule period:[{} ~ {}]", currentScheduleTime, nextScheduleTime);
             } catch (Throwable thrown) {
                 LOG.error(thrown.getMessage(), thrown);
             } finally {
                 /** 从DB加载数据时本身存在一定的延时，提前加载提供精确性 */
-                scheduler.schedule(new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums), nextScheduleTime - 10 * 1000 - current.getTime(), TimeUnit.MILLISECONDS)
+                scheduler.schedule(new LoadDelayInternalJob(getNextValidTimeAfter(cron, new Date(nextScheduleTime)), loadMaxJobNums), nextScheduleTime - loadJobAdvanceSeconds * 1000 - current.getTime(), TimeUnit.MILLISECONDS);
 
                 /** 维护调度周期信息 */
                 scheduler.schedule(this, nextScheduleTime - current.getTime(), TimeUnit.MILLISECONDS);
             }
         }
+    }
+
+    private long getNextValidTimeAfter(CronExpression cron, Date current) {
+        return cron.getNextValidTimeAfter(current).getTime();
     }
 
     private class HeartBeatJob implements Runnable {
