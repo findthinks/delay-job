@@ -80,6 +80,7 @@ public class JobProcessor {
      */
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
+        LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
         if (jobs.size() > 0) {
             LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
             translateToMap(jobs).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
