@@ -45,7 +45,7 @@
                 </foreach>
             <![CDATA[
             AND trigger_time_start >= #{timeStart}
-            AND trigger_time_start < #{timeEnd}
+            AND trigger_time_end< #{timeEnd}
             ]]>
             AND state != 40
     </select>

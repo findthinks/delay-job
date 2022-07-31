@@ -33,7 +33,7 @@ scheduler:
     translate-max-nums: 100
     retry-period: 10
     retry-max-nums: 10000
-    retry-seg-nums: 30
+    retry-seg-nums: 60
 logging:
   file:
     name: classpath:logback.xml

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
 
@@ -34,6 +33,8 @@ public class JobProcessor {
 
     private static final int JOB_STATE_UPDATE_TIMEOUT = 1000;
 
+    private static final int RETRY_EXECUTOR_NUM = 1;
+
     /** 延时调度器 */
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(SCHEDULER_NUM, new ThreadFactoryBuilder().setNameFormat("Delay-Job-%d").setDaemon(true).build());
 
@@ -41,7 +42,7 @@ public class JobProcessor {
     private final ExecutorService executor = new DelayThreadPoolExecutor(EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Executor-%d").setDaemon(true).build());
 
     /** 补偿处理器 */
-    private final ExecutorService retryExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Job-Retry-%d").setDaemon(true).build());
+    private final ExecutorService retryExecutor = new DelayThreadPoolExecutor(RETRY_EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Retry-%d").setDaemon(true).build());
 
     /** 异步更新数据库任务状态 */
     private final ExecutorService stateExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Job-State-Sync-%d").setDaemon(true).build());
@@ -82,7 +83,6 @@ public class JobProcessor {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
         LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
         if (jobs.size() > 0) {
-            LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
             translateToMap(jobs).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
         }
     }
@@ -283,6 +283,7 @@ public class JobProcessor {
 
         @Override
         protected void afterExecute(Runnable r, Throwable t) {
+            System.out.println("");
             if (r instanceof InternalDelayJob) {
                 InternalDelayJob wrapperJob = (InternalDelayJob) r;
                 if (isSubmit(wrapperJob)) {

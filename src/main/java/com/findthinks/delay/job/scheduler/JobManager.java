@@ -98,7 +98,7 @@ public class JobManager implements IJobManager {
 
     @Override
     public boolean modifyJobState(Job job, int newState, int oldState, int retryTimes) {
-        Map<String, Object> parameters = new HashMap<>(4);
+        Map<String, Object> parameters = new HashMap<>(8);
         parameters.put("id", job.getId());
         parameters.put("jobShardId", job.getJobShardId());
         parameters.put("newState", newState);

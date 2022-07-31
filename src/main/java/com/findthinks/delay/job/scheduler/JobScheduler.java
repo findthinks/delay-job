@@ -645,8 +645,6 @@ public class JobScheduler {
     private class RetryJob implements Runnable {
         @Override
         public void run() {
-            LOG.info("Job retry start...");
-
             try {
                 List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
                 if (!isLeader(getSchedulerInfo().getId(), schedulers)) {
