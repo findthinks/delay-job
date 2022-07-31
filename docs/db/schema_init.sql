@@ -1,11 +1,15 @@
+CREATE DATABASE `delay_job` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
 DROP TABLE IF EXISTS `account`;
 CREATE TABLE `account` (
- `id` int(11) NOT NULL AUTO_INCREMENT,
- `account` varchar(32) NOT NULL,
- `passwd` varchar(32) NOT NULL,
- `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`account` varchar(32) NOT NULL,
+`passwd` varchar(32) NOT NULL,
+`modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `account` (`id`, `account`, `passwd`, `modify_time`) VALUES (1, 'delay', '7243f8be75253afbadf7477867021f8b', '2022-07-29 00:43:51');
 
 DROP TABLE IF EXISTS `global_rec`;
 CREATE TABLE `global_rec` (
@@ -55,7 +59,7 @@ CREATE TABLE `scheduler_info` (
  `uuid` varchar(32) NOT NULL COMMENT '调度器ID',
  `last_heartbeat_time` bigint(22) DEFAULT NULL COMMENT '最后心跳时间',
  `register` varchar(5) NOT NULL COMMENT '注册信息',
- `ip` varchar(25) DEFAULT NULL COMMENT '调度器ip'
+ `ip` varchar(25) DEFAULT NULL COMMENT '调度器ip',
  PRIMARY KEY (`id`),
  KEY `idx_scheduler_uuid` (`uuid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
