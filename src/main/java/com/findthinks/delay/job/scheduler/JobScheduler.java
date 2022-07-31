@@ -546,9 +546,6 @@ public class JobScheduler {
         public void run() {
             /** 加载任务*/
             scheduleDelayJob(triggerEndTime, maxJobNums);
-
-            /** 释放被其它节点申请的任务 */
-            releaseJobShardReqByOther();
         }
     }
 
@@ -581,7 +578,6 @@ public class JobScheduler {
                 //传递调度起始时间到执行器
                 jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
 
-
                 //计算下次调度时间，并加载延迟任务到内存排队
                 nextScheduleTime = cron.getNextValidTimeAfter(current).getTime();
 
@@ -590,6 +586,9 @@ public class JobScheduler {
                     new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums).run();
                     first = false;
                 }
+
+                /** 释放被其它节点申请的任务 */
+                releaseJobShardReqByOther();
 
                 LOG.info("Current schedule period:[{} ~ {}]", currentScheduleTime, nextScheduleTime);
             } catch (Throwable thrown) {
