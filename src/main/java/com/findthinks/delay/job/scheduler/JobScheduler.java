@@ -643,6 +643,8 @@ public class JobScheduler {
     private class RetryJob implements Runnable {
         @Override
         public void run() {
+            LOG.info("Job retry start...");
+
             try {
                 List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
                 if (!isLeader(getSchedulerInfo().getId(), schedulers)) {
@@ -670,6 +672,11 @@ public class JobScheduler {
                         jobSegTriggerFlowManager.updateTaskFlowState(seg, TriggerFLowState.COMPLETE);
                     }
                 });
+
+                for (JobSegTriggerFlow segment : segments) {
+                    LOG.info("Retry seg: {} ~ {}.", segment.getTriggerTimeStart(), segment.getTriggerTimeEnd());
+                }
+                LOG.info("Job retry end");
             } catch (Throwable thrown) {
                 LOG.error(thrown.getMessage(), thrown);
             } finally {
