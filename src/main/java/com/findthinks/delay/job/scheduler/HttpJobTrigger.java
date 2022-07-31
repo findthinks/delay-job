@@ -5,14 +5,19 @@ import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import javax.annotation.Resource;
 
 @Component("httpJobTrigger")
@@ -77,6 +82,24 @@ public class HttpJobTrigger implements IJobTrigger {
 
         public void setJobInfo(String jobInfo) {
             this.jobInfo = jobInfo;
+        }
+    }
+
+    @Configuration
+    public class HttpJobTriggerConfig {
+        @Value("${scheduler.job.trigger-connection-timeout:2}")
+        private int connectTimeout;
+        @Value("${scheduler.job.trigger-read-timeout:2}")
+        private int readTimeout;
+
+        @Bean
+        public RestTemplate restTemplate() {
+            SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+            requestFactory.setConnectTimeout(connectTimeout * 1000);
+            requestFactory.setReadTimeout(readTimeout * 1000);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.setRequestFactory(requestFactory);
+            return restTemplate;
         }
     }
 }

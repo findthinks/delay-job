@@ -12,7 +12,7 @@ public class FrontController {
             "/login",
             "/dashboard/analysis",
             "/dashboard/workbench",
-            "/cluster/index",
+            "/scheduler/index",
             "/shard/index",
             "/job/index",
             "/about/index",
