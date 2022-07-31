@@ -11,7 +11,7 @@
             `trigger_time` bigint(21) NOT NULL COMMENT '计划触发时间',
             `state` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '任务状态:10-提交 20-重试中 30-成功 40-失败 50-取消',
             `retry_times` tinyint(1) unsigned zerofill NOT NULL COMMENT '重试次数',
-            `callback_protocol` tinyint(1) NOT NULL COMMENT '回调协议:0-HTTP 5-GRPC',
+            `callback_protocol` tinyint(1) NOT NULL COMMENT '回调协议:0-HTTP 5-GRPC 20-LOG',
             `callback_endpoint` varchar(64) NOT NULL COMMENT '回调地址',
             `job_info` varchar(128) DEFAULT NULL COMMENT 'JOB附加参数',
             `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
