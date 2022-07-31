@@ -546,8 +546,6 @@ public class JobScheduler {
         public void run() {
             /** 加载任务*/
             scheduleDelayJob(triggerEndTime, maxJobNums);
-
-            LOG.info("Complete load job.");
         }
     }
 
@@ -678,11 +676,6 @@ public class JobScheduler {
                         jobSegTriggerFlowManager.updateTaskFlowState(seg, TriggerFLowState.COMPLETE);
                     }
                 });
-
-                for (JobSegTriggerFlow segment : segments) {
-                    LOG.info("Retry seg: {} ~ {}.", segment.getTriggerTimeStart(), segment.getTriggerTimeEnd());
-                }
-                LOG.info("Job retry end");
             } catch (Throwable thrown) {
                 LOG.error(thrown.getMessage(), thrown);
             } finally {
