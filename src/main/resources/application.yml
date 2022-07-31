@@ -34,6 +34,8 @@ scheduler:
     retry-period: 10
     retry-max-nums: 10000
     retry-seg-nums: 60
+    trigger-connection-timeout: 2
+    trigger-read-timeout: 2
 logging:
   file:
     name: classpath:logback.xml

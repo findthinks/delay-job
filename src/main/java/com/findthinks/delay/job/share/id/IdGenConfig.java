@@ -3,7 +3,6 @@ package com.findthinks.delay.job.share.id;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class IdGenConfig {
@@ -21,10 +20,5 @@ public class IdGenConfig {
     @Bean
     public KeyGeneratorManager keyGeneratorManager(SequenceKeyService sequenceKeyService) {
         return new KeyGeneratorManager(sequenceKeyService);
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 }
