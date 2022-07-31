@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
+
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
 
 @Component
@@ -79,6 +81,7 @@ public class JobProcessor {
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
         if (jobs.size() > 0) {
+            LOG.info("Total jobs-------------------->:{}", jobs.stream().mapToInt(jb->jb.size()).sum());
             translateToMap(jobs).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
         }
     }
