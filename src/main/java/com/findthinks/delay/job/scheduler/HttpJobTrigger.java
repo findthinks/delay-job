@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
 import javax.annotation.Resource;
 
 @Component("httpJobTrigger")
@@ -87,9 +86,9 @@ public class HttpJobTrigger implements IJobTrigger {
 
     @Configuration
     public class HttpJobTriggerConfig {
-        @Value("${scheduler.job.trigger-connection-timeout:2}")
+        @Value("${scheduler.job.http-trigger-connect-timeout:1}")
         private int connectTimeout;
-        @Value("${scheduler.job.trigger-read-timeout:2}")
+        @Value("${scheduler.job.http-trigger-read-timeout:1}")
         private int readTimeout;
 
         @Bean

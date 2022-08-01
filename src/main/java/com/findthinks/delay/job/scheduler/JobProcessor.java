@@ -81,7 +81,12 @@ public class JobProcessor {
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
         if (jobs.size() > 0) {
-            translateToMap(jobs).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+            translateToMap(jobs).entrySet().forEach(entry -> {
+                scheduler.schedule(
+                        new DelayJob(entry.getValue()),
+                        entry.getKey() * 1000 - System.currentTimeMillis(),
+                        TimeUnit.MILLISECONDS);
+            });
         }
     }
 
@@ -93,7 +98,10 @@ public class JobProcessor {
         if (job.getTriggerTime() <= System.currentTimeMillis()) {
             executor.execute(new InternalDelayJob(job));
         } else {
-            scheduler.schedule(new JobProcessor.DelayJob(Arrays.asList(job)), job.getTriggerTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            scheduler.schedule(
+                    new JobProcessor.DelayJob(Arrays.asList(job)),
+                    job.getTriggerTime() - System.currentTimeMillis(),
+                    TimeUnit.MILLISECONDS);
         }
     }
 
@@ -102,7 +110,12 @@ public class JobProcessor {
      * @param jobs
      */
     public void scheduleJobs(List<Job> jobs) {
-        translateToMap(Arrays.asList(jobs)).entrySet().forEach(entry -> scheduler.schedule(new DelayJob(entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+        translateToMap(Arrays.asList(jobs)).entrySet().forEach(entry -> {
+            scheduler.schedule(
+                    new DelayJob(entry.getValue()),
+                    entry.getKey() * 1000 - System.currentTimeMillis(),
+                    TimeUnit.MILLISECONDS);
+        });
     }
 
     /**
@@ -112,21 +125,19 @@ public class JobProcessor {
      */
     private TreeMap<Long, List<Job>> translateToMap(List<List<Job>> jobs) {
         final TreeMap<Long, List<Job>> mappedJobs = new TreeMap<>();
-        jobs.forEach(internalJobs -> internalJobs.forEach(job -> {
-            //到期任务直接触发
+        jobs.stream().flatMap(List::stream).forEach(job -> {
             if (job.getTriggerTime() <= System.currentTimeMillis()) {
                 executor.execute(new InternalDelayJob(job));
             } else {
-                // 按秒分组
                 long triggerTimeSeconds = job.getTriggerTime() / 1000;
-                List<Job> secondJobs = mappedJobs.get(triggerTimeSeconds);
-                if (null == secondJobs) {
-                    secondJobs = new ArrayList<>();
-                    mappedJobs.put(triggerTimeSeconds, secondJobs);
+                List<Job> secondsJobs = mappedJobs.get(triggerTimeSeconds);
+                if (null == secondsJobs) {
+                    secondsJobs = new ArrayList<>();
+                    mappedJobs.put(triggerTimeSeconds, secondsJobs);
                 }
-                secondJobs.add(job);
+                secondsJobs.add(job);
             }
-        }));
+        });
         return mappedJobs;
     }
 
@@ -187,7 +198,6 @@ public class JobProcessor {
             if (!resp.isSuccessful()) {
                 throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, resp.getMsg());
             }
-            LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000);
         } catch (Exception ex) {
             LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger error.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000, ex);
         }
@@ -297,7 +307,11 @@ public class JobProcessor {
             } else if (r instanceof RetryJob) {
                 RetryJob retry = (RetryJob) r;
                 JobState destState = null == t ? JobState.SUCCESS : retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
-                if (jobManager.modifyJobState(retry.job, destState.getCode(), retry.job.getState(), retry.job.getRetryTimes() + 1)) {
+                if (jobManager.modifyJobState(
+                        retry.job,
+                        destState.getCode(),
+                        retry.job.getState(),
+                        retry.job.getRetryTimes() + 1)) {
                     retry.job.setState(destState.getCode());
                 }
             }
