@@ -8,11 +8,11 @@ import java.util.List;
  */
 public interface IJobSegTriggerFlowManager {
 
-    List<JobSegTriggerFlow> loadRecentlyFlows(int shards, long minTriggerTime);
+    List<JobSegTriggerFlow> loadRecentlySegments(int shards, long minTriggerTime);
 
-    List<JobSegTriggerFlow> loadRetryFlows(List<Integer> shards, Long startTime, Long endTime);
+    List<JobSegTriggerFlow> loadRetrySegments(List<Integer> shards, Long startTime, Long endTime);
 
-    boolean updateTaskFlowState(JobSegTriggerFlow flow, TriggerFLowState dst);
+    boolean updateSegmentState(JobSegTriggerFlow flow, TriggerFLowState dst);
 
     int insertSegTriggerFlow(JobSegTriggerFlow flow);
 }

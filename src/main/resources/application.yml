@@ -23,19 +23,21 @@ grpc:
     num: 50
 scheduler:
   judge-dead: 15
-  heartbeat-period: 5
+  cron:
+    heartbeat: 2,7,12,17,22,27,32,37,42,47,52,57 * * * * ?
   job:
-    load-cron: 0 0/1 * * * ?
+    cron:
+      load: 0 0/1 * * * ?
+      retry: 5,15,25,35,45,55 * * * * ?
+      sync-state: 5,15,25,35,45,55 * * * * ?
     load-max-nums: 15000
     allow-cancel: false
     repeat-check-delta: 5
-    state-sync-period: 10
     translate-max-nums: 100
-    retry-period: 10
     retry-max-nums: 10000
     retry-seg-nums: 60
-    trigger-connection-timeout: 2
-    trigger-read-timeout: 2
+    http-trigger-connect-timeout: 2
+    http-trigger-read-timeout: 2
 logging:
   file:
     name: classpath:logback.xml

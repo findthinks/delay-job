@@ -69,26 +69,14 @@ public class JobScheduler {
     @Value("${scheduler.judge-dead:15}")
     private int judgeDeadInternal;
 
-    @Value("${scheduler.heartbeat-period:5}")
-    private long heartBeatPeriod;
-
-    @Value("${scheduler.job.state-sync-period:10}")
-    private long stateSyncPeriod;
-
-    @Value("${scheduler.job.retry-period:10}")
-    private long retryPeriod;
-
     @Value("${scheduler.job.retry-max-nums:10000}")
     private int retryMaxJobNums;
 
     @Value("${scheduler.job.retry-seg-nums:30}")
     private int retrySegNums;
 
-    @Value("${scheduler.job.load-cron}")
-    private String loadJobCron;
-
-    @Value("${scheduler.job.advance-seconds:10}")
-    private int loadJobAdvanceSeconds;
+    @Value("${scheduler.job.cron.load}")
+    private CronExpression jobLoadCron;
 
     @Value("${scheduler.job.load-max-nums:5000}")
     private int loadMaxJobNums;
@@ -207,23 +195,23 @@ public class JobScheduler {
     }
 
     public void start() {
-        // 注册调度器
+        /** 注册调度器 */
         reRegister(createSchedulerInfo());
 
-        // 启动心跳检查
-        this.scheduler.schedule(new HeartBeatJob(), 0, TimeUnit.SECONDS);
+        /** 初始一次心跳 */
+        doHeartbeat();
 
-        // 启动延迟任务扫描
-        this.scheduler.schedule(new LoadDelayJob(true), 0, TimeUnit.MILLISECONDS);
+        /** 初始一次任务加载 */
+        doLoadDelayJob();
 
-        // 启动任务状态同步到DB
-        this.jobProcessor.startSyncCompletionJobToDB();
+        /** 初始一次状态同步 */
+        doStateSync();
 
-        // 启动状态同步任务
-        this.scheduler.schedule(new StateJob(), 0, TimeUnit.SECONDS);
+        /** 初始一次任务补偿 */
+        doRetry();
 
-        // 注册任务补偿
-        this.scheduler.schedule(new RetryJob(), 0, TimeUnit.SECONDS);
+        /** 启动任务状态同步到DB */
+        jobProcessor.startSyncCompletionJobToDB();
     }
     
     public void scheduleDelayJob(Long nextScheduleTime, Integer maxJobNums) {
@@ -231,38 +219,6 @@ public class JobScheduler {
         if (!CollectionUtils.isEmpty(assignedJobShard)) {
             jobProcessor.scheduleShardJob(nextScheduleTime, maxJobNums, assignedJobShard.stream().map(JobShard::getId).collect(Collectors.toList()));
         }
-    }
-
-    public void refreshScheduler() {
-        LOG.info("Scheduler[{}] trigger heartbeat.", schedulerInfo.getId());
-
-        //节点存活，由于网络、GC等原因，导致心跳更新不及时，节点被清理
-        if (isSchedulerPersistenceExpired()) {
-            //重新注册节点信息
-            reRegister(createSchedulerInfo());
-            return;
-        }
-        
-        //更新心跳信息
-        updateSchedulerHeartbeat();
-        
-        //清理超时调度器
-        clearExpiredScheduler();
-
-        //释放游离任务项，并重新分配任务项
-        List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
-        if (isLeader(getSchedulerInfo().getId(), schedulers)) {
-            LOG.info("Lead-scheduler[id={}] is assigning job shards.", getSchedulerInfo().getId());
-
-            //释放游离任务项
-            releaseJobShardOutOfControl(schedulers);
-
-            //重分配任务项
-            reAssignJobShard(schedulers, jobShardManager.loadEnabledJobShards());
-        }
-
-        //填充当前已经分配的分片信息
-        fillSchedulerAssignedJobShard();
     }
 
     /**
@@ -288,16 +244,126 @@ public class JobScheduler {
         executor.execute(() -> translateJobShardToOtherShard(jobShardId));
     }
 
+    public void stop() {
+        this.scheduler.shutdown();
+        try {
+            if (!this.scheduler.awaitTermination(CLOSE_HANDLER_TIMEOUT, TimeUnit.SECONDS)) {
+                this.scheduler.shutdownNow();
+                if (!this.scheduler.awaitTermination(CLOSE_HANDLER_TIMEOUT, TimeUnit.SECONDS)) {
+                    LOG.warn("Scheduler[{}] did not terminate!");
+                }
+            }
+        } catch (InterruptedException ignore) {
+            LOG.warn("Stop scheduler has been interrupted!");
+        }
+    }
+
+    public void doHeartbeat() {
+        LOG.debug("Scheduler[{}] trigger heartbeat.", schedulerInfo.getId());
+
+        if (!isSchedulerReady()) {
+            return;
+        }
+
+        /** 刷新调度器信息 */
+        refreshScheduler();
+    }
+
+    public void doStateSync() {
+        LOG.debug("Scheduler[{}] trigger sync state.", schedulerInfo.getId());
+
+        if (!isSchedulerReady()) {
+            return;
+        }
+
+        /** 更新数据库任务状态, 由Leader完成 */
+        if (isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
+            jobProcessor.triggerFlowStateSync();
+        }
+
+        /** 同步任务分片到调度器缓存 */
+        reSyncJobShards();
+    }
+
+    public void doLoadDelayJob() {
+        LOG.debug("Scheduler[{}] trigger load delay job.", schedulerInfo.getId());
+
+        if (!isSchedulerReady()) {
+            return;
+        }
+
+        if (isSchedulerPersistenceExpired()) {
+            return;
+        }
+
+        /** 保留上次调度时间，计算下次调度时间*/
+        currentScheduleTime = nextScheduleTime;
+        nextScheduleTime = jobLoadCron.getNextValidTimeAfter(new Date()).getTime();
+
+        /** 传递调度起始时间到执行器 */
+        jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
+
+        /** 加载延迟任务 */
+        scheduleDelayJob(nextScheduleTime, loadMaxJobNums);
+
+        /** 释放被其它节点申请的任务 */
+        releaseJobShardReqByOther();
+    }
+
+    public void doRetry() {
+        LOG.debug("Scheduler[{}] trigger retry job.", schedulerInfo.getId());
+
+        if (!isSchedulerReady()) {
+            return;
+        }
+
+        if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
+            return;
+        }
+
+        /** 已经有任务在重试中，当前重试调度直接结束 */
+        if (jobProcessor.getRetryingJobCount() > 0) {
+            return;
+        }
+
+        if (currentScheduleTime <= 0 || nextScheduleTime <= 0) {
+            return;
+        }
+
+        /** 对所有分片做重试，包括已经停用的分片 */
+        List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
+
+        /** 开始补偿未完成的任务段 */
+        doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime));
+    }
+
+    public SchedulerInfo getSchedulerInfo() {
+        return schedulerInfo;
+    }
+
+    public void setSchedulerInfo(SchedulerInfo schedulerInfo) {
+        this.schedulerInfo = schedulerInfo;
+    }
+
+    public List<Integer> getJobShardIds() {
+        return jobShardIds;
+    }
+
+    public void setJobShardIds(List<Integer> jobShardIds) {
+        this.jobShardIds = jobShardIds;
+    }
+
+    public boolean isSchedulerReady() {
+        return null != schedulerInfo;
+    }
+
     /**
      * 抽取分片任务，重新分配到其它分片
      * @param jobShardId
      */
     private void translateJobShardToOtherShard(Integer jobShardId) {
-        long startTime = nextScheduleTime;
-        /** 每批次处理100条 */
-        int maxJobs = translateMaxNums;
         for (;;) {
-            List<Job> jobs = jobManager.loadShardJobs(jobShardId, startTime, maxJobs);
+            List<Job> jobs = jobManager.loadShardJobs(jobShardId, nextScheduleTime, translateMaxNums);
             if (CollectionUtils.isEmpty(jobs)) {
                 break;
             }
@@ -315,6 +381,35 @@ public class JobScheduler {
 
         /** 删除JobSegTrigger分段信息 */
         jobSegTriggerManager.deleteSegTrigger(jobShardId);
+    }
+
+    private void refreshScheduler() {
+        //节点存活，由于网络、GC等原因，导致心跳更新不及时，节点被清理
+        if (isSchedulerPersistenceExpired()) {
+            reRegister(createSchedulerInfo());
+            return;
+        }
+
+        //更新心跳信息
+        updateSchedulerHeartbeat();
+
+        //清理超时调度器
+        clearExpiredScheduler();
+
+        //释放游离任务项，并重新分配任务项
+        List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
+        if (isLeader(getSchedulerInfo().getId(), schedulers)) {
+            LOG.info("Lead-scheduler[id={}] is assigning job shards.", getSchedulerInfo().getId());
+
+            //释放游离任务项
+            releaseJobShardOutOfControl(schedulers);
+
+            //重分配任务项
+            reAssignJobShard(schedulers, jobShardManager.loadEnabledJobShards());
+        }
+
+        //填充当前已经分配的分片信息
+        fillSchedulerAssignedJobShard();
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {
@@ -460,7 +555,6 @@ public class JobScheduler {
 
     /**
      * 获取系统统一时间，以数据库为准
-     * 
      * @return
      */
     private long getSystemTime() {
@@ -474,20 +568,6 @@ public class JobScheduler {
         scheduler.setLastHeartbeatTime(getSystemTime());
         scheduler.setIp(getLocalIP());
         return scheduler;
-    }
-
-    public void stop() {
-        this.scheduler.shutdown();
-        try {
-            if (!this.scheduler.awaitTermination(CLOSE_HANDLER_TIMEOUT, TimeUnit.SECONDS)) {
-                this.scheduler.shutdownNow();
-                if (!this.scheduler.awaitTermination(CLOSE_HANDLER_TIMEOUT, TimeUnit.SECONDS)) {
-                    LOG.warn("Scheduler[{}] did not terminate!");
-                }
-            }
-        } catch (InterruptedException ignore) {
-            LOG.warn("Stop scheduler has been interrupted!");
-        }
     }
 
     private void releaseJobShardReqByOther() {
@@ -516,171 +596,33 @@ public class JobScheduler {
         return queueSelector.chooseOne(shardIds);
     }
 
-    public SchedulerInfo getSchedulerInfo() {
-        return schedulerInfo;
+    /** 暂未使用 */
+    public void doLoadDelayJobInternal() {
+        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNums);
     }
 
-    public void setSchedulerInfo(SchedulerInfo schedulerInfo) {
-        this.schedulerInfo = schedulerInfo;
+    private long getNextValidTimeAfter(Date current) {
+        return jobLoadCron.getNextValidTimeAfter(current).getTime();
     }
 
-    public List<Integer> getJobShardIds() {
-        return jobShardIds;
+    private long getRetryStartTime() {
+        return currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
     }
 
-    public void setJobShardIds(List<Integer> jobShardIds) {
-        this.jobShardIds = jobShardIds;
-    }
-
-    private class LoadDelayInternalJob implements Runnable {
-        private final long triggerEndTime;
-
-        private final int maxJobNums;
-
-        public LoadDelayInternalJob(long triggerEndTime, int maxJobNums) {
-            this.triggerEndTime = triggerEndTime;
-            this.maxJobNums = maxJobNums;
-        }
-
-        @Override
-        public void run() {
-            /** 加载任务*/
-            scheduleDelayJob(triggerEndTime, maxJobNums);
-        }
-    }
-
-    private class LoadDelayJob implements Runnable {
-        private CronExpression cron;
-
-        private volatile boolean first;
-
-        public LoadDelayJob(boolean first) {
-            this.first = first;
-            try {
-                cron = new CronExpression(loadJobCron);
-            } catch (Exception ex) {
-                cron = null;
-                LOG.error("Error load job cron: {}.", loadJobCron);
-            }
-        }
-
-        @Override
-        public void run() {
-            Date current = new Date();
-            try {
-                if (isSchedulerPersistenceExpired()) {
-                    return;
+    private void doSegmentsRetry(List<JobSegTriggerFlow> segments) {
+        if (!CollectionUtils.isEmpty(segments)) {
+            segments.forEach(segment -> {
+                List<Job> jobs = jobManager.loadRetryJobs(
+                        segment.getJobShardId(),
+                        segment.getTriggerTimeStart(),
+                        segment.getTriggerTimeEnd(),
+                        retryMaxJobNums);
+                if (!CollectionUtils.isEmpty(jobs)) {
+                    jobs.forEach(job -> jobProcessor.retryOneJob(job));
+                } else {
+                    jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
                 }
-
-                /** 加载新一轮的任务, 尽可能保证工作节点时间同步，从而让各个节点能同时触发任务加载*/
-                //保留上次调度时间
-                currentScheduleTime = nextScheduleTime;
-                //传递调度起始时间到执行器
-                jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
-
-                //计算下次调度时间，并加载延迟任务到内存排队
-                nextScheduleTime = cron.getNextValidTimeAfter(current).getTime();
-
-                /** 首次加载直接执行 */
-                if (first) {
-                    new LoadDelayInternalJob(nextScheduleTime, loadMaxJobNums).run();
-                    first = false;
-                }
-
-                /** 释放被其它节点申请的任务 */
-                releaseJobShardReqByOther();
-
-                LOG.info("Current schedule period:[{} ~ {}]", currentScheduleTime, nextScheduleTime);
-            } catch (Throwable thrown) {
-                LOG.error(thrown.getMessage(), thrown);
-            } finally {
-                /** 从DB加载数据时本身存在一定的延时，提前加载提供精确性 */
-                scheduler.schedule(new LoadDelayInternalJob(getNextValidTimeAfter(cron, new Date(nextScheduleTime)), loadMaxJobNums), nextScheduleTime - loadJobAdvanceSeconds * 1000 - current.getTime(), TimeUnit.MILLISECONDS);
-
-                /** 维护调度周期信息 */
-                scheduler.schedule(this, nextScheduleTime - current.getTime(), TimeUnit.MILLISECONDS);
-            }
-        }
-    }
-
-    private long getNextValidTimeAfter(CronExpression cron, Date current) {
-        return cron.getNextValidTimeAfter(current).getTime();
-    }
-
-    private class HeartBeatJob implements Runnable {
-        @Override
-        public void run() {
-            try {
-                refreshScheduler();
-            } catch (Throwable thrown) {
-                LOG.error(thrown.getMessage(), thrown);
-            } finally {
-                scheduler.schedule(this, heartBeatPeriod, TimeUnit.SECONDS);
-            }
-        }
-    }
-
-    private class StateJob implements Runnable {
-        @Override
-        public void run() {
-            try {
-                List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
-                if (isLeader(getSchedulerInfo().getId(), schedulers)) {
-                    //更新数据库任务状态
-                    jobProcessor.triggerFlowStateSync();
-                }
-
-                //同步任务分片到调度器缓存
-                reSyncJobShards();
-            } catch (Throwable thrown) {
-                LOG.error(thrown.getMessage(), thrown);
-            } finally {
-                scheduler.schedule(this, stateSyncPeriod, TimeUnit.SECONDS);
-            }
-        }
-    }
-
-    private class RetryJob implements Runnable {
-        @Override
-        public void run() {
-            try {
-                List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
-                if (!isLeader(getSchedulerInfo().getId(), schedulers)) {
-                    return;
-                }
-
-                /** 已经有任务在重试中，当前重试调度直接结束 */
-                if (jobProcessor.getRetryingJobCount() > 0) {
-                    return;
-                }
-
-                if (currentScheduleTime <= 0 || nextScheduleTime <= 0) {
-                    return;
-                }
-
-                Long startTime = currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
-                List<JobShard> shards = jobShardManager.loadAllJobShards();
-                if (CollectionUtils.isEmpty(shards)) {
-                    return;
-                }
-                List<Integer> jobShards = shards.stream().map(shard -> shard.getId()).collect(Collectors.toList());
-                List<JobSegTriggerFlow> segments = jobSegTriggerFlowManager.loadRetryFlows(jobShards, startTime, currentScheduleTime);
-                if (CollectionUtils.isEmpty(segments)) {
-                    return;
-                }
-                segments.forEach(seg -> {
-                    final List<Job> jobs = jobManager.loadRetryJobs(seg.getJobShardId(), seg.getTriggerTimeStart(), seg.getTriggerTimeEnd(), retryMaxJobNums);
-                    if (!CollectionUtils.isEmpty(jobs)) {
-                        jobs.forEach(job -> jobProcessor.retryOneJob(job));
-                    } else {
-                        jobSegTriggerFlowManager.updateTaskFlowState(seg, TriggerFLowState.COMPLETE);
-                    }
-                });
-            } catch (Throwable thrown) {
-                LOG.error(thrown.getMessage(), thrown);
-            } finally {
-                scheduler.schedule(this, retryPeriod, TimeUnit.SECONDS);
-            }
+            });
         }
     }
 }
