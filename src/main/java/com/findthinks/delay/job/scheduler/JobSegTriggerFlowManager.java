@@ -1,5 +1,6 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.share.lib.utils.CollectionUtils;
 import com.findthinks.delay.job.share.repository.entity.JobSegTriggerFlow;
 import com.findthinks.delay.job.share.repository.mapper.JobSegTriggerFlowExtMapper;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,16 @@ public class JobSegTriggerFlowManager implements IJobSegTriggerFlowManager {
     private JobSegTriggerFlowExtMapper jobSegTriggerFlowExtMapper;
 
     @Override
-    public List<JobSegTriggerFlow> loadRecentlyFlows(int shards, long minTriggerTime) {
+    public List<JobSegTriggerFlow> loadRecentlySegments(int shards, long minTriggerTime) {
         Map<String, Object> params = new HashMap<>();
         params.put("flows", shards);
         params.put("minTriggerTime", minTriggerTime);
-        return jobSegTriggerFlowExtMapper.loadRecentlyFlows(params);
+        List<JobSegTriggerFlow> segments = jobSegTriggerFlowExtMapper.loadRecentlyFlows(params);
+        return CollectionUtils.isEmpty(segments) ? Collections.EMPTY_LIST : segments;
     }
 
     @Override
-    public List<JobSegTriggerFlow> loadRetryFlows(List<Integer> shards, Long startTime, Long endTime) {
+    public List<JobSegTriggerFlow> loadRetrySegments(List<Integer> shards, Long startTime, Long endTime) {
         Map<String, Object> params = new HashMap<>();
         params.put("shardIds", shards);
         params.put("timeStart", startTime);
@@ -33,7 +35,7 @@ public class JobSegTriggerFlowManager implements IJobSegTriggerFlowManager {
     }
 
     @Override
-    public boolean updateTaskFlowState(JobSegTriggerFlow flow, TriggerFLowState dst) {
+    public boolean updateSegmentState(JobSegTriggerFlow flow, TriggerFLowState dst) {
         Map<String, Object> params = new HashMap<>();
         params.put("newState", dst.COMPLETE.getCode());
         params.put("state", flow.getState());

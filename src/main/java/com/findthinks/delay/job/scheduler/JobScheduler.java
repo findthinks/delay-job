@@ -334,7 +334,7 @@ public class JobScheduler {
         List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
 
         /** 开始补偿未完成的任务段 */
-        doSegmentsRetry(jobSegTriggerFlowManager.loadRetryFlows(shardIds, getRetryStartTime(), currentScheduleTime));
+        doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime));
     }
 
     public SchedulerInfo getSchedulerInfo() {
@@ -620,7 +620,7 @@ public class JobScheduler {
                 if (!CollectionUtils.isEmpty(jobs)) {
                     jobs.forEach(job -> jobProcessor.retryOneJob(job));
                 } else {
-                    jobSegTriggerFlowManager.updateTaskFlowState(segment, TriggerFLowState.COMPLETE);
+                    jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
                 }
             });
         }

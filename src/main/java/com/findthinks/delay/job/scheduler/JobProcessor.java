@@ -2,7 +2,6 @@ package com.findthinks.delay.job.scheduler;
 
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.repository.entity.JobSegTrigger;
-import com.findthinks.delay.job.share.repository.entity.JobSegTriggerFlow;
 import com.findthinks.delay.job.share.repository.mapper.JobSegTriggerExtMapper;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
@@ -171,14 +170,15 @@ public class JobProcessor {
     public void triggerFlowStateSync() {
         long minTriggerTime = getMinTriggerTimeFromSegTrigger();
         if (minTriggerTime > 0) {
-            int shards = jobShardManager.selectJobShardCount();
-            List<JobSegTriggerFlow> flows = jobSegTriggerFlowManager.loadRecentlyFlows(shards, minTriggerTime);
-            for (JobSegTriggerFlow flow : flows) {
-                int processCount = jobManager.getNoneSuccessJobsCount(flow.getJobShardId(), flow.getTriggerTimeStart(), flow.getTriggerTimeEnd());
+            jobSegTriggerFlowManager.loadRecentlySegments(jobShardManager.selectJobShardCount(), minTriggerTime).forEach(segment -> {
+                int processCount = jobManager.getNoneSuccessJobsCount(
+                        segment.getJobShardId(),
+                        segment.getTriggerTimeStart(),
+                        segment.getTriggerTimeEnd());
                 if (processCount == 0) {
-                    jobSegTriggerFlowManager.updateTaskFlowState(flow, TriggerFLowState.COMPLETE);
+                    jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
                 }
-            }
+            });
         }
     }
 
@@ -191,15 +191,11 @@ public class JobProcessor {
     }
 
     private void fireJob(Job job) {
-        try {
-            CallbackProtocol protocol = CallbackProtocol.getByProtocol(job.getCallbackProtocol());
-            final IJobTrigger trigger = (IJobTrigger) applicationContext.getBean(protocol.getTrigger());
-            TriggerResult resp = trigger.triggerJob(job);
-            if (!resp.isSuccessful()) {
-                throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, resp.getMsg());
-            }
-        } catch (Exception ex) {
-            LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger error.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000, ex);
+        CallbackProtocol protocol = CallbackProtocol.getByProtocol(job.getCallbackProtocol());
+        final IJobTrigger trigger = (IJobTrigger) applicationContext.getBean(protocol.getTrigger());
+        TriggerResult resp = trigger.triggerJob(job);
+        if (!resp.isSuccessful()) {
+            throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, resp.getMsg());
         }
     }
 
@@ -237,7 +233,11 @@ public class JobProcessor {
         @Override
         public void run() {
             if (isSubmit(this)) {
-                fireJob(job);
+                try {
+                    fireJob(job);
+                } catch (Exception ex) {
+                    LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger error.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000, ex);
+                }
             }
         }
     }
