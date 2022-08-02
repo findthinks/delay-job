@@ -76,10 +76,10 @@ public class KeyGeneratorManager {
     }
 
     private class KeyGeneratorImpl implements KeyGenerator {
-        private static final int FIRE_BUF_THRESHOLD_RATIO = 80;
+        private static final int FIRE_BUF_THRESHOLD_RATIO = 20;
         private final Lock keyLocker = new ReentrantLock();
-        private volatile long fireThreshold;
-        private boolean switched = false;
+        private volatile long fireLeftThreshold;
+        private boolean fire = false;
         private final int id;
         private final String key;
         private volatile Segment cur;
@@ -95,33 +95,30 @@ public class KeyGeneratorManager {
         @Override
         public long nextId() {
             if (cur.startWith.get() <= cur.endWith) {
-                switched = false;
-                if (cur.endWith - cur.startWith.get() < fireThreshold) {
-                    LOG.debug("Fire cache segment: {}", key);
+                if (!fire && (cur.endWith - cur.startWith.get() < fireLeftThreshold)) {
+                    LOG.info("Fire cache segment: {}", key);
+                    fire = true;
                     executor.submit(new CacheSegmentJob());
                 }
                 return cur.startWith.getAndIncrement();
             } else {
                 try {
                     keyLocker.lock();
-                    if (switched) {
+                    if (cur.startWith.get() <= cur.endWith) {
                         return nextId();
                     }
 
                     if (null != buf) {
-                        LOG.debug("Switch cached segment for key: {}", key);
+                        LOG.info("Switch cached segment for key: {}", key);
                         cur = buf;
                         buf = null;
-                        switched = true;
-                        freshFireThreshold();
-                        return nextId();
+                        fire = false;
                     } else {
-                        LOG.debug("Cached segment is not ready, directly generate new segment for key: {}", key);
+                        LOG.info("Cached segment is not ready, directly generate new segment for key: {}", key);
                         cur = newSegment();
-                        switched = true;
-                        freshFireThreshold();
-                        return nextId();
                     }
+                    freshFireThreshold();
+                    return nextId();
                 } finally {
                     keyLocker.unlock();
                 }
@@ -129,7 +126,7 @@ public class KeyGeneratorManager {
         }
 
         private void freshFireThreshold() {
-            this.fireThreshold = (this.cur.incSpan * FIRE_BUF_THRESHOLD_RATIO) / 100;
+            this.fireLeftThreshold = (this.cur.incSpan * FIRE_BUF_THRESHOLD_RATIO) / 100;
         }
 
         private void cacheSegment() {

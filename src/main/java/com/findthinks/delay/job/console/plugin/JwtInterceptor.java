@@ -10,27 +10,15 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author YuBo
  */
 public class JwtInterceptor implements HandlerInterceptor {
 
-    private static List<String> SKIP_AUTH_URL= Arrays.asList("/api/v1/submit/jobs", "/api/v1/submit/job" , "/login", "/" ,"/favicon.ico","/index.html");
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String ctx = request.getContextPath();
-        String uri = request.getRequestURI().replaceFirst(ctx, "");
-        if (SKIP_AUTH_URL.contains(uri) ||
-                uri.startsWith("/assets") ||
-                uri.startsWith("/resource") ||
-                uri.startsWith("/_app.config.js")) {
-            return true;
-        }
         String jwt = CookieUtils.getCookieValue(request.getCookies(), SystemConstants.JWT_COOKIE_NAME);
         if (StringUtils.isEmpty(jwt)) {
             throw new DelayJobException(ExceptionEnum.AUTHENTICATION_NOT_EXIST);
