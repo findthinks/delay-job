@@ -48,7 +48,7 @@ CREATE TABLE `job_seg_trigger_flow` (
 
 DROP TABLE IF EXISTS `job_shard`;
 CREATE TABLE `job_shard` (
- `id` tinyint(3) unsigned NOT NULL COMMENT '分片ID',
+ `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT '分片ID',
  `cur_server` int(11) NOT NULL COMMENT '当前分片持有者',
  `req_server` int(11) NOT NULL DEFAULT '0' COMMENT '分片申请者',
  `state` tinyint(3) NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
