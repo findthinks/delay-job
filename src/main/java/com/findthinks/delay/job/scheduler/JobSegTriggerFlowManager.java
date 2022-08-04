@@ -27,6 +27,10 @@ public class JobSegTriggerFlowManager implements IJobSegTriggerFlowManager {
 
     @Override
     public List<JobSegTriggerFlow> loadRetrySegments(List<Integer> shards, Long startTime, Long endTime) {
+        if (CollectionUtils.isEmpty(shards)) {
+            return Collections.EMPTY_LIST;
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("shardIds", shards);
         params.put("timeStart", startTime);

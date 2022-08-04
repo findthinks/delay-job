@@ -259,7 +259,7 @@ public class JobScheduler {
     }
 
     public void doHeartbeat() {
-        LOG.debug("Scheduler[{}] trigger heartbeat.", null == schedulerInfo.getId() ? -1 : schedulerInfo.getId());
+        LOG.debug("Scheduler[{}] trigger heartbeat.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
         if (!isSchedulerReady()) {
             return;
@@ -270,7 +270,7 @@ public class JobScheduler {
     }
 
     public void doStateSync() {
-        LOG.debug("Scheduler[{}] trigger sync state.", null == schedulerInfo.getId() ? -1 : schedulerInfo.getId());
+        LOG.debug("Scheduler[{}] trigger sync state.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
         if (!isSchedulerReady()) {
             return;
@@ -286,7 +286,7 @@ public class JobScheduler {
     }
 
     public void doLoadDelayJob() {
-        LOG.debug("Scheduler[{}] trigger load delay job.", null == schedulerInfo.getId() ? -1 : schedulerInfo.getId());
+        LOG.debug("Scheduler[{}] trigger load delay job.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
         if (!isSchedulerReady()) {
             return;
@@ -311,7 +311,7 @@ public class JobScheduler {
     }
 
     public void doRetry() {
-        LOG.debug("Scheduler[{}] trigger retry job.", null == schedulerInfo.getId() ? -1 : schedulerInfo.getId());
+        LOG.debug("Scheduler[{}] trigger retry job.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
         if (!isSchedulerReady()) {
             return;
