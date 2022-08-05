@@ -62,6 +62,7 @@ public class KeyGeneratorManager {
     private class KeyGeneratorImpl implements KeyGenerator {
         private static final int FIRE_BUF_THRESHOLD_RATIO = 20;
         private final Lock keyLocker = new ReentrantLock();
+        private final Lock bufLocker = new ReentrantLock();
         private volatile long fireLeftThreshold;
         private boolean fire = false;
         private final int id;
@@ -79,10 +80,19 @@ public class KeyGeneratorManager {
         @Override
         public long nextId() {
             if (cur.startWith.get() <= cur.endWith) {
-                if ((cur.endWith - cur.startWith.get() < fireLeftThreshold) && !fire) {
-                    LOG.info("Fire cache segment: {}", key);
-                    fire = true;
-                    executor.submit(new CacheSegmentJob());
+                if (cur.endWith - cur.startWith.get() < fireLeftThreshold) {
+                    if (!fire) {
+                        try {
+                            bufLocker.lock();
+                            if (!fire) {
+                                LOG.info("Fire cache segment: {}", key);
+                                executor.submit(() -> cacheSegment());
+                                fire = true;
+                            }
+                        } finally {
+                            bufLocker.unlock();
+                        }
+                    }
                 }
                 return cur.startWith.getAndIncrement();
             } else {
@@ -125,13 +135,6 @@ public class KeyGeneratorManager {
                 if (sequenceKeyService.compareAndSet(id, newStartWith, newEndWith)) {
                     return new Segment(new AtomicLong(newStartWith), newEndWith - 1, sequence.getIncSpan());
                 }
-            }
-        }
-
-        private class CacheSegmentJob implements Runnable {
-            @Override
-            public void run() {
-                cacheSegment();
             }
         }
     }
