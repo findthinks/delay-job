@@ -190,14 +190,18 @@ public class JobScheduler {
     public void cancelJob(String outJobNo) {
         Job job = jobManager.loadJob(outJobNo);
         if (null != job) {
+            if (job.getTriggerTime() <= nextScheduleTime) {
+                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is ready to trigger");
+            }
+
             if (JobState.getStateByCode(job.getState()) == JobState.CANCEL) {
-                throw new DelayJobException(JOB_IS_CANCEL, "Job is canceled.");
+                throw new DelayJobException(JOB_IS_CANCEL, "Job is canceled");
             }
             if (job.getState() > JobState.SUBMIT.getCode()) {
-                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered.");
+                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered");
             }
             if (!jobManager.modifyJobState(job, JobState.CANCEL.getCode(), JobState.SUBMIT.getCode(), 0)) {
-                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered.");
+                throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered");
             }
         }
     }
