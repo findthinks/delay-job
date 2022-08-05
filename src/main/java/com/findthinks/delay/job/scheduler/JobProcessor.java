@@ -51,9 +51,6 @@ public class JobProcessor {
     @Resource
     private volatile ApplicationContext applicationContext;
 
-    @Value("${scheduler.job.allow-cancel:false}")
-    private boolean allowJobCancel;
-
     /** 重发执行校验，加载任务最前2s内*/
     @Value("${scheduler.job.repeat-check-delta:2000}")
     private long repeatCheckDelta;
@@ -200,7 +197,7 @@ public class JobProcessor {
     }
 
     private boolean needSyncJobStateFromDB(Job job) {
-        return allowJobCancel && inRepeatTriggerCheckWindow(job);
+        return inRepeatTriggerCheckWindow(job);
     }
 
     private boolean inRepeatTriggerCheckWindow(Job job) {
