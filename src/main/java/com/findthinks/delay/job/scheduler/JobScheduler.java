@@ -197,9 +197,11 @@ public class JobScheduler {
             if (JobState.getStateByCode(job.getState()) == JobState.CANCEL) {
                 throw new DelayJobException(JOB_IS_CANCEL, "Job is canceled");
             }
+
             if (job.getState() > JobState.SUBMIT.getCode()) {
                 throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered");
             }
+
             if (!jobManager.modifyJobState(job, JobState.CANCEL.getCode(), JobState.SUBMIT.getCode(), 0)) {
                 throw new DelayJobException(CANNOT_CANCEL_JOB, "Job is triggered");
             }
