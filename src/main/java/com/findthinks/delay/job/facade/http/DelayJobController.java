@@ -2,6 +2,7 @@ package com.findthinks.delay.job.facade.http;
 
 import com.findthinks.delay.job.scheduler.FacadeJob;
 import com.findthinks.delay.job.scheduler.JobScheduler;
+import com.findthinks.delay.job.share.id.KeyGeneratorManager;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.lib.result.FoxResult;
 import org.slf4j.Logger;
@@ -19,6 +20,14 @@ public class DelayJobController {
 
     @Resource
     private JobScheduler jobScheduler;
+
+    @Resource
+    private KeyGeneratorManager keyGeneratorManager;
+
+    @GetMapping(value = "/id")
+    public Long id() {
+        return keyGeneratorManager.getKeyGenerator("JOB_ID").nextId();
+    }
 
     @PostMapping("/submit/job")
     public FoxResult submitJob(@RequestBody FacadeJob job) {

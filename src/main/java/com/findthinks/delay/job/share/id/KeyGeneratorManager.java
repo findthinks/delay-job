@@ -33,40 +33,27 @@ public class KeyGeneratorManager {
 
         KeyGenerator keyGenerator = keyGenerators.get(key);
         if (keyGenerator == null) {
-            boolean result = false;
             try {
-                result = locker.tryLock(15, TimeUnit.SECONDS);
-                if (result) {
-                    // Double check
-                    if ((keyGenerator = keyGenerators.get(key)) == null) {
-                        for (;;) { // CAS
-                            SequenceKey persistentKey = sequenceKeyService.loadSequenceKey(key);
-                            if (persistentKey == null) {
-                                throw new RuntimeException("Unregistered sequence key generator: " + key);
-                            }
-
-                            long newStartWith = persistentKey.getStartWith();
-                            long newEndWith = newStartWith + persistentKey.getIncSpan();
-                            if (sequenceKeyService.compareAndSet(persistentKey.getId(), newStartWith, newEndWith)) {
-                                keyGenerator = new KeyGeneratorImpl(persistentKey.getId(), key, newStartWith, newEndWith - 1, persistentKey.getIncSpan());
-                                break;
-                            }
+                locker.lock();
+                // Double check
+                if ((keyGenerator = keyGenerators.get(key)) == null) {
+                    for (;;) { // CAS
+                        SequenceKey persistentKey = sequenceKeyService.loadSequenceKey(key);
+                        if (persistentKey == null) {
+                            throw new RuntimeException("Unregistered sequence key generator: " + key);
                         }
-                        keyGenerators.put(key, keyGenerator);
+
+                        long newStartWith = persistentKey.getStartWith();
+                        long newEndWith = newStartWith + persistentKey.getIncSpan();
+                        if (sequenceKeyService.compareAndSet(persistentKey.getId(), newStartWith, newEndWith)) {
+                            keyGenerator = new KeyGeneratorImpl(persistentKey.getId(), key, newStartWith, newEndWith - 1, persistentKey.getIncSpan());
+                            break;
+                        }
                     }
+                    keyGenerators.put(key, keyGenerator);
                 }
-            } catch (InterruptedException ignore) {
-                Thread.currentThread().interrupt();
             } finally {
-                if (result) {
-                    locker.unlock();
-                } else {
-                    if (Thread.interrupted()) {
-                        throw new RuntimeException("Interrupt to get KeyGenerator for " + key);
-                    } else {
-                        throw new RuntimeException("Timeout to get KeyGenerator for " + key);
-                    }
-                }
+                locker.unlock();
             }
         }
         return keyGenerator;
@@ -92,7 +79,7 @@ public class KeyGeneratorManager {
         @Override
         public long nextId() {
             if (cur.startWith.get() <= cur.endWith) {
-                if (!fire && (cur.endWith - cur.startWith.get() < fireLeftThreshold)) {
+                if ((cur.endWith - cur.startWith.get() < fireLeftThreshold) && !fire) {
                     LOG.info("Fire cache segment: {}", key);
                     fire = true;
                     executor.submit(new CacheSegmentJob());
