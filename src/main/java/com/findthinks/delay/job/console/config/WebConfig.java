@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor())
-                .addPathPatterns("/**")
+                .addPathPatterns("/api/**")
                 .excludePathPatterns(
                         "/api/v1/id",
                         "/api/v1/login",
@@ -27,12 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/submit/job",
                         "/api/v1/submit/jobs",
                         "/api/v1/cancel/job",
-                        "/assets/**",
-                        "/resource/**",
-                        "/_app.config.js",
-                        "/",
-                        "/favicon.ico",
-                        "/index.html");
+                        "/**");
     }
 
     @Override

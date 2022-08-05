@@ -22,7 +22,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         final Claims claims = AuthenticationUtils.parseJwt(jwt);
         if (claims.getExpiration().before(new Date())) {
-            throw new DelayJobException(ExceptionEnum.AUTHENTICATION_NOT_EXIST, "认证信息失效，请重新登录");
+            throw new DelayJobException(ExceptionEnum.AUTHENTICATION_NOT_EXIST);
         }
         return true;
     }
