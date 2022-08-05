@@ -1,8 +1,5 @@
 package com.findthinks.delay.job.share.id;
 
-/**
- * @author YuBo
- */
 public interface SequenceKeyService {
 
     SequenceKey loadSequenceKey(String key);

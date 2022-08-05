@@ -2,9 +2,6 @@ package com.findthinks.delay.job.share.lib.utils;
 
 import java.util.UUID;
 
-/**
- * @author YuBo
- */
 public class UUIDUtils {
     private UUIDUtils() {
     }

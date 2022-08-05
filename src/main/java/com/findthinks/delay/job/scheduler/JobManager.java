@@ -22,9 +22,6 @@ import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
 import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.OUT_JOB_NO_IS_EXIST;
 
-/**
- * @author YuBo
- */
 @Service
 public class JobManager implements IJobManager {
 

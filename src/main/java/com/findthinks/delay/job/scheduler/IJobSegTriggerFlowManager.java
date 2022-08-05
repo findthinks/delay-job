@@ -3,9 +3,6 @@ package com.findthinks.delay.job.scheduler;
 import com.findthinks.delay.job.share.repository.entity.JobSegTriggerFlow;
 import java.util.List;
 
-/**
- * @author YuBo
- */
 public interface IJobSegTriggerFlowManager {
 
     List<JobSegTriggerFlow> loadRecentlySegments(int shards, long minTriggerTime);

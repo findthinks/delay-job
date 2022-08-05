@@ -2,9 +2,6 @@ package com.findthinks.delay.job.share.lib.utils;
 
 import java.util.*;
 
-/**
- * @author YuBo
- */
 public abstract class CollectionUtils {
 
 	public static boolean isEmpty(Collection<?> collection) {

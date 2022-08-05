@@ -60,10 +60,11 @@
         UPDATE
             job_shard
         SET
-            state = #{state},
+            state = #{newState},
             cur_server = -1
         WHERE
             id = #{id}
+            AND state = ${oldState}
     </update>
 
     <update id="updateReqServerToCurServer">

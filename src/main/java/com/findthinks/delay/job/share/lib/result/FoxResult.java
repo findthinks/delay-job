@@ -3,9 +3,6 @@ package com.findthinks.delay.job.share.lib.result;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 
-/**
- * Restful统一响应结果类
- */
 @JsonPropertyOrder({"code", "message", "data"})
 public class FoxResult<T> {
 

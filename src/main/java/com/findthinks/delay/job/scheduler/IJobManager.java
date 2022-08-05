@@ -6,9 +6,6 @@ import com.findthinks.delay.job.share.repository.entity.Job;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author YuBo
- */
 public interface IJobManager {
 
     List<List<Job>> loadRecentlyJobs(List<Integer> jobShardIds, Long nextTriggerTime, Integer maxJobNums);

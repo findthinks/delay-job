@@ -37,6 +37,19 @@
         LIMIT 1
     </select>
 
+    <select id="selectJobSegTriggers" parameterType="list" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+        WHERE
+            job_shard_id
+                in
+                <foreach collection="jobShardIds" item="shardId" index="index" open="(" close=")" separator=",">
+                    #{shardId}
+                </foreach>
+    </select>
+
     <update id="compareAndSet" parameterType="map">
         UPDATE
             job_seg_trigger

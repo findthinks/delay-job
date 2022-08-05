@@ -29,4 +29,9 @@ public class CronManager {
     public void syncState() {
         jobScheduler.doStateSync();
     }
+
+    @Scheduled(cron="${scheduler.job.cron.translate}")
+    public void translate() {
+        jobScheduler.doTranslateDisabledShardJobToOther();
+    }
 }

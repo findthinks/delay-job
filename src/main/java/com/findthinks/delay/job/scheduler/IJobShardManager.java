@@ -12,6 +12,8 @@ public interface IJobShardManager {
 
     List<JobShard> loadEnabledJobShards();
 
+    List<JobShard> loadTranslatingJobShards();
+
     List<JobShard> loadAllJobShards();
 
     Map<Integer, List<Integer>> loadAllJobShardsGroupByCurServer();
@@ -26,5 +28,5 @@ public interface IJobShardManager {
 
     int updateJobShardByCondition(List<Integer> schedulerIds);
 
-    int updateJobShardState(Integer jobShardId, Integer state);
+    int updateJobShardState(Integer jobShardId, Integer oldState, Integer newState);
 }

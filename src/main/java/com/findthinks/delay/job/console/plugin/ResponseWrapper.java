@@ -9,9 +9,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-/**
- * @author YuBo
- */
 @RestControllerAdvice(basePackageClasses = { ControllerLocation.class })
 public class ResponseWrapper implements ResponseBodyAdvice<Object> {
 

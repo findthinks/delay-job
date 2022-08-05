@@ -1,9 +1,5 @@
 package com.findthinks.delay.job.share.lib.exception;
 
-/**
- * @author YuBo
- * @version $Id: TaskCanceledException.java, v0.1 Exp $$
- */
 public class JobCanceledException extends RuntimeException {
 
     public JobCanceledException() {

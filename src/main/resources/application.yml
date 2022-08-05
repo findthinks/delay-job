@@ -30,6 +30,7 @@ scheduler:
       load: 0 0/1 * * * ?
       retry: 5,15,25,35,45,55 * * * * ?
       sync-state: 5,15,25,35,45,55 * * * * ?
+      translate: 10,25,40,55 * * * * ?
     load-max-nums: 15000
     allow-cancel: false
     repeat-check-delta: 5

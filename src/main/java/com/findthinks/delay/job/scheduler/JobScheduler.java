@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +38,6 @@ public class JobScheduler {
 
     protected final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(V_CPU_CORES / 2 + 1, new ThreadFactoryBuilder().setNameFormat("Delay-JobShard-%d").setDaemon(true).build());
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Delay-Job-Translate-%d").setDaemon(true).build());
-
     private final RoundRobinSelector queueSelector = new RoundRobinSelector();
 
     private volatile SchedulerInfo schedulerInfo = null;
@@ -62,6 +59,9 @@ public class JobScheduler {
 
     @Resource
     private IJobSegTriggerManager jobSegTriggerManager;
+
+    @Resource
+    private IGlobalRecManager globalRecManager;
 
     @Resource
     private KeyGeneratorManager keyGeneratorManager;
@@ -90,6 +90,7 @@ public class JobScheduler {
 
     private volatile long nextScheduleTime = 0;
 
+    /** 暂未使用 */
     private volatile List<JobShard> assignedJobShard = null;
 
     /**
@@ -112,6 +113,13 @@ public class JobScheduler {
      * 批量创建延迟任务
      */
     public void submitJobs(List<FacadeJob> jobs) {
+        submitJobs(jobs, getJobShardIds());
+    }
+
+    /**
+     * 批量创建延迟任务，任务提交到指定的分片集合中
+     */
+    public void submitJobs(List<FacadeJob> jobs, List<Integer> shardIds) {
         if (jobs.size() > BATCH_JOBS_SIZE) {
             throw new ParamsException("Batch jobs size overflow.");
         }
@@ -121,7 +129,7 @@ public class JobScheduler {
         List<Job> batchJobs = new ArrayList<>(batchSize);
         List<Job> immediate = new ArrayList<>();
         Map<Integer, List<Job>> mappedJobs = new HashMap<>();
-        Integer jobShardId = getOneJobShardId();
+        Integer jobShardId = getOneJobShardId(shardIds);
         for (int idx=0; idx<jobs.size(); idx++) {
             Job job = createJob(jobs.get(idx));
             job.setJobShardId(jobShardId);
@@ -140,7 +148,7 @@ public class JobScheduler {
                     mappedJobs.get(jobShardId).addAll(batchJobs);
                 }
                 counter = 0;
-                jobShardId = getOneJobShardId();
+                jobShardId = getOneJobShardId(shardIds);
                 batchJobs = new ArrayList<>(batchSize);
             }
 
@@ -214,19 +222,12 @@ public class JobScheduler {
         jobProcessor.startSyncCompletionJobToDB();
     }
     
-    public void scheduleDelayJob(Long nextScheduleTime, Integer maxJobNums) {
-        LOG.info("Scheduler[id={}] is loading jobs, shards: {}", getSchedulerInfo().getId(), fetchJobShardIds(assignedJobShard));
-        if (!CollectionUtils.isEmpty(assignedJobShard)) {
-            jobProcessor.scheduleShardJob(nextScheduleTime, maxJobNums, assignedJobShard.stream().map(JobShard::getId).collect(Collectors.toList()));
-        }
-    }
-
     /**
      * 启用分片，分片开始接收和消费任务
      * @param jobShardId
      */
     public void startJobShard(Integer jobShardId) {
-        jobShardManager.updateJobShardState(jobShardId, JobShardState.ENABLED.getCode());
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.DISABLED.getCode(), JobShardState.ENABLED.getCode());
     }
 
     /**
@@ -234,14 +235,13 @@ public class JobScheduler {
      * @param jobShardId
      */
     public void stopJobShard(Integer jobShardId) {
+        /** 同一时间只能停用一个分片*/
+        if (!CollectionUtils.isEmpty(jobShardManager.loadTranslatingJobShards())) {
+            throw new DelayJobException(HAS_TRANSLATING_SHARD);
+        }
+
         /** 修改JobShard为数据转移中，此时改分片停止接受任务，且下个调度周期开始将停止任务消费 */
-        jobShardManager.updateJobShardState(jobShardId, JobShardState.TRANSLATING.getCode());
-
-        /** 同步最新可用分片到内存，确保不会将任务迁移到停用分片上 */
-        reSyncJobShards();
-
-        /** 开始迁移当前分片任务到其它分片 */
-        executor.execute(() -> translateJobShardToOtherShard(jobShardId));
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.ENABLED.getCode(), JobShardState.TRANSLATING.getCode());
     }
 
     public void stop() {
@@ -303,11 +303,15 @@ public class JobScheduler {
         /** 传递调度起始时间到执行器 */
         jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
 
-        /** 加载延迟任务 */
-        scheduleDelayJob(nextScheduleTime, loadMaxJobNums);
+        /** 实时获取被分配的分片ID */
+        List<Integer> shardIds = fetchJobShardIds(getAssignedJobShard());
+        if (!CollectionUtils.isEmpty(shardIds)) {
+            /** 加载延迟任务 */
+            scheduleDelayJob(nextScheduleTime, loadMaxJobNums, shardIds);
 
-        /** 释放被其它节点申请的任务 */
-        releaseJobShardReqByOther();
+            /** 释放被其它节点申请的任务 */
+            releaseJobShardReqByOther(shardIds);
+        }
     }
 
     public void doRetry() {
@@ -337,6 +341,34 @@ public class JobScheduler {
         doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime));
     }
 
+    /**
+     * 转移停用分片的任务到其它分片
+     */
+    public void doTranslateDisabledShardJobToOther() {
+        if (!isSchedulerReady()) {
+            return;
+        }
+
+        if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
+            return;
+        }
+
+        /** 获取所有待迁移的任务分片 */
+        List<Integer> translatingShardIds = fetchJobShardIds(jobShardManager.loadTranslatingJobShards());
+        if (CollectionUtils.isEmpty(translatingShardIds)) {
+            return;
+        }
+
+        /** 获取转移分片最新加载任务的截止时间点 */
+        Map<Integer, Long> mappedSegTriggers = jobSegTriggerManager
+                .loadSegTriggers(translatingShardIds)
+                .stream()
+                .collect(Collectors.toMap(JobSegTrigger::getJobShardId, JobSegTrigger::getTriggerTimeEnd));
+
+        /** 逐步转移分片任务 */
+        translatingShardIds.forEach(shardId -> translateShardJobToOtherShard(shardId, mappedSegTriggers.get(shardId), translateMaxNums));
+    }
+
     public SchedulerInfo getSchedulerInfo() {
         return schedulerInfo;
     }
@@ -357,27 +389,38 @@ public class JobScheduler {
         return null != schedulerInfo;
     }
 
+    private void scheduleDelayJob(Long nextScheduleTime, Integer maxJobNums, List<Integer> jobShardIds) {
+        LOG.info("Scheduler[id={}] is loading jobs, shards: {}", getSchedulerInfo().getId(), jobShardIds);
+        jobProcessor.scheduleShardJob(nextScheduleTime, maxJobNums, jobShardIds);
+    }
+
     /**
-     * 抽取分片任务，重新分配到其它分片
+     * 抽取指定分片任务，重新分配到其它分片
      * @param jobShardId
      */
-    private void translateJobShardToOtherShard(Integer jobShardId) {
+    private void translateShardJobToOtherShard(Integer jobShardId, Long startTriggerTime, Integer maxNums) {
+        /** 获取当前可用的分片ID */
+        List<Integer> shardIds = jobShardManager.loadEnabledJobShards().stream().map(JobShard::getId).collect(Collectors.toList());
+
         for (;;) {
-            List<Job> jobs = jobManager.loadShardJobs(jobShardId, nextScheduleTime, translateMaxNums);
+            List<Job> jobs = jobManager.loadShardJobs(jobShardId, startTriggerTime, maxNums);
             if (CollectionUtils.isEmpty(jobs)) {
                 break;
             }
             List<FacadeJob> facadeJobs = jobs.stream().map(job -> buildFacadeJob(job)).collect(Collectors.toList());
 
+            /** 删除全局记录 */
+            globalRecManager.deleteGlobalRec(jobs.stream().map(Job::getOutJobNo).collect(Collectors.toList()));
+
             /** 转移任务到其它分片 */
-            submitJobs(facadeJobs);
+            submitJobs(facadeJobs, shardIds);
 
             /** 批量删除转移的分片任务 */
             jobManager.deleteShardJobs(jobShardId, jobs.stream().map(job -> job.getId()).collect(Collectors.toList()));
         }
 
         /** 完成任务迁移后修改分片状态为停止 */
-        jobShardManager.updateJobShardState(jobShardId, JobShardState.DISABLED.getCode());
+        jobShardManager.updateJobShardState(jobShardId, JobShardState.TRANSLATING.getCode(), JobShardState.DISABLED.getCode());
 
         /** 删除JobSegTrigger分段信息 */
         jobSegTriggerManager.deleteSegTrigger(jobShardId);
@@ -407,9 +450,6 @@ public class JobScheduler {
             //重分配任务项
             reAssignJobShard(schedulers, jobShardManager.loadEnabledJobShards());
         }
-
-        //填充当前已经分配的分片信息
-        fillSchedulerAssignedJobShard();
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {
@@ -424,9 +464,14 @@ public class JobScheduler {
         setJobShardIds(shardIds);
     }
 
-    private void fillSchedulerAssignedJobShard() {
+    /** 暂未使用 */
+    private void fillAssignedJobShard() {
         final List<JobShard> jobShards = Collections.synchronizedList(jobShardManager.loadAssignedJobShards(getSchedulerInfo().getId()));
         this.assignedJobShard = jobShards;
+    }
+
+    private List<JobShard> getAssignedJobShard() {
+        return jobShardManager.loadAssignedJobShards(getSchedulerInfo().getId());
     }
 
     /**
@@ -539,7 +584,7 @@ public class JobScheduler {
         FacadeJob facadeJob = new FacadeJob();
         facadeJob.setOutJobNo(job.getOutJobNo());
         facadeJob.setJobInfo(job.getJobInfo());
-        facadeJob.setTriggerTime(job.getTriggerTime());
+        facadeJob.setTriggerTime(job.getTriggerTime() / 1000);
         facadeJob.setCallbackProtocol(job.getCallbackEndpoint());
         facadeJob.setCallbackEndpoint(job.getCallbackEndpoint());
         return facadeJob;
@@ -570,10 +615,8 @@ public class JobScheduler {
         return scheduler;
     }
 
-    private void releaseJobShardReqByOther() {
-        if (!CollectionUtils.isEmpty(assignedJobShard)) {
-            jobShardManager.updateReqServerToCurServer(assignedJobShard.stream().map(item -> item.getId()).collect(Collectors.toList()));
-        }
+    private void releaseJobShardReqByOther(List<Integer> assignedShardIds) {
+        jobShardManager.updateReqServerToCurServer(assignedShardIds);
     }
 
     private void reRegister(SchedulerInfo schedulerInfo) {
@@ -581,15 +624,18 @@ public class JobScheduler {
         setSchedulerInfo(schedulerInfo);
     }
 
-    private List<Integer> fetchJobShardIds(List<JobShard> assignedJobShard) {
-        if (CollectionUtils.isEmpty(assignedJobShard)) {
+    private List<Integer> fetchJobShardIds(List<JobShard> jobShard) {
+        if (CollectionUtils.isEmpty(jobShard)) {
             return Collections.EMPTY_LIST;
         }
-        return assignedJobShard.stream().map(item -> item.getId()).collect(Collectors.toList());
+        return jobShard.stream().map(JobShard::getId).collect(Collectors.toList());
     }
 
     private Integer getOneJobShardId() {
-        List<Integer> shardIds = getJobShardIds();
+        return getOneJobShardId(getJobShardIds());
+    }
+
+    private Integer getOneJobShardId(List<Integer> shardIds) {
         if (CollectionUtils.isEmpty(shardIds)) {
             throw new DelayJobException(NO_AVAILABLE_JOB_SHARD);
         }
@@ -598,7 +644,7 @@ public class JobScheduler {
 
     /** 暂未使用 */
     public void doLoadDelayJobInternal() {
-        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNums);
+        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNums, null);
     }
 
     private long getNextValidTimeAfter(Date current) {

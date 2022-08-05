@@ -11,4 +11,6 @@ public interface GlobalRecExtMapper {
     int insertRec(GlobalRec rec);
 
     int insertRecs(@Param("grcs") List<GlobalRec> grcs);
+
+    int deleteGlobalRecords(@Param("outJobNos") List<String> outJobNos);
 }

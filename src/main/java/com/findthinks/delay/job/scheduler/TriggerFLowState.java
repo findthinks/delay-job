@@ -1,9 +1,5 @@
 package com.findthinks.delay.job.scheduler;
 
-/**
- * @author YuBo
- * @version $Id: TaskFlowState.java, v0.1 2019/5/12 22:32 YuBo Exp $$
- */
 public enum TriggerFLowState {
     PROCESS(20,"执行中"),
     RETRY(30,"补偿中"),

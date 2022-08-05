@@ -17,6 +17,8 @@ public class JobShardManager implements IJobShardManager {
 
     private static final int NORMAL_STATE = 5;
 
+    private static final int TRANSLATING_STATE = 10;
+
     @Resource
     private JobShardExtMapper jobShardExtMapper;
 
@@ -45,6 +47,14 @@ public class JobShardManager implements IJobShardManager {
     public List<JobShard> loadEnabledJobShards() {
         Map<String, Object> params = new HashMap<>();
         params.put("state", NORMAL_STATE);
+        List<JobShard> jobShards = jobShardExtMapper.selectJobShardByCond(params);
+        return CollectionUtils.isEmpty(jobShards) ? Collections.EMPTY_LIST : jobShards;
+    }
+
+    @Override
+    public List<JobShard> loadTranslatingJobShards() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("state", TRANSLATING_STATE);
         return jobShardExtMapper.selectJobShardByCond(params);
     }
 
@@ -95,10 +105,11 @@ public class JobShardManager implements IJobShardManager {
     }
 
     @Override
-    public int updateJobShardState(Integer jobShardId, Integer state) {
+    public int updateJobShardState(Integer jobShardId, Integer oldState, Integer newState) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", jobShardId);
-        params.put("state", state);
+        params.put("oldState", oldState);
+        params.put("newState", newState);
         return jobShardExtMapper.updateJobShardState(params);
     }
 }

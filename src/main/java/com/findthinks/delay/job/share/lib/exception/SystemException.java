@@ -2,9 +2,6 @@ package com.findthinks.delay.job.share.lib.exception;
 
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 
-/**
- * @author YuBo
- */
 public class SystemException extends DelayJobException {
 
     public SystemException() {

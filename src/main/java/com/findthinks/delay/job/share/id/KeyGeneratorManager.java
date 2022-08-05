@@ -7,9 +7,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * @author YuBo
- */
 public class KeyGeneratorManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeyGeneratorManager.class);

@@ -1,8 +1,5 @@
 package com.findthinks.delay.job.share.lib.constants;
 
-/**
- * @author YuBo
- */
 public interface SystemConstants {
 
     int V_CPU_CORES = Runtime.getRuntime().availableProcessors();

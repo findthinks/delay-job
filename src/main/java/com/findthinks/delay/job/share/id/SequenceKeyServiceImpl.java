@@ -3,9 +3,6 @@ package com.findthinks.delay.job.share.id;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author YuBo
- */
 public class SequenceKeyServiceImpl implements SequenceKeyService {
 
     private SequenceKeyRepository sequenceKeyRepository;

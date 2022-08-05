@@ -1,8 +1,5 @@
 package com.findthinks.delay.job.share.lib.enums;
 
-/**
- * @author YuBo
- */
 public enum ExceptionEnum {
 
     SUCCESS("ok", "success"),
@@ -13,6 +10,7 @@ public enum ExceptionEnum {
     JOB_IS_CANCEL("job_is_cancel", "job is cancel"),
     NO_AVAILABLE_JOB_SHARD("no_available_job_shard","no available job shard"),
     OUT_JOB_NO_IS_EXIST("out_job_no_is_exist", "out job number is exist"),
+    HAS_TRANSLATING_SHARD("has_translating_job_shard", "has translating job shard"),
     UNKNOWN_ERROR( "unknown_error", "unknown error");
 
     /** 枚举编码 */

@@ -36,4 +36,14 @@
           (#{g.outJobNo}, #{g.jobShardId}, #{g.jobId}, #{g.triggerTime}, #{g.gmtCreate})
         </foreach>
     </insert>
+
+    <delete id="deleteGlobalRecords">
+        DELETE FROM global_rec
+        WHERE
+            out_job_no
+                IN
+                <foreach collection="outJobNos" item="outJobNo" index="index" open="(" close=")" separator=",">
+                    #{outJobNo}
+                </foreach>
+    </delete>
 </mapper>

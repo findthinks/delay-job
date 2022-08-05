@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
-/**
- * @author YuBo
- */
 public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
