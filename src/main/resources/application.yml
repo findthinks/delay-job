@@ -35,9 +35,9 @@ scheduler:
     repeat-check-delta: 5
     translate-max-nums: 100
     retry-max-nums: 10000
-    retry-seg-nums: 60
-    http-trigger-connect-timeout: 2
-    http-trigger-read-timeout: 2
+    retry-seg-nums: 1440
+    http-trigger-connect-timeout: 1
+    http-trigger-read-timeout: 1
 logging:
   file:
     name: classpath:logback.xml

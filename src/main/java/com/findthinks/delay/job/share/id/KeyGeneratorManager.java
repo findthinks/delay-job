@@ -2,7 +2,10 @@ package com.findthinks.delay.job.share.id;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -60,27 +63,31 @@ public class KeyGeneratorManager {
     }
 
     private class KeyGeneratorImpl implements KeyGenerator {
-        private static final int FIRE_BUF_THRESHOLD_RATIO = 20;
+        private final BigDecimal FIRE_BUF_THRESHOLD_RATIO = BigDecimal.valueOf(0.5);
         private final Lock keyLocker = new ReentrantLock();
         private final Lock bufLocker = new ReentrantLock();
-        private volatile long fireLeftThreshold;
-        private boolean fire = false;
+        private volatile long fireThreshold;
+        private volatile boolean fire = false;
         private final int id;
         private final String key;
         private volatile Segment cur;
         private volatile Segment buf;
+        private final long incSpan;
+        private AtomicInteger counter;
 
         public KeyGeneratorImpl(int id, String key, long startWith, long endWith, long incSpan) {
             this.id = id;
             this.key = key;
-            this.cur = new Segment(new AtomicLong(startWith), endWith, incSpan);
-            freshFireThreshold();
+            this.cur = new Segment(new AtomicLong(startWith), endWith);
+            this.incSpan = incSpan;
+            this.counter = new AtomicInteger(0);
+            this.fireThreshold = FIRE_BUF_THRESHOLD_RATIO.multiply(BigDecimal.valueOf(incSpan)).longValue();
         }
 
         @Override
         public long nextId() {
-            if (cur.startWith.get() <= cur.endWith) {
-                if (cur.endWith - cur.startWith.get() < fireLeftThreshold) {
+            if (counter.getAndIncrement() < incSpan) {
+                if (counter.get() < fireThreshold) {
                     if (!fire) {
                         try {
                             bufLocker.lock();
@@ -98,29 +105,25 @@ public class KeyGeneratorManager {
             } else {
                 try {
                     keyLocker.lock();
-                    if (cur.startWith.get() <= cur.endWith) {
+                    if (counter.getAndIncrement() < incSpan) {
                         return nextId();
                     }
 
                     if (null != buf) {
-                        LOG.info("Switch cached segment for key: {}", key);
+                        LOG.info("Switch cached segment for key: {}~{}", buf.startWith, buf.endWith);
                         cur = buf;
                         buf = null;
                         fire = false;
                     } else {
-                        LOG.info("Cached segment is not ready, directly generate new segment for key: {}", key);
                         cur = newSegment();
+                        LOG.info("Cached segment is not ready, directly generate new segment for key: {}~{}", cur.startWith, cur.endWith);
                     }
-                    freshFireThreshold();
+                    counter = new AtomicInteger(0);
                     return nextId();
                 } finally {
                     keyLocker.unlock();
                 }
             }
-        }
-
-        private void freshFireThreshold() {
-            this.fireLeftThreshold = (this.cur.incSpan * FIRE_BUF_THRESHOLD_RATIO) / 100;
         }
 
         private void cacheSegment() {
@@ -133,21 +136,19 @@ public class KeyGeneratorManager {
                 long newStartWith = sequence.getStartWith();
                 long newEndWith = newStartWith + sequence.getIncSpan();
                 if (sequenceKeyService.compareAndSet(id, newStartWith, newEndWith)) {
-                    return new Segment(new AtomicLong(newStartWith), newEndWith - 1, sequence.getIncSpan());
+                    return new Segment(new AtomicLong(newStartWith), newEndWith - 1);
                 }
             }
         }
     }
 
     private class Segment {
-        private AtomicLong startWith;
+        private volatile AtomicLong startWith;
         private volatile long endWith;
-        private volatile long incSpan;
 
-        public Segment(AtomicLong startWith, long endWith, long incSpan) {
+        public Segment(final AtomicLong startWith, long endWith) {
             this.startWith = startWith;
             this.endWith = endWith;
-            this.incSpan = incSpan;
         }
     }
 }
