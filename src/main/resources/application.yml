@@ -37,7 +37,7 @@ scheduler:
     once-retry-seg-nums: 10
     retry-max-nums: 10000
     retry-seg-nums: 1440
-    state-check-seg-nums: 3
+    state-check-seg-nums: 10
     http-trigger-connect-timeout: 1
     http-trigger-read-timeout: 1
 logging:

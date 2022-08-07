@@ -59,7 +59,7 @@
         WHERE
             <![CDATA[
                 trigger_time_start >= #{timeStart}
-                AND trigger_time_end < #{timeEnd}
+                AND trigger_time_end <= #{timeEnd}
             ]]>
             AND state != 40
     </select>

@@ -111,10 +111,10 @@ public class KeyGeneratorManager {
                         cur = buf;
                         buf = null;
                         fireCache = false;
-                        LOG.info("Switch cached segment for key: {}~{}", buf.startWith, buf.endWith);
+                        LOG.info("Switch cached segment for key: {}, segment: {}~{}", key, buf.startWith, buf.endWith);
                     } else {
                         cur = newSegment();
-                        LOG.info("Cached segment is not ready, directly generate new segment for key: {}~{}", cur.startWith, cur.endWith);
+                        LOG.info("Cached segment is not ready, directly generate new segment for key: {}, segment: {}~{}", key, cur.startWith, cur.endWith);
                     }
                     counter = resetCounter();
                     return nextId();
