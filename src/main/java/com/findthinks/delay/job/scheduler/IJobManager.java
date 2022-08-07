@@ -2,7 +2,6 @@ package com.findthinks.delay.job.scheduler;
 
 import com.findthinks.delay.job.share.repository.entity.GlobalRec;
 import com.findthinks.delay.job.share.repository.entity.Job;
-
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +12,8 @@ public interface IJobManager {
     List<Job> loadJobs(Integer jobShardId, Long nextTriggerTime, Integer maxJobs);
 
     List<Job> loadShardJobs(Integer jobShardId, Long nextTriggerTime, Integer maxJobs);
+
+    Long getOneUnSuccessJobId(Integer jobShardId, long triggerTimeStart, long triggerTimeEnd);
 
     boolean modifyJobState(Job job, int newState, int oldState, int retryTimes);
 

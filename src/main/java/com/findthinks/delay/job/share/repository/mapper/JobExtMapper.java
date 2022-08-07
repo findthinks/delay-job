@@ -15,6 +15,8 @@ public interface JobExtMapper {
 
     int selectNoneSuccessJobsCount(Map<String, Object> parameters);
 
+    Long selectOneUnSuccessJobId(Map<String, Object> parameters);
+
     int updateJobState(Map<String, Object> parameters);
 
     int updateJobsState(Map<String, Object> parameters);

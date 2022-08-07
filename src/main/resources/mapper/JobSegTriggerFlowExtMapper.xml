@@ -44,8 +44,22 @@
                     #{shardId}
                 </foreach>
             <![CDATA[
-            AND trigger_time_start >= #{timeStart}
-            AND trigger_time_end< #{timeEnd}
+                AND trigger_time_start >= #{timeStart}
+                AND trigger_time_end< #{timeEnd}
+            ]]>
+                AND state != 40
+        LIMIT #{maxSegments}
+    </select>
+
+    <select id="loadUnCompleteFlows" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
+        FROM
+            job_seg_trigger_flow
+        WHERE
+            <![CDATA[
+                trigger_time_start >= #{timeStart}
+                AND trigger_time_end < #{timeEnd}
             ]]>
             AND state != 40
     </select>

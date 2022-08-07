@@ -1,7 +1,6 @@
 package com.findthinks.delay.job.scheduler;
 
 import com.findthinks.delay.job.share.repository.entity.Job;
-import com.findthinks.delay.job.share.repository.entity.JobSegTrigger;
 import com.findthinks.delay.job.share.repository.mapper.JobSegTriggerExtMapper;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
@@ -77,12 +76,11 @@ public class JobProcessor {
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
         if (jobs.size() > 0) {
-            translateToMap(jobs).entrySet().forEach(entry -> {
+            translateToMap(jobs).entrySet().forEach(entry ->
                 scheduler.schedule(
                         new DelayJob(entry.getValue()),
                         entry.getKey() * 1000 - System.currentTimeMillis(),
-                        TimeUnit.MILLISECONDS);
-            });
+                        TimeUnit.MILLISECONDS));
         }
     }
 
@@ -159,32 +157,6 @@ public class JobProcessor {
      */
     public long getRetryingJobCount() {
         return retryExecutor.getQueue().size();
-    }
-
-    /**
-     * 异步同步任务执行状态
-     */
-    public void syncSegmentsState() {
-        long minTriggerTime = getMinTriggerTimeFromSegTrigger();
-        if (minTriggerTime > 0) {
-            jobSegTriggerFlowManager.loadRecentlySegments(jobShardManager.selectJobShardCount(), minTriggerTime).forEach(segment -> {
-                int processCount = jobManager.getNoneSuccessJobsCount(
-                        segment.getJobShardId(),
-                        segment.getTriggerTimeStart(),
-                        segment.getTriggerTimeEnd());
-                if (processCount == 0) {
-                    jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
-                }
-            });
-        }
-    }
-
-    private long getMinTriggerTimeFromSegTrigger() {
-        final JobSegTrigger seg = jobSegTriggerExtMapper.selectOneSegTrigger();
-        if (null != seg) {
-            return seg.getTriggerTimeStart();
-        }
-        return -1;
     }
 
     private void fireJob(Job job) {

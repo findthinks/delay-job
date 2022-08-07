@@ -6,9 +6,9 @@ import java.util.Map;
 
 public interface JobSegTriggerFlowExtMapper {
 
-    List<JobSegTriggerFlow> loadRecentlyFlows(Map<String, Object> parameters);
-
     List<JobSegTriggerFlow> loadRetryFlows(Map<String, Object> parameters);
+
+    List<JobSegTriggerFlow> loadUnCompleteFlows(Map<String, Object> parameters);
 
     int insertSegTriggerFlow(JobSegTriggerFlow flow);
 

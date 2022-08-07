@@ -72,8 +72,14 @@ public class JobScheduler {
     @Value("${scheduler.job.retry-max-nums:10000}")
     private int retryMaxJobNums;
 
-    @Value("${scheduler.job.retry-seg-nums:30}")
+    @Value("${scheduler.job.once-retry-seg-nums:10}")
+    private int onceRetrySegNums;
+
+    @Value("${scheduler.job.retry-seg-nums:1440}")
     private int retrySegNums;
+
+    @Value("${scheduler.job.state-check-seg-nums:3}")
+    private int stateCheckSegNums;
 
     @Value("${scheduler.job.cron.load}")
     private CronExpression jobLoadCron;
@@ -282,10 +288,17 @@ public class JobScheduler {
             return;
         }
 
-        /** 更新数据库任务状态, 由Leader完成 */
-        if (isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
-            jobProcessor.syncSegmentsState();
-        }
+        /** 寻找最近周期内完成的任务段，将任务状态更新为完成 */
+        List<JobSegTriggerFlow> segments = jobSegTriggerFlowManager.loadUnCompleteSegments(getSegmentStateCheckStartTime(), currentScheduleTime);
+        segments.forEach(segment -> {
+            Long jobId = jobManager.getOneUnSuccessJobId(
+                    segment.getJobShardId(),
+                    segment.getTriggerTimeStart(),
+                    segment.getTriggerTimeEnd());
+            if (null == jobId) {
+                jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
+            }
+        });
 
         /** 同步任务分片到调度器缓存 */
         reSyncJobShards();
@@ -344,7 +357,7 @@ public class JobScheduler {
         List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
 
         /** 开始补偿未完成的任务段 */
-        doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime));
+        doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNums));
     }
 
     /**
@@ -427,9 +440,6 @@ public class JobScheduler {
 
         /** 完成任务迁移后修改分片状态为停止 */
         jobShardManager.updateJobShardState(jobShardId, JobShardState.TRANSLATING.getCode(), JobShardState.DISABLED.getCode());
-
-        /** 删除JobSegTrigger分段信息 */
-        jobSegTriggerManager.deleteSegTrigger(jobShardId);
     }
 
     private void refreshScheduler() {
@@ -659,6 +669,10 @@ public class JobScheduler {
 
     private long getRetryStartTime() {
         return currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
+    }
+
+    private Long getSegmentStateCheckStartTime() {
+        return currentScheduleTime - stateCheckSegNums * (nextScheduleTime - currentScheduleTime);
     }
 
     private void doSegmentsRetry(List<JobSegTriggerFlow> segments) {

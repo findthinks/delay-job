@@ -14,24 +14,24 @@ public class JobSegTriggerFlowManager implements IJobSegTriggerFlowManager {
     private JobSegTriggerFlowExtMapper jobSegTriggerFlowExtMapper;
 
     @Override
-    public List<JobSegTriggerFlow> loadRecentlySegments(int shards, long minTriggerTime) {
+    public List<JobSegTriggerFlow> loadUnCompleteSegments(Long startTime, Long endTime) {
         Map<String, Object> params = new HashMap<>();
-        params.put("flows", shards);
-        params.put("minTriggerTime", minTriggerTime);
-        List<JobSegTriggerFlow> segments = jobSegTriggerFlowExtMapper.loadRecentlyFlows(params);
+        params.put("timeStart", startTime);
+        params.put("timeEnd", endTime);
+        List<JobSegTriggerFlow> segments = jobSegTriggerFlowExtMapper.loadUnCompleteFlows(params);
         return CollectionUtils.isEmpty(segments) ? Collections.EMPTY_LIST : segments;
     }
 
     @Override
-    public List<JobSegTriggerFlow> loadRetrySegments(List<Integer> shards, Long startTime, Long endTime) {
+    public List<JobSegTriggerFlow> loadRetrySegments(List<Integer> shards, Long startTime, Long endTime, Integer limitSegNums) {
         if (CollectionUtils.isEmpty(shards)) {
             return Collections.EMPTY_LIST;
         }
-
         Map<String, Object> params = new HashMap<>();
         params.put("shardIds", shards);
         params.put("timeStart", startTime);
         params.put("timeEnd", endTime);
+        params.put("maxSegments", limitSegNums);
         return jobSegTriggerFlowExtMapper.loadRetryFlows(params);
     }
 

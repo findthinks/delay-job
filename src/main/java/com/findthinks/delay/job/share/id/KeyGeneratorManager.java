@@ -2,7 +2,6 @@ package com.findthinks.delay.job.share.id;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -109,20 +108,24 @@ public class KeyGeneratorManager {
                     }
 
                     if (null != buf) {
-                        LOG.info("Switch cached segment for key: {}~{}", buf.startWith, buf.endWith);
                         cur = buf;
                         buf = null;
                         fireCache = false;
+                        LOG.info("Switch cached segment for key: {}~{}", buf.startWith, buf.endWith);
                     } else {
                         cur = newSegment();
                         LOG.info("Cached segment is not ready, directly generate new segment for key: {}~{}", cur.startWith, cur.endWith);
                     }
-                    counter = new AtomicInteger(0);
+                    counter = resetCounter();
                     return nextId();
                 } finally {
                     keyLocker.unlock();
                 }
             }
+        }
+
+        private AtomicInteger resetCounter() {
+            return new AtomicInteger(0);
         }
 
         private void cacheSegment() {

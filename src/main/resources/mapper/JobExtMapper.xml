@@ -81,6 +81,20 @@
         ]]>
     </select>
 
+    <select id="selectOneUnSuccessJobId" parameterType="map" resultType="int">
+        <![CDATA[
+        SELECT
+            id
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time > #{triggerTimeStart}
+          AND trigger_time <= #{triggerTimeEnd}
+          AND state in (10, 20, 40)
+            LIMIT 1
+        ]]>
+    </select>
+
     <select id="selectNoneSuccessJobsCount" parameterType="map" resultType="int">
         <![CDATA[
         SELECT

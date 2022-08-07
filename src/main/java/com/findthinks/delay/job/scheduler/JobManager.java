@@ -94,6 +94,15 @@ public class JobManager implements IJobManager {
     }
 
     @Override
+    public Long getOneUnSuccessJobId(Integer jobShardId, long triggerTimeStart, long triggerTimeEnd) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("jobShardId", jobShardId);
+        parameters.put("triggerTimeStart", triggerTimeStart);
+        parameters.put("triggerTimeEnd", triggerTimeEnd);
+        return jobExtMapper.selectOneUnSuccessJobId(parameters);
+    }
+
+    @Override
     public boolean modifyJobState(Job job, int newState, int oldState, int retryTimes) {
         Map<String, Object> parameters = new HashMap<>(8);
         parameters.put("id", job.getId());

@@ -27,6 +27,13 @@
         LIMIT 1
     </select>
 
+    <select id="selectAllSegTriggers" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+    </select>
+
     <select id="selectJobSegTriggerByShardId" parameterType="int" resultMap="BaseResultMap">
         SELECT
             id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
