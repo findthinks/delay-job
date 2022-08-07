@@ -265,13 +265,19 @@ public class JobProcessor {
                 }
             } else if (r instanceof RetryJob) {
                 RetryJob retry = (RetryJob) r;
-                JobState destState = null == t ? JobState.SUCCESS : retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
-                if (jobManager.modifyJobState(
-                        retry.job,
-                        destState.getCode(),
-                        retry.job.getState(),
-                        retry.job.getRetryTimes() + 1)) {
-                    retry.job.setState(destState.getCode());
+                /** 任务重试成功 */
+                if (null == t) {
+                    triggeredJobs.offer(new TriggeredJob(retry.job, JobState.SUCCESS));
+                /** 任务重试失败或者继续重试 */
+                } else {
+                    JobState destState = retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
+                    if (jobManager.modifyJobState(
+                            retry.job,
+                            destState.getCode(),
+                            retry.job.getState(),
+                            retry.job.getRetryTimes() + 1)) {
+                        retry.job.setState(destState.getCode());
+                    }
                 }
             }
         }
