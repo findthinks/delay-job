@@ -164,7 +164,7 @@ public class JobProcessor {
     /**
      * 异步同步任务执行状态
      */
-    public void triggerFlowStateSync() {
+    public void syncSegmentsState() {
         long minTriggerTime = getMinTriggerTimeFromSegTrigger();
         if (minTriggerTime > 0) {
             jobSegTriggerFlowManager.loadRecentlySegments(jobShardManager.selectJobShardCount(), minTriggerTime).forEach(segment -> {

@@ -284,7 +284,7 @@ public class JobScheduler {
 
         /** 更新数据库任务状态, 由Leader完成 */
         if (isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
-            jobProcessor.triggerFlowStateSync();
+            jobProcessor.syncSegmentsState();
         }
 
         /** 同步任务分片到调度器缓存 */

@@ -63,11 +63,11 @@ public class KeyGeneratorManager {
     }
 
     private class KeyGeneratorImpl implements KeyGenerator {
-        private final BigDecimal FIRE_BUF_THRESHOLD_RATIO = BigDecimal.valueOf(0.5);
+        private final BigDecimal FIRE_CACHE_BUF_THRESHOLD_RATIO = BigDecimal.valueOf(0.4);
         private final Lock keyLocker = new ReentrantLock();
         private final Lock bufLocker = new ReentrantLock();
         private volatile long fireThreshold;
-        private volatile boolean fire = false;
+        private volatile boolean fireCache = false;
         private final int id;
         private final String key;
         private volatile Segment cur;
@@ -81,20 +81,19 @@ public class KeyGeneratorManager {
             this.cur = new Segment(new AtomicLong(startWith), endWith);
             this.incSpan = incSpan;
             this.counter = new AtomicInteger(0);
-            this.fireThreshold = FIRE_BUF_THRESHOLD_RATIO.multiply(BigDecimal.valueOf(incSpan)).longValue();
+            this.fireThreshold = FIRE_CACHE_BUF_THRESHOLD_RATIO.multiply(BigDecimal.valueOf(incSpan)).longValue();
         }
 
         @Override
         public long nextId() {
             if (counter.getAndIncrement() < incSpan) {
                 if (counter.get() < fireThreshold) {
-                    if (!fire) {
+                    if (!fireCache) {
                         try {
                             bufLocker.lock();
-                            if (!fire) {
-                                LOG.info("Fire cache segment: {}", key);
+                            if (!fireCache) {
                                 executor.submit(() -> cacheSegment());
-                                fire = true;
+                                fireCache = true;
                             }
                         } finally {
                             bufLocker.unlock();
@@ -105,7 +104,7 @@ public class KeyGeneratorManager {
             } else {
                 try {
                     keyLocker.lock();
-                    if (counter.getAndIncrement() < incSpan) {
+                    if (counter.get() < incSpan) {
                         return nextId();
                     }
 
@@ -113,7 +112,7 @@ public class KeyGeneratorManager {
                         LOG.info("Switch cached segment for key: {}~{}", buf.startWith, buf.endWith);
                         cur = buf;
                         buf = null;
-                        fire = false;
+                        fireCache = false;
                     } else {
                         cur = newSegment();
                         LOG.info("Cached segment is not ready, directly generate new segment for key: {}~{}", cur.startWith, cur.endWith);
@@ -127,6 +126,7 @@ public class KeyGeneratorManager {
         }
 
         private void cacheSegment() {
+            LOG.info("Trigger to cache segment.");
             buf = newSegment();
         }
 
