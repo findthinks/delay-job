@@ -1,7 +1,6 @@
 package com.findthinks.delay.job.scheduler;
 
 import com.findthinks.delay.job.share.repository.entity.Job;
-import com.findthinks.delay.job.share.repository.mapper.JobSegTriggerExtMapper;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -56,15 +55,6 @@ public class JobProcessor {
 
     @Resource
     private IJobManager jobManager;
-
-    @Resource
-    private IJobSegTriggerFlowManager jobSegTriggerFlowManager;
-
-    @Resource
-    private JobSegTriggerExtMapper jobSegTriggerExtMapper;
-
-    @Resource
-    private JobShardManager jobShardManager;
 
     private volatile long currentLoadJobTime;
 
