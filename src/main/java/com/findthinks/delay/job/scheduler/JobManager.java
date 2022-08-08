@@ -94,12 +94,13 @@ public class JobManager implements IJobManager {
     }
 
     @Override
-    public Long getOneUnSuccessJobId(Integer jobShardId, long triggerTimeStart, long triggerTimeEnd) {
+    public Job getOneUnSuccessJob(Integer jobShardId, long triggerTimeStart, long triggerTimeEnd) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("jobShardId", jobShardId);
         parameters.put("triggerTimeStart", triggerTimeStart);
         parameters.put("triggerTimeEnd", triggerTimeEnd);
-        return jobExtMapper.selectOneUnSuccessJobId(parameters);
+        List<Job> jobs = jobExtMapper.selectOneUnSuccessJob(parameters);
+        return CollectionUtils.isEmpty(jobs) ? null : jobs.get(0);
     }
 
     @Override
@@ -186,15 +187,6 @@ public class JobManager implements IJobManager {
     public List<Job> loadRetryJobs(Integer jobShardId, Long startTime, Long endTime, Integer maxJobs) {
         List<Job> shardJob = loadNoneSuccessJobs(jobShardId, startTime, endTime, maxJobs);
         return CollectionUtils.isEmpty(shardJob) ? Collections.EMPTY_LIST : shardJob;
-    }
-
-    @Override
-    public int getNoneSuccessJobsCount(Integer jobShardId, long triggerTimeStart, long triggerTimeEnd) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("jobShardId", jobShardId);
-        parameters.put("triggerTimeStart", triggerTimeStart);
-        parameters.put("triggerTimeEnd", triggerTimeEnd);
-        return jobExtMapper.selectNoneSuccessJobsCount(parameters);
     }
 
     @Override
