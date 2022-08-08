@@ -315,7 +315,7 @@ public class JobScheduler {
             return;
         }
 
-        /** 保留上次调度时间，计算下次调度时间*/
+        /** 保留上次调度时间，计算下次调度时间 */
         currentScheduleTime = nextScheduleTime;
         nextScheduleTime = jobLoadCron.getNextValidTimeAfter(new Date()).getTime();
 
