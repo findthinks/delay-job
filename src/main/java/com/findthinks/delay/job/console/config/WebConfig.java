@@ -1,9 +1,11 @@
 package com.findthinks.delay.job.console.config;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.findthinks.delay.job.console.plugin.JwtInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -45,5 +47,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public JwtInterceptor jwtInterceptor() {
         return new JwtInterceptor();
+    }
+
+    @Bean
+    public Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder() {
+        return new Jackson2ObjectMapperBuilder().featuresToEnable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 }
