@@ -291,11 +291,11 @@ public class JobScheduler {
         /** 寻找最近周期内完成的任务段，将任务状态更新为完成 */
         List<JobSegTriggerFlow> segments = jobSegTriggerFlowManager.loadUnCompleteSegments(getSegmentStateCheckStartTime(), currentScheduleTime);
         segments.forEach(segment -> {
-            Long jobId = jobManager.getOneUnSuccessJobId(
+            Job Job = jobManager.getOneUnSuccessJob(
                     segment.getJobShardId(),
                     segment.getTriggerTimeStart(),
                     segment.getTriggerTimeEnd());
-            if (null == jobId) {
+            if (null == Job) {
                 jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
             }
         });
@@ -315,7 +315,7 @@ public class JobScheduler {
             return;
         }
 
-        /** 保留上次调度时间，计算下次调度时间*/
+        /** 保留上次调度时间，计算下次调度时间 */
         currentScheduleTime = nextScheduleTime;
         nextScheduleTime = jobLoadCron.getNextValidTimeAfter(new Date()).getTime();
 

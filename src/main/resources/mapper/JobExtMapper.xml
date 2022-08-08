@@ -81,10 +81,10 @@
         ]]>
     </select>
 
-    <select id="selectOneUnSuccessJobId" parameterType="map" resultType="int">
+    <select id="selectOneUnSuccessJob" parameterType="map" resultMap="BaseResultMap">
         <![CDATA[
         SELECT
-            id
+            *
         FROM
             job_${jobShardId}
         WHERE
