@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS `global_rec`;
 CREATE TABLE `global_rec` (
 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 `out_job_no` varchar(32) NOT NULL COMMENT '外部任务编号',
-`job_shard_id` tinyint(5) NOT NULL COMMENT '任务分片ID',
+`job_shard_id` tinyint(3) unsigned NOT NULL COMMENT '任务分片ID',
 `job_id` bigint(20) NOT NULL COMMENT '内部任务ID',
 `trigger_time` bigint(21) NOT NULL COMMENT '触发时间',
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -51,7 +51,7 @@ CREATE TABLE `job_shard` (
 `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT COMMENT '分片ID',
 `cur_server` int(11) NOT NULL COMMENT '当前分片持有者',
 `req_server` int(11) NOT NULL DEFAULT '0' COMMENT '分片申请者',
-`state` tinyint(3) NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
+`state` tinyint(3) unsigned NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
