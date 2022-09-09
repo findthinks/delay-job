@@ -94,12 +94,11 @@ public class JobProcessor {
      * @param jobs
      */
     public void scheduleJobs(List<Job> jobs) {
-        translateToMap(Arrays.asList(jobs)).entrySet().forEach(entry -> {
+        translateToMap(Arrays.asList(jobs)).entrySet().forEach(entry ->
             scheduler.schedule(
                     new DelayJob(entry.getValue()),
                     entry.getKey() * 1000 - System.currentTimeMillis(),
-                    TimeUnit.MILLISECONDS);
-        });
+                    TimeUnit.MILLISECONDS));
     }
 
     /**
