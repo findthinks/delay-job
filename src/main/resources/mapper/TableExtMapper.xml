@@ -18,7 +18,7 @@
             PRIMARY KEY (`id`),
             UNIQUE KEY `idx_job0_out_job_no` (`out_job_no`) USING BTREE,
             KEY `idx_trigger_time` (`trigger_time`) USING BTREE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci
         ]]>
     </update>
 </mapper>
