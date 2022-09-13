@@ -4,9 +4,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://119.91.87.4:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: bbfisher
-    password: Bbfisher123!
+    url: jdbc:mysql://162.14.114.83:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Findthinks@2022
     hikari:
       minimum-idle: 10
       maximum-pool-size: 100
@@ -31,13 +31,13 @@ scheduler:
       retry: 5,15,25,35,45,55 * * * * ?
       sync-state: 5,15,25,35,45,55 * * * * ?
       translate: 10,25,40,55 * * * * ?
-    load-max-nums: 50000
+    load-max-num: 50000
     repeat-check-delta: 5
-    translate-max-nums: 100
-    once-retry-seg-nums: 10
-    retry-max-nums: 10000
-    retry-seg-nums: 1440
-    state-check-seg-nums: 10
+    translate-max-num: 100
+    once-retry-seg-num: 10
+    retry-max-num: 10000
+    retry-seg-num: 1440
+    state-check-seg-num: 10
     http-trigger-connect-timeout: 1
     http-trigger-read-timeout: 1
 logging:

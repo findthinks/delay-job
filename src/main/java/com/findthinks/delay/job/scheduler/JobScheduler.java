@@ -69,25 +69,25 @@ public class JobScheduler {
     @Value("${scheduler.judge-dead:15}")
     private int judgeDeadInternal;
 
-    @Value("${scheduler.job.retry-max-nums:10000}")
+    @Value("${scheduler.job.retry-max-num:10000}")
     private int retryMaxJobNums;
 
-    @Value("${scheduler.job.once-retry-seg-nums:10}")
+    @Value("${scheduler.job.once-retry-seg-num:10}")
     private int onceRetrySegNums;
 
-    @Value("${scheduler.job.retry-seg-nums:1440}")
+    @Value("${scheduler.job.retry-seg-num:1440}")
     private int retrySegNums;
 
-    @Value("${scheduler.job.state-check-seg-nums:3}")
+    @Value("${scheduler.job.state-check-seg-num:3}")
     private int stateCheckSegNums;
 
     @Value("${scheduler.job.cron.load}")
     private CronExpression jobLoadCron;
 
-    @Value("${scheduler.job.load-max-nums:5000}")
+    @Value("${scheduler.job.load-max-num:5000}")
     private int loadMaxJobNums;
 
-    @Value("${scheduler.job.translate-max-nums:100}")
+    @Value("${scheduler.job.translate-max-num:100}")
     private int translateMaxNums;
 
     private volatile List<Integer> jobShardIds;
