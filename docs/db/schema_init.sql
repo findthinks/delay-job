@@ -8,9 +8,7 @@ CREATE TABLE `account` (
 `passwd` varchar(32) NOT NULL,
 `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `account` (`id`, `account`, `passwd`, `modify_time`) VALUES (1, 'delay', '7243f8be75253afbadf7477867021f8b', CURRENT_TIME);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `global_rec`;
 CREATE TABLE `global_rec` (
@@ -22,7 +20,7 @@ CREATE TABLE `global_rec` (
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 PRIMARY KEY (`id`),
 UNIQUE KEY `idx_global_out_job_no` (`out_job_no`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 CREATE TABLE `job_seg_trigger` (
 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -32,7 +30,7 @@ CREATE TABLE `job_seg_trigger` (
 `gmt_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间',
 PRIMARY KEY (`id`),
 KEY `idx_st_jshard_id` (`job_shard_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 CREATE TABLE `job_seg_trigger_flow` (
 `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -44,7 +42,7 @@ CREATE TABLE `job_seg_trigger_flow` (
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 PRIMARY KEY (`id`),
 KEY `idx_sgf_shard_trigger_time` (`job_shard_id`,`trigger_time_start`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `job_shard`;
 CREATE TABLE `job_shard` (
@@ -53,7 +51,7 @@ CREATE TABLE `job_shard` (
 `req_server` int(11) NOT NULL DEFAULT '0' COMMENT '分片申请者',
 `state` tinyint(3) unsigned NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `scheduler_info`;
 CREATE TABLE `scheduler_info` (
@@ -64,7 +62,7 @@ CREATE TABLE `scheduler_info` (
 `ip` varchar(25) DEFAULT NULL COMMENT '调度器ip',
 PRIMARY KEY (`id`),
 KEY `idx_scheduler_uuid` (`uuid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `sequence_key`;
 CREATE TABLE `sequence_key` (
@@ -75,6 +73,7 @@ CREATE TABLE `sequence_key` (
 `description` varchar(64) DEFAULT NULL COMMENT '说明',
 PRIMARY KEY (`id`),
 UNIQUE KEY `idx_sequence_key` (`key`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci;
 
 INSERT INTO `sequence_key` (`id`, `key`, `start_with`, `inc_span`, `description`) VALUES (1000, 'JOB_ID', 100000000, 500, 'Job_ID生成种子');
+INSERT INTO `account`(`id`, `account`, `passwd`, `modify_time`) VALUES (1, 'delay', '7243f8be75253afbadf7477867021f8b', '2022-07-29 00:43:51');
