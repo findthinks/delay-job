@@ -11,6 +11,7 @@ public enum ExceptionEnum {
     NO_AVAILABLE_JOB_SHARD("no_available_job_shard","no available job shard"),
     OUT_JOB_NO_IS_EXIST("out_job_no_is_exist", "out job number is exist"),
     HAS_TRANSLATING_SHARD("has_translating_job_shard", "has translating job shard"),
+    DUPLICATE_KEY_EXCEPTION("data_duplicate","data duplicate"),
     UNKNOWN_ERROR( "unknown_error", "unknown error");
 
     /** 枚举编码 */

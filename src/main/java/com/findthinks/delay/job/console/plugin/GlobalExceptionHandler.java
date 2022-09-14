@@ -5,6 +5,7 @@ import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.lib.result.FoxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -63,15 +64,22 @@ public class GlobalExceptionHandler {
         return FoxResult.fail(ExceptionEnum.INVALID_PARAMS, errorMsg.toString());
     }
 
+
+    @ExceptionHandler(value = DuplicateKeyException.class)
+    public FoxResult error(DuplicateKeyException duplicateKeyException){
+        LOG.error("duplicate keyException",duplicateKeyException);
+        return FoxResult.fail(ExceptionEnum.DUPLICATE_KEY_EXCEPTION,ExceptionEnum.DUPLICATE_KEY_EXCEPTION.getDesc());
+    }
+
     /**
-     * Handle uncatched exception, wrap a default response
+     * Handle not catch exception, wrap a default response
      *
-     * @param ex
+     * @param throwable
      * @return
      */
-    @ExceptionHandler(value = Exception.class)
-    public FoxResult error(Exception ex) {
-        LOG.error("Unkown exception", ex);
+    @ExceptionHandler(value = Throwable.class)
+    public FoxResult error(Throwable throwable) {
+        LOG.error("Unknown exception", throwable);
         return FoxResult.fail();
     }
 }
