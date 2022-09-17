@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -62,7 +63,7 @@ public class KeyGeneratorManager {
 
     private class KeyGeneratorImpl implements KeyGenerator {
         private final BigDecimal FIRE_CACHE_BUF_THRESHOLD_RATIO = BigDecimal.valueOf(0.4);
-        private final Lock keyLocker = new ReentrantLock();
+        private final Object genLocker = new Object();
         private final Object cacheLocker = new Object();
         private volatile long fireThreshold;
         private volatile boolean fireCache = false;
@@ -70,31 +71,25 @@ public class KeyGeneratorManager {
         private final String key;
         private volatile Segment cur;
         private volatile Segment buf;
-        private final long incSpan;
-        private volatile int counter;
 
         public KeyGeneratorImpl(int id, String key, long startWith, long endWith, long incSpan) {
             this.id = id;
             this.key = key;
-            this.cur = new Segment(new AtomicLong(startWith), endWith);
-            this.incSpan = incSpan;
-            this.counter = 0;
+            this.cur = new Segment(startWith, endWith, incSpan);
             this.fireThreshold = FIRE_CACHE_BUF_THRESHOLD_RATIO.multiply(BigDecimal.valueOf(incSpan)).longValue();
         }
 
         @Override
         public long nextId() {
-            if (counter < incSpan) {
-                if (counter >= fireThreshold) {
+            int cnt = cur.counterGetAndInc();
+            if (cnt < cur.incSpan) {
+                if (cnt >= fireThreshold) {
                     cacheSegment();
                 }
-                long no = cur.getAndIncrement();
-                counter ++;
-                return no;
+                return cur.startWith + cnt;
             } else {
-                try {
-                    keyLocker.lock();
-                    if (counter < incSpan) {
+                synchronized (genLocker) {
+                    if (cur.count() < cur.incSpan) {
                         return nextId();
                     }
 
@@ -107,10 +102,7 @@ public class KeyGeneratorManager {
                         cur = newSegment();
                         LOG.info("Cached segment is not ready, directly generate new segment for key: {}, segment: {}-{}", key, cur.startWith, cur.endWith);
                     }
-                    counter = 0;
                     return nextId();
-                } finally {
-                    keyLocker.unlock();
                 }
             }
         }
@@ -137,23 +129,31 @@ public class KeyGeneratorManager {
                 long newStartWith = sequence.getStartWith();
                 long newEndWith = newStartWith + sequence.getIncSpan();
                 if (sequenceKeyService.compareAndSet(id, newStartWith, newEndWith)) {
-                    return new Segment(new AtomicLong(newStartWith), newEndWith - 1);
+                    return new Segment(newStartWith, newEndWith - 1, sequence.getIncSpan());
                 }
             }
         }
     }
 
     private class Segment {
-        private volatile AtomicLong startWith;
-        private volatile long endWith;
+        private final long startWith;
+        private final long endWith;
+        private final long incSpan;
+        private final AtomicInteger counter;
 
-        public Segment(final AtomicLong startWith, long endWith) {
+        public Segment(long startWith, long endWith, long incSpan) {
             this.startWith = startWith;
             this.endWith = endWith;
+            this.incSpan = incSpan;
+            this.counter = new AtomicInteger(0);
         }
 
-        public final long getAndIncrement() {
-            return startWith.getAndIncrement();
+        public int counterGetAndInc() {
+            return counter.getAndIncrement();
+        }
+
+        public int count() {
+            return counter.get();
         }
     }
 }
