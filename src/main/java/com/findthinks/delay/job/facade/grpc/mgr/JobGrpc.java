@@ -77,27 +77,89 @@ public final class JobGrpc {
     return getSubmitJobsMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq,
+  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+      com.findthinks.delay.job.facade.grpc.mgr.JobResp> getPauseJobMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "pauseJob",
+      requestType = com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.class,
+      responseType = com.findthinks.delay.job.facade.grpc.mgr.JobResp.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+      com.findthinks.delay.job.facade.grpc.mgr.JobResp> getPauseJobMethod() {
+    io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp> getPauseJobMethod;
+    if ((getPauseJobMethod = JobGrpc.getPauseJobMethod) == null) {
+      synchronized (JobGrpc.class) {
+        if ((getPauseJobMethod = JobGrpc.getPauseJobMethod) == null) {
+          JobGrpc.getPauseJobMethod = getPauseJobMethod =
+              io.grpc.MethodDescriptor.<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "pauseJob"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.findthinks.delay.job.facade.grpc.mgr.JobResp.getDefaultInstance()))
+              .setSchemaDescriptor(new JobMethodDescriptorSupplier("pauseJob"))
+              .build();
+        }
+      }
+    }
+    return getPauseJobMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+      com.findthinks.delay.job.facade.grpc.mgr.JobResp> getResumeJobMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "resumeJob",
+      requestType = com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.class,
+      responseType = com.findthinks.delay.job.facade.grpc.mgr.JobResp.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+      com.findthinks.delay.job.facade.grpc.mgr.JobResp> getResumeJobMethod() {
+    io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp> getResumeJobMethod;
+    if ((getResumeJobMethod = JobGrpc.getResumeJobMethod) == null) {
+      synchronized (JobGrpc.class) {
+        if ((getResumeJobMethod = JobGrpc.getResumeJobMethod) == null) {
+          JobGrpc.getResumeJobMethod = getResumeJobMethod =
+              io.grpc.MethodDescriptor.<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "resumeJob"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.findthinks.delay.job.facade.grpc.mgr.JobResp.getDefaultInstance()))
+              .setSchemaDescriptor(new JobMethodDescriptorSupplier("resumeJob"))
+              .build();
+        }
+      }
+    }
+    return getResumeJobMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
       com.findthinks.delay.job.facade.grpc.mgr.JobResp> getCancelJobMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "cancelJob",
-      requestType = com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.class,
+      requestType = com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.class,
       responseType = com.findthinks.delay.job.facade.grpc.mgr.JobResp.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq,
+  public static io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
       com.findthinks.delay.job.facade.grpc.mgr.JobResp> getCancelJobMethod() {
-    io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp> getCancelJobMethod;
+    io.grpc.MethodDescriptor<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp> getCancelJobMethod;
     if ((getCancelJobMethod = JobGrpc.getCancelJobMethod) == null) {
       synchronized (JobGrpc.class) {
         if ((getCancelJobMethod = JobGrpc.getCancelJobMethod) == null) {
           JobGrpc.getCancelJobMethod = getCancelJobMethod =
-              io.grpc.MethodDescriptor.<com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp>newBuilder()
+              io.grpc.MethodDescriptor.<com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq, com.findthinks.delay.job.facade.grpc.mgr.JobResp>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "cancelJob"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.getDefaultInstance()))
+                  com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   com.findthinks.delay.job.facade.grpc.mgr.JobResp.getDefaultInstance()))
               .setSchemaDescriptor(new JobMethodDescriptorSupplier("cancelJob"))
@@ -172,7 +234,21 @@ public final class JobGrpc {
 
     /**
      */
-    public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq request,
+    public void pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPauseJobMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getResumeJobMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCancelJobMethod(), responseObserver);
     }
@@ -194,10 +270,24 @@ public final class JobGrpc {
                 com.findthinks.delay.job.facade.grpc.mgr.JobResp>(
                   this, METHODID_SUBMIT_JOBS)))
           .addMethod(
+            getPauseJobMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+                com.findthinks.delay.job.facade.grpc.mgr.JobResp>(
+                  this, METHODID_PAUSE_JOB)))
+          .addMethod(
+            getResumeJobMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
+                com.findthinks.delay.job.facade.grpc.mgr.JobResp>(
+                  this, METHODID_RESUME_JOB)))
+          .addMethod(
             getCancelJobMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<
-                com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq,
+                com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq,
                 com.findthinks.delay.job.facade.grpc.mgr.JobResp>(
                   this, METHODID_CANCEL_JOB)))
           .build();
@@ -236,7 +326,23 @@ public final class JobGrpc {
 
     /**
      */
-    public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq request,
+    public void pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getPauseJobMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
+        io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getResumeJobMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCancelJobMethod(), getCallOptions()), request, responseObserver);
@@ -273,7 +379,21 @@ public final class JobGrpc {
 
     /**
      */
-    public com.findthinks.delay.job.facade.grpc.mgr.JobResp cancelJob(com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq request) {
+    public com.findthinks.delay.job.facade.grpc.mgr.JobResp pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getPauseJobMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.findthinks.delay.job.facade.grpc.mgr.JobResp resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getResumeJobMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.findthinks.delay.job.facade.grpc.mgr.JobResp cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCancelJobMethod(), getCallOptions(), request);
     }
@@ -311,8 +431,24 @@ public final class JobGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> pauseJob(
+        com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getPauseJobMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> resumeJob(
+        com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getResumeJobMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> cancelJob(
-        com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq request) {
+        com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCancelJobMethod(), getCallOptions()), request);
     }
@@ -320,7 +456,9 @@ public final class JobGrpc {
 
   private static final int METHODID_SUBMIT_JOB = 0;
   private static final int METHODID_SUBMIT_JOBS = 1;
-  private static final int METHODID_CANCEL_JOB = 2;
+  private static final int METHODID_PAUSE_JOB = 2;
+  private static final int METHODID_RESUME_JOB = 3;
+  private static final int METHODID_CANCEL_JOB = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -347,8 +485,16 @@ public final class JobGrpc {
           serviceImpl.submitJobs((com.findthinks.delay.job.facade.grpc.mgr.CreateJobsReq) request,
               (io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp>) responseObserver);
           break;
+        case METHODID_PAUSE_JOB:
+          serviceImpl.pauseJob((com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) request,
+              (io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp>) responseObserver);
+          break;
+        case METHODID_RESUME_JOB:
+          serviceImpl.resumeJob((com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) request,
+              (io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp>) responseObserver);
+          break;
         case METHODID_CANCEL_JOB:
-          serviceImpl.cancelJob((com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq) request,
+          serviceImpl.cancelJob((com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) request,
               (io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp>) responseObserver);
           break;
         default:
@@ -414,6 +560,8 @@ public final class JobGrpc {
               .setSchemaDescriptor(new JobFileDescriptorSupplier())
               .addMethod(getSubmitJobMethod())
               .addMethod(getSubmitJobsMethod())
+              .addMethod(getPauseJobMethod())
+              .addMethod(getResumeJobMethod())
               .addMethod(getCancelJobMethod())
               .build();
         }

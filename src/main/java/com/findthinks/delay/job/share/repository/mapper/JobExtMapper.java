@@ -19,6 +19,10 @@ public interface JobExtMapper {
 
     int updateJobsState(Map<String, Object> parameters);
 
+    int updateJobPauseTime(Map<String, Object> parameters);
+
+    int updateJobTriggerTime(Map<String, Object> parameters);
+
     int deleteJobs(Map<String, Object> parameters);
 
     int insertJob(Job job);

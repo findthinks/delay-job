@@ -29,6 +29,10 @@ public interface IJobManager {
 
     Job loadJob(String outTaskNo);
 
+    boolean pause(String outJobNo);
+
+    Job resume(String outJobNo);
+
     List<Job> loadRetryJobs(Integer jobShardId, Long startTime, Long endTime, Integer maxJobs);
 
     int deleteShardJobs(Integer jobShardId, List<Long> jobIds);

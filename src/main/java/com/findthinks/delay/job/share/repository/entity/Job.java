@@ -18,6 +18,9 @@ public class Job {
     @Column(name = "trigger_time")
     private Long triggerTime;
 
+    @Column(name = "pause_time")
+    private Long pauseTime;
+
     private Integer state;
 
     @Column(name = "retry_times")
@@ -89,6 +92,14 @@ public class Job {
      */
     public void setTriggerTime(Long triggerTime) {
         this.triggerTime = triggerTime;
+    }
+
+    public Long getPauseTime() {
+        return pauseTime;
+    }
+
+    public void setPauseTime(Long pauseTime) {
+        this.pauseTime = pauseTime;
     }
 
     /**

@@ -2,14 +2,17 @@ package com.findthinks.delay.job.facade.http;
 
 import com.findthinks.delay.job.scheduler.FacadeJob;
 import com.findthinks.delay.job.scheduler.JobScheduler;
-import com.findthinks.delay.job.share.id.KeyGeneratorManager;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.lib.result.FoxResult;
+import com.findthinks.delay.job.share.lib.utils.UUIDUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
 
 @RestController
@@ -21,13 +24,23 @@ public class DelayJobController {
     @Resource
     private JobScheduler jobScheduler;
 
-    @Resource
-    private KeyGeneratorManager keyGeneratorManager;
-
-    @GetMapping(value = "/id")
-    public Long id() {
-        return keyGeneratorManager.getKeyGenerator("JOB_ID").nextId();
+    @GetMapping(value = "/test/job/{batch}/{triggerTime}")
+    public void test(@PathVariable("batch") int batch, @PathVariable("triggerTime") long triggerTime) {
+        for (int i=0; i<batch; i++) {
+            List<FacadeJob> jobs = new ArrayList<>(100);
+            for (int j=0; j<100; j++) {
+                FacadeJob job = new FacadeJob();
+                job.setTriggerTime(triggerTime);
+                job.setJobInfo("I am a delay job.");
+                job.setOutJobNo(UUIDUtils.randomUUID());
+                job.setCallbackEndpoint("LOG");
+                job.setCallbackProtocol("LOG");
+                jobs.add(job);
+            }
+            jobScheduler.submitJobs(jobs);
+        }
     }
+
 
     @PostMapping("/submit/job")
     public FoxResult submitJob(@RequestBody FacadeJob job) {
@@ -52,12 +65,34 @@ public class DelayJobController {
     }
 
     @PostMapping("/cancel/job")
-    public FoxResult submitJobs(@RequestBody FacadeJob job) {
+    public FoxResult cancelJob(@RequestBody FacadeJob job) {
         try {
             jobScheduler.cancelJob(job.getOutJobNo());
             return FoxResult.SUCCESS;
         } catch (Exception ex) {
             LOG.error("Cancel delay job error.", ex);
+            return wrapErrorResult(ex);
+        }
+    }
+
+    @PostMapping("/pause/job")
+    public FoxResult pauseJob(@RequestBody FacadeJob job) {
+        try {
+            jobScheduler.pauseJob(job.getOutJobNo());
+            return FoxResult.SUCCESS;
+        } catch (Exception ex) {
+            LOG.error("Pause delay job error.", ex);
+            return wrapErrorResult(ex);
+        }
+    }
+
+    @PostMapping("/resume/job")
+    public FoxResult resumeJob(@RequestBody FacadeJob job) {
+        try {
+            jobScheduler.resumeJob(job.getOutJobNo());
+            return FoxResult.SUCCESS;
+        } catch (Exception ex) {
+            LOG.error("Resume delay job error.", ex);
             return wrapErrorResult(ex);
         }
     }

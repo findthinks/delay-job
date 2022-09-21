@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.JOB_IS_TRIGGERED;
 import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.OUT_JOB_NO_IS_EXIST;
 
 @Service
@@ -181,6 +182,37 @@ public class JobManager implements IJobManager {
     public Job loadJob(String outJobNo) {
         GlobalRec rec = globalRecExtMapper.selectRecByOutJobNo(outJobNo);
         return null == rec ? null : loadJob(rec.getJobShardId(), outJobNo);
+    }
+
+    @Override
+    public Job resume(String outJobNo) {
+        Job job = loadJob(outJobNo);
+        long newTriggerTime = job.getTriggerTime() + (System.currentTimeMillis() - job.getPauseTime());
+        job.setTriggerTime(newTriggerTime);
+        job.setPauseTime(null);
+
+        // 更新trigger time
+        Map<String, Object> parameters = new HashMap<>(4);
+        parameters.put("jobShardId", job.getJobShardId());
+        parameters.put("id", job.getId());
+        parameters.put("triggerTime", newTriggerTime);
+        jobExtMapper.updateJobTriggerTime(parameters);
+        return job;
+    }
+
+    @Override
+    public boolean pause(String outJobNo) {
+        Job job = loadJob(outJobNo);
+        if (job.getTriggerTime() <= System.currentTimeMillis()) {
+            throw new DelayJobException(JOB_IS_TRIGGERED);
+        }
+
+        //更新暂定计时点
+        Map<String, Object> parameters = new HashMap<>(4);
+        parameters.put("jobShardId", job.getJobShardId());
+        parameters.put("id", job.getId());
+        parameters.put("pauseTime", System.currentTimeMillis());
+        return 0 == jobExtMapper.updateJobPauseTime(parameters);
     }
 
     @Override

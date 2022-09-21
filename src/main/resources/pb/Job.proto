@@ -16,7 +16,7 @@ message CreateJobsReq {
     repeated CreateJobReq jobs = 1;
 }
 
-message CancelJobReq {
+message OperateJobReq {
     string outJobNo = 1;
 }
 
@@ -32,6 +32,12 @@ service Job {
     rpc submitJobs (CreateJobsReq) returns (JobResp) {
     }
 
-    rpc cancelJob (CancelJobReq) returns (JobResp) {
+    rpc pauseJob (OperateJobReq) returns (JobResp) {
+    }
+
+    rpc resumeJob (OperateJobReq) returns (JobResp) {
+    }
+
+    rpc cancelJob (OperateJobReq) returns (JobResp) {
     }
 }

@@ -4,18 +4,18 @@
 package com.findthinks.delay.job.facade.grpc.mgr;
 
 /**
- * Protobuf type {@code delay.job.CancelJobReq}
+ * Protobuf type {@code delay.job.OperateJobReq}
  */
-public final class CancelJobReq extends
+public final class OperateJobReq extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:delay.job.CancelJobReq)
-    CancelJobReqOrBuilder {
+    // @@protoc_insertion_point(message_implements:delay.job.OperateJobReq)
+    OperateJobReqOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use CancelJobReq.newBuilder() to construct.
-  private CancelJobReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use OperateJobReq.newBuilder() to construct.
+  private OperateJobReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private CancelJobReq() {
+  private OperateJobReq() {
     outJobNo_ = "";
   }
 
@@ -23,7 +23,7 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new CancelJobReq();
+    return new OperateJobReq();
   }
 
   @java.lang.Override
@@ -31,7 +31,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private CancelJobReq(
+  private OperateJobReq(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -76,15 +76,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_CancelJobReq_descriptor;
+    return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_OperateJobReq_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_CancelJobReq_fieldAccessorTable
+    return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_OperateJobReq_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.class, com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.Builder.class);
+            com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.class, com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.Builder.class);
   }
 
   public static final int OUTJOBNO_FIELD_NUMBER = 1;
@@ -164,10 +164,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq)) {
+    if (!(obj instanceof com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq)) {
       return super.equals(obj);
     }
-    com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq other = (com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq) obj;
+    com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq other = (com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) obj;
 
     if (!getOutJobNo()
         .equals(other.getOutJobNo())) return false;
@@ -189,69 +189,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(byte[] data)
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(java.io.InputStream input)
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseDelimitedFrom(java.io.InputStream input)
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseDelimitedFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parseFrom(
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -264,7 +264,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq prototype) {
+  public static Builder newBuilder(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -280,26 +280,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code delay.job.CancelJobReq}
+   * Protobuf type {@code delay.job.OperateJobReq}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:delay.job.CancelJobReq)
-      com.findthinks.delay.job.facade.grpc.mgr.CancelJobReqOrBuilder {
+      // @@protoc_insertion_point(builder_implements:delay.job.OperateJobReq)
+      com.findthinks.delay.job.facade.grpc.mgr.OperateJobReqOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_CancelJobReq_descriptor;
+      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_OperateJobReq_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_CancelJobReq_fieldAccessorTable
+      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_OperateJobReq_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.class, com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.Builder.class);
+              com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.class, com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.Builder.class);
     }
 
-    // Construct using com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.newBuilder()
+    // Construct using com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -325,17 +325,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_CancelJobReq_descriptor;
+      return com.findthinks.delay.job.facade.grpc.mgr.JobOuterClass.internal_static_delay_job_OperateJobReq_descriptor;
     }
 
     @java.lang.Override
-    public com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq getDefaultInstanceForType() {
-      return com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.getDefaultInstance();
+    public com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq getDefaultInstanceForType() {
+      return com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.getDefaultInstance();
     }
 
     @java.lang.Override
-    public com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq build() {
-      com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq result = buildPartial();
+    public com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq build() {
+      com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -343,8 +343,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq buildPartial() {
-      com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq result = new com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq(this);
+    public com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq buildPartial() {
+      com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq result = new com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq(this);
       result.outJobNo_ = outJobNo_;
       onBuilt();
       return result;
@@ -384,16 +384,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq) {
-        return mergeFrom((com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq)other);
+      if (other instanceof com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) {
+        return mergeFrom((com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq other) {
-      if (other == com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq other) {
+      if (other == com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq.getDefaultInstance()) return this;
       if (!other.getOutJobNo().isEmpty()) {
         outJobNo_ = other.outJobNo_;
         onChanged();
@@ -413,11 +413,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq parsedMessage = null;
+      com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq) e.getUnfinishedMessage();
+        parsedMessage = (com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -515,41 +515,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:delay.job.CancelJobReq)
+    // @@protoc_insertion_point(builder_scope:delay.job.OperateJobReq)
   }
 
-  // @@protoc_insertion_point(class_scope:delay.job.CancelJobReq)
-  private static final com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:delay.job.OperateJobReq)
+  private static final com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq();
+    DEFAULT_INSTANCE = new com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq();
   }
 
-  public static com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq getDefaultInstance() {
+  public static com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<CancelJobReq>
-      PARSER = new com.google.protobuf.AbstractParser<CancelJobReq>() {
+  private static final com.google.protobuf.Parser<OperateJobReq>
+      PARSER = new com.google.protobuf.AbstractParser<OperateJobReq>() {
     @java.lang.Override
-    public CancelJobReq parsePartialFrom(
+    public OperateJobReq parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new CancelJobReq(input, extensionRegistry);
+      return new OperateJobReq(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<CancelJobReq> parser() {
+  public static com.google.protobuf.Parser<OperateJobReq> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<CancelJobReq> getParserForType() {
+  public com.google.protobuf.Parser<OperateJobReq> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.findthinks.delay.job.facade.grpc.mgr.CancelJobReq getDefaultInstanceForType() {
+  public com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

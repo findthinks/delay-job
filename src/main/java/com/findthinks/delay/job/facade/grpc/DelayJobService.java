@@ -58,9 +58,33 @@ public class DelayJobService extends JobGrpc.JobImplBase {
     }
 
     @Override
-    public void cancelJob(CancelJobReq request, StreamObserver<JobResp> responseObserver) {
+    public void cancelJob(OperateJobReq request, StreamObserver<JobResp> responseObserver) {
         try {
             jobScheduler.cancelJob(request.getOutJobNo());
+
+            sendSuccessResponse(responseObserver);
+        } catch (Exception ex) {
+            LOG.error("Cancel delay job error.", ex);
+            sendFailResponse(ex, responseObserver);
+        }
+    }
+
+    @Override
+    public void pauseJob(OperateJobReq request, StreamObserver<JobResp> responseObserver) {
+        try {
+            jobScheduler.pauseJob(request.getOutJobNo());
+
+            sendSuccessResponse(responseObserver);
+        } catch (Exception ex) {
+            LOG.error("Cancel delay job error.", ex);
+            sendFailResponse(ex, responseObserver);
+        }
+    }
+
+    @Override
+    public void resumeJob(OperateJobReq request, StreamObserver<JobResp> responseObserver) {
+        try {
+            jobScheduler.resumeJob(request.getOutJobNo());
 
             sendSuccessResponse(responseObserver);
         } catch (Exception ex) {

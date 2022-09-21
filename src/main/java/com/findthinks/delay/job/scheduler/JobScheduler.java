@@ -178,14 +178,23 @@ public class JobScheduler {
         jobProcessor.scheduleJobs(immediate);
     }
 
-    private GlobalRec buildGlobalRec(String outJobNo, Integer jobShardId, Long jobId, Long triggerTime, Date gmtCreate) {
-        GlobalRec rec = new GlobalRec();
-        rec.setOutJobNo(outJobNo);
-        rec.setJobShardId(jobShardId);
-        rec.setJobId(jobId);
-        rec.setTriggerTime(triggerTime);
-        rec.setGmtCreate(gmtCreate);
-        return rec;
+    /**
+     * 暂停任务计时
+     * @param outJobNo
+     */
+    public void pauseJob(String outJobNo) {
+        jobManager.pause(outJobNo);
+    }
+
+    /**
+     * 恢复任务
+     * @param outJobNo
+     */
+    public void resumeJob(String outJobNo) {
+        Job resume = jobManager.resume(outJobNo);
+        if (shouldSchedulerImmediately(resume.getTriggerTime())) {
+            jobProcessor.scheduleOneJob(resume);
+        }
     }
 
     /**
@@ -411,6 +420,16 @@ public class JobScheduler {
     private void scheduleDelayJob(Long nextScheduleTime, Integer maxJobNums, List<Integer> jobShardIds) {
         LOG.info("Scheduler[id={}] is loading jobs, shards: {}", getSchedulerInfo().getId(), jobShardIds);
         jobProcessor.scheduleShardJob(nextScheduleTime, maxJobNums, jobShardIds);
+    }
+
+    private GlobalRec buildGlobalRec(String outJobNo, Integer jobShardId, Long jobId, Long triggerTime, Date gmtCreate) {
+        GlobalRec rec = new GlobalRec();
+        rec.setOutJobNo(outJobNo);
+        rec.setJobShardId(jobShardId);
+        rec.setJobId(jobId);
+        rec.setTriggerTime(triggerTime);
+        rec.setGmtCreate(gmtCreate);
+        return rec;
     }
 
     /**

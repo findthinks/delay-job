@@ -25,10 +25,10 @@ public final class JobOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_delay_job_CreateJobsReq_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_delay_job_CancelJobReq_descriptor;
+    internal_static_delay_job_OperateJobReq_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_delay_job_CancelJobReq_fieldAccessorTable;
+      internal_static_delay_job_OperateJobReq_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_delay_job_JobResp_descriptor;
   static final 
@@ -48,15 +48,18 @@ public final class JobOuterClass {
       "\020callbackProtocol\030\003 \001(\t\022\030\n\020callbackEndpo" +
       "int\030\004 \001(\t\022\017\n\007jobInfo\030\005 \001(\t\"6\n\rCreateJobs" +
       "Req\022%\n\004jobs\030\001 \003(\0132\027.delay.job.CreateJobR" +
-      "eq\" \n\014CancelJobReq\022\020\n\010outJobNo\030\001 \001(\t\"(\n\007" +
-      "JobResp\022\014\n\004code\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2\273" +
-      "\001\n\003Job\022:\n\tsubmitJob\022\027.delay.job.CreateJo" +
-      "bReq\032\022.delay.job.JobResp\"\000\022<\n\nsubmitJobs" +
-      "\022\030.delay.job.CreateJobsReq\032\022.delay.job.J" +
-      "obResp\"\000\022:\n\tcancelJob\022\027.delay.job.Cancel" +
-      "JobReq\032\022.delay.job.JobResp\"\000B,\n(com.find" +
-      "thinks.delay.job.facade.grpc.mgrP\001b\006prot" +
-      "o3"
+      "eq\"!\n\rOperateJobReq\022\020\n\010outJobNo\030\001 \001(\t\"(\n" +
+      "\007JobResp\022\014\n\004code\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2" +
+      "\265\002\n\003Job\022:\n\tsubmitJob\022\027.delay.job.CreateJ" +
+      "obReq\032\022.delay.job.JobResp\"\000\022<\n\nsubmitJob" +
+      "s\022\030.delay.job.CreateJobsReq\032\022.delay.job." +
+      "JobResp\"\000\022:\n\010pauseJob\022\030.delay.job.Operat" +
+      "eJobReq\032\022.delay.job.JobResp\"\000\022;\n\tresumeJ" +
+      "ob\022\030.delay.job.OperateJobReq\032\022.delay.job" +
+      ".JobResp\"\000\022;\n\tcancelJob\022\030.delay.job.Oper" +
+      "ateJobReq\032\022.delay.job.JobResp\"\000B,\n(com.f" +
+      "indthinks.delay.job.facade.grpc.mgrP\001b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -74,11 +77,11 @@ public final class JobOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_delay_job_CreateJobsReq_descriptor,
         new java.lang.String[] { "Jobs", });
-    internal_static_delay_job_CancelJobReq_descriptor =
+    internal_static_delay_job_OperateJobReq_descriptor =
       getDescriptor().getMessageTypes().get(2);
-    internal_static_delay_job_CancelJobReq_fieldAccessorTable = new
+    internal_static_delay_job_OperateJobReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_delay_job_CancelJobReq_descriptor,
+        internal_static_delay_job_OperateJobReq_descriptor,
         new java.lang.String[] { "OutJobNo", });
     internal_static_delay_job_JobResp_descriptor =
       getDescriptor().getMessageTypes().get(3);
