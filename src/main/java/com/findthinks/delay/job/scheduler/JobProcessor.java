@@ -65,6 +65,8 @@ public class JobProcessor {
      */
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
+        LOG.info("Finish load jobs from DB. Jobs count: {}.", jobs.stream().mapToInt(List::size).sum());
+
         if (jobs.size() > 0) {
             translateToMap(jobs).entrySet().forEach(entry ->
                 scheduler.schedule(
@@ -109,17 +111,13 @@ public class JobProcessor {
     private TreeMap<Long, List<Job>> translateToMap(List<List<Job>> jobs) {
         final TreeMap<Long, List<Job>> mappedJobs = new TreeMap<>();
         jobs.stream().flatMap(List::stream).forEach(job -> {
-            if (job.getTriggerTime() <= System.currentTimeMillis()) {
-                executor.execute(new InternalDelayJob(job));
-            } else {
-                long triggerTimeSeconds = job.getTriggerTime() / 1000;
-                List<Job> secondsJobs = mappedJobs.get(triggerTimeSeconds);
-                if (null == secondsJobs) {
-                    secondsJobs = new ArrayList<>();
-                    mappedJobs.put(triggerTimeSeconds, secondsJobs);
-                }
-                secondsJobs.add(job);
+            long triggerTimeSeconds = job.getTriggerTime() / 1000;
+            List<Job> secondsJobs = mappedJobs.get(triggerTimeSeconds);
+            if (null == secondsJobs) {
+                secondsJobs = new ArrayList<>();
+                mappedJobs.put(triggerTimeSeconds, secondsJobs);
             }
+            secondsJobs.add(job);
         });
         return mappedJobs;
     }
@@ -158,9 +156,14 @@ public class JobProcessor {
     }
 
     private boolean needSyncJobStateFromDB(Job job) {
-        return inRepeatTriggerCheckWindow(job);
+        return false;
     }
 
+    /**
+     * 暂时不用
+     * @param job
+     * @return
+     */
     private boolean inRepeatTriggerCheckWindow(Job job) {
         return job.getTriggerTime() > getCurrentLoadJobTime() && job.getTriggerTime() <= getCurrentLoadJobTime() + repeatCheckDelta * 1000;
     }
