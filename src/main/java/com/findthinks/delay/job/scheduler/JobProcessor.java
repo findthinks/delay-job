@@ -157,6 +157,7 @@ public class JobProcessor {
 
     private boolean needSyncJobStateFromDB(Job job) {
         return false;
+        // return inRepeatTriggerCheckWindow(job);
     }
 
     /**
