@@ -332,6 +332,7 @@ public class JobScheduler {
 
         /** 传递调度起始时间到执行器 */
         jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
+        jobProcessor.setNextScheduleTime(nextScheduleTime);
 
         /** 实时获取被分配的分片ID */
         List<Integer> shardIds = fetchJobShardIds(getAssignedJobShard());
@@ -497,7 +498,7 @@ public class JobScheduler {
     }
 
     private boolean shouldSchedulerImmediately(long planTriggerTime) {
-        return planTriggerTime < System.currentTimeMillis() || (planTriggerTime >= currentScheduleTime && planTriggerTime <= nextScheduleTime);
+        return planTriggerTime <= System.currentTimeMillis() || (planTriggerTime >= currentScheduleTime && planTriggerTime < nextScheduleTime);
     }
 
     /**

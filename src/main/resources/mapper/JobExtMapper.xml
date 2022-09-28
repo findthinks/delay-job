@@ -47,8 +47,8 @@
         FROM
             job_${jobShardId}
         WHERE
-            trigger_time > #{triggerTimeStart}
-            AND trigger_time <= #{triggerTimeEnd}
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
             AND state = 10
         ORDER BY trigger_time
         LIMIT #{maxJobs}

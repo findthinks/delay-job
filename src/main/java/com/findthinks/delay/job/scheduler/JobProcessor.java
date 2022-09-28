@@ -59,6 +59,8 @@ public class JobProcessor {
 
     private volatile long currentLoadJobTime;
 
+    private volatile long nextScheduleTime;
+
     private final Object locker = new Object();
 
     private volatile Map<Long, List<Job>> delayingJobs = Collections.synchronizedSortedMap(new TreeMap<>());
@@ -86,7 +88,8 @@ public class JobProcessor {
      * @param job
      */
     public void scheduleOneJob(Job job) {
-        if (job.getTriggerTime() <= System.currentTimeMillis()) {
+        long current = System.currentTimeMillis();
+        if (job.getTriggerTime() <= current) {
             executor.execute(new InternalDelayJob(job));
         } else {
             /**
@@ -100,7 +103,7 @@ public class JobProcessor {
                         jobs = Collections.synchronizedList(new ArrayList<>());
                         jobs.add(job);
                         delayingJobs.put(job.getTriggerTime(), jobs);
-                        scheduler.schedule(new DelayJob(job.getTriggerTime(), jobs), job.getTriggerTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                        scheduler.schedule(new DelayJob(job.getTriggerTime(), jobs), job.getTriggerTime() - current, TimeUnit.MILLISECONDS);
                     }
                 }
             } else {
@@ -260,6 +263,15 @@ public class JobProcessor {
             this.triggerTime = triggerTime;
         }
 
+        private DelayJob(Job job) {
+            this.jobs = new ArrayList<Job>() {
+                {
+                    add(job);
+                }
+            };
+            this.triggerTime = job.getTriggerTime();
+        }
+
         @Override
         public void run() {
             jobs.forEach(job -> executor.execute(new InternalDelayJob(job)));
@@ -365,11 +377,19 @@ public class JobProcessor {
         mappedJobs.entrySet().forEach(item -> jobManager.modifyJobState(item.getKey(), jobs, state.getCode()));
     }
 
+    public void setCurrentLoadJobTime(long currentLoadJobTime) {
+        this.currentLoadJobTime = currentLoadJobTime;
+    }
+
+    public void setNextScheduleTime(long nextScheduleTime) {
+        this.nextScheduleTime = nextScheduleTime;
+    }
+
     public long getCurrentLoadJobTime() {
         return currentLoadJobTime;
     }
 
-    public void setCurrentLoadJobTime(long currentLoadJobTime) {
-        this.currentLoadJobTime = currentLoadJobTime;
+    public long getNextScheduleTime() {
+        return nextScheduleTime;
     }
 }
