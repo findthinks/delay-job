@@ -94,6 +94,8 @@ public class JobScheduler {
 
     private volatile long nextScheduleTime = 0;
 
+    private volatile boolean retrying = false;
+
     /** 暂未使用 */
     private volatile List<JobShard> assignedJobShard = null;
 
@@ -343,16 +345,17 @@ public class JobScheduler {
     public void doRetry() {
         LOG.debug("Scheduler[{}] trigger retry job.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
+        /** 已经有任务在重试中，当前重试调度直接结束 */
+        if (retrying) {
+            return;
+        }
+        retrying = true;
+
         if (!isSchedulerReady()) {
             return;
         }
 
         if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
-            return;
-        }
-
-        /** 已经有任务在重试中，当前重试调度直接结束 */
-        if (jobProcessor.getRetryingJobCount() > 0) {
             return;
         }
 
@@ -365,6 +368,8 @@ public class JobScheduler {
 
         /** 开始补偿未完成的任务段 */
         doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNums));
+
+        retrying = false;
     }
 
     /**

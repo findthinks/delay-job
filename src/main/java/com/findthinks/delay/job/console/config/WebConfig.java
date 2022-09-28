@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/pause/job",
                         "/api/v1/resume/job",
                         "/api/v1/cancel/job",
-                        "/api/v1/test/job");
+                        "/api/v1/test/**");
     }
 
     @Override

@@ -150,7 +150,20 @@ public class JobProcessor {
      * 补偿失败任务
      */
     public void retryOneJob(Job job) {
-        retryExecutor.execute(new RetryJob(job));
+        try {
+            fireJob(job);
+
+            //修改任务状态为成功
+            jobManager.modifyJobState(job, JobState.SUCCESS.getCode(), job.getState(), job.getRetryTimes() + 1);
+        } catch (Exception ex) {
+            // 状态不变，修改重试次数
+            jobManager.modifyJobState(job, job.getState(), job.getState(), job.getRetryTimes() + 1);
+        }
+
+        /**
+         * 异步重试，暂未使用
+         */
+        //retryExecutor.execute(new RetryJob(job));
     }
 
     /**
@@ -219,6 +232,9 @@ public class JobProcessor {
         }
     }
 
+    /**
+     * 暂未使用
+     */
     private class RetryJob implements Runnable {
 
         private final Job job;
@@ -286,24 +302,8 @@ public class JobProcessor {
         protected void afterExecute(Runnable r, Throwable t) {
             if (r instanceof InternalDelayJob) {
                 InternalDelayJob wrapperJob = (InternalDelayJob) r;
-                if (isSubmit(wrapperJob)) {
-                    triggeredJobs.offer(new TriggeredJob(wrapperJob.job, null != t ? JobState.RETRY : JobState.SUCCESS));
-                }
-            } else if (r instanceof RetryJob) {
-                RetryJob retry = (RetryJob) r;
-                /** 任务重试成功 */
-                if (null == t) {
-                    triggeredJobs.offer(new TriggeredJob(retry.job, JobState.SUCCESS));
-                /** 任务重试失败或者继续重试 */
-                } else {
-                    JobState destState = retry.job.getRetryTimes() > DEFAULT_JOB_RETRY_TIMES ? JobState.FAIL : JobState.RETRY;
-                    if (jobManager.modifyJobState(
-                            retry.job,
-                            destState.getCode(),
-                            retry.job.getState(),
-                            retry.job.getRetryTimes() + 1)) {
-                        retry.job.setState(destState.getCode());
-                    }
+                if (isSubmit(wrapperJob) && null == t) {
+                    triggeredJobs.offer(new TriggeredJob(wrapperJob.job, JobState.SUCCESS));
                 }
             }
         }
@@ -325,23 +325,19 @@ public class JobProcessor {
 
         private final List<Job> success = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
 
-        private final List<Job> retry = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
-
         private long costs = 0L;
 
         @Override
         public void run() {
             try {
-                while ((success.size() + retry.size()) < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
+                LOG.info("Finish trigger queue size: {}", triggeredJobs.size());
+
+                while (success.size() < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
                     long start = System.currentTimeMillis();
                     try {
                         TriggeredJob trigger = triggeredJobs.poll(500, TimeUnit.MILLISECONDS);
                         if (null != trigger) {
-                            if (trigger.destState == JobState.RETRY) {
-                                retry.add(trigger.job);
-                            } else {
-                                success.add(trigger.job);
-                            }
+                            success.add(trigger.job);
                         }
                     } catch (InterruptedException ignore) {
                         LOG.warn("Collect triggered job is interrupted.", ignore);
@@ -350,9 +346,6 @@ public class JobProcessor {
                 }
                 if (success.size() > 0) {
                     batchModifyJobsState(success, JobState.SUCCESS);
-                }
-                if (retry.size() > 0) {
-                    batchModifyJobsState(retry, JobState.RETRY);
                 }
             } finally {
                 stateExecutor.submit(new CompletionJob());
