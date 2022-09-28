@@ -1,5 +1,6 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.share.lib.utils.CollectionUtils;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
@@ -58,6 +59,10 @@ public class JobProcessor {
 
     private volatile long currentLoadJobTime;
 
+    private final Object locker = new Object();
+
+    private volatile Map<Long, List<Job>> delayingJobs = Collections.synchronizedSortedMap(new TreeMap<>());
+
     /**
      * 调度分片任务
      * @param nextTriggerTime
@@ -65,12 +70,12 @@ public class JobProcessor {
      */
     public void scheduleShardJob(Long nextTriggerTime, Integer maxJobNums, List<Integer> jobShardIds) {
         List<List<Job>> jobs = jobManager.loadRecentlyJobs(jobShardIds, nextTriggerTime, maxJobNums);
-        LOG.info("Finish load jobs from DB. Jobs count: {}.", jobs.stream().mapToInt(List::size).sum());
+        LOG.info("Load jobs from DB, count: {}.", jobs.stream().mapToInt(List::size).sum());
 
         if (jobs.size() > 0) {
             translateToMap(jobs).entrySet().forEach(entry ->
                 scheduler.schedule(
-                        new DelayJob(entry.getValue()),
+                        new DelayJob(entry.getKey() * 1000, entry.getValue()),
                         entry.getKey() * 1000 - System.currentTimeMillis(),
                         TimeUnit.MILLISECONDS));
         }
@@ -84,10 +89,23 @@ public class JobProcessor {
         if (job.getTriggerTime() <= System.currentTimeMillis()) {
             executor.execute(new InternalDelayJob(job));
         } else {
-            scheduler.schedule(
-                    new JobProcessor.DelayJob(Arrays.asList(job)),
-                    job.getTriggerTime() - System.currentTimeMillis(),
-                    TimeUnit.MILLISECONDS);
+            /**
+             * 当前调度周期（当前分总内）内的任务，直接进入内存排队，由于任务量可能很大，会导致DelayQueue大量的排序，
+             * 故将提交的任务按秒分组缓存后，再提交给DelayQueue排队，提升性能。
+             */
+            List<Job> jobs = delayingJobs.get(job.getTriggerTime());
+            if (CollectionUtils.isEmpty(jobs)) {
+                synchronized (locker) {
+                    if (null == delayingJobs.get(job.getTriggerTime())) {
+                        jobs = Collections.synchronizedList(new ArrayList<>());
+                        jobs.add(job);
+                        delayingJobs.put(job.getTriggerTime(), jobs);
+                        scheduler.schedule(new DelayJob(job.getTriggerTime(), jobs), job.getTriggerTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+                    }
+                }
+            } else {
+                jobs.add(job);
+            }
         }
     }
 
@@ -97,14 +115,11 @@ public class JobProcessor {
      */
     public void scheduleJobs(List<Job> jobs) {
         translateToMap(Arrays.asList(jobs)).entrySet().forEach(entry ->
-            scheduler.schedule(
-                    new DelayJob(entry.getValue()),
-                    entry.getKey() * 1000 - System.currentTimeMillis(),
-                    TimeUnit.MILLISECONDS));
+            scheduler.schedule(new DelayJob(entry.getKey() * 1000, entry.getValue()), entry.getKey() * 1000 - System.currentTimeMillis(), TimeUnit.MILLISECONDS));
     }
 
     /**
-     * 批量任务转化为按秒升序的TreeMap结构
+     * 批量任务转化为按秒升序的SortedMap结构
      * @param jobs
      * @return
      */
@@ -218,17 +233,25 @@ public class JobProcessor {
         }
     }
 
-    private class DelayJob implements Runnable {
+    class DelayJob implements Runnable {
+
+        private final Long triggerTime;
 
         private final List<Job> jobs;
 
-        private DelayJob(List<Job> job) {
-            this.jobs = job;
+        private DelayJob(Long triggerTime, List<Job> jobs) {
+            this.jobs = jobs;
+            this.triggerTime = triggerTime;
         }
 
         @Override
         public void run() {
             jobs.forEach(job -> executor.execute(new InternalDelayJob(job)));
+
+            /**
+             * 任务触发后移除分组缓存
+             */
+            delayingJobs.remove(triggerTime);
         }
     }
 
@@ -312,7 +335,7 @@ public class JobProcessor {
                 while ((success.size() + retry.size()) < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
                     long start = System.currentTimeMillis();
                     try {
-                        TriggeredJob trigger = triggeredJobs.poll(500, TimeUnit.MICROSECONDS);
+                        TriggeredJob trigger = triggeredJobs.poll(500, TimeUnit.MILLISECONDS);
                         if (null != trigger) {
                             if (trigger.destState == JobState.RETRY) {
                                 retry.add(trigger.job);
