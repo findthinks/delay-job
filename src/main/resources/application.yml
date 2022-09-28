@@ -33,9 +33,9 @@ scheduler:
       translate: 10,25,40,55 * * * * ?
     load-max-num: 20000
     translate-max-num: 100
-    once-retry-seg-num: 10
+    once-retry-seg-num: 16
     retry-max-num: 1000
-    retry-seg-num: 60
+    retry-seg-num: 64
     state-check-seg-num: 10
     http-trigger-connect-timeout: 1
     http-trigger-read-timeout: 1

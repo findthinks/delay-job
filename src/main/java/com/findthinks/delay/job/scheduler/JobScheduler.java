@@ -17,6 +17,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
 import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.*;
@@ -94,7 +96,7 @@ public class JobScheduler {
 
     private volatile long nextScheduleTime = 0;
 
-    private volatile boolean retrying = false;
+    private final Lock retryLocker = new ReentrantLock();
 
     /** 暂未使用 */
     private volatile List<JobShard> assignedJobShard = null;
@@ -345,31 +347,35 @@ public class JobScheduler {
     public void doRetry() {
         LOG.debug("Scheduler[{}] trigger retry job.", null == schedulerInfo ? -1 : schedulerInfo.getId());
 
-        /** 已经有任务在重试中，当前重试调度直接结束 */
-        if (retrying) {
-            return;
+        boolean ret = false;
+        try {
+            ret = retryLocker.tryLock(5, TimeUnit.SECONDS);
+            if (ret) {
+                if (!isSchedulerReady()) {
+                    return;
+                }
+
+                if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
+                    return;
+                }
+
+                if (currentScheduleTime <= 0 || nextScheduleTime <= 0) {
+                    return;
+                }
+
+                /** 对所有分片做重试，包括已经停用的分片 */
+                List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
+
+                /** 开始补偿未完成的任务段 */
+                doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNums));
+            }
+        } catch (InterruptedException ie) {
+            LOG.warn("Enter retry lock fail, has interrupted", ie);
+        } finally {
+            if (ret) {
+                retryLocker.unlock();
+            }
         }
-        retrying = true;
-
-        if (!isSchedulerReady()) {
-            return;
-        }
-
-        if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
-            return;
-        }
-
-        if (currentScheduleTime <= 0 || nextScheduleTime <= 0) {
-            return;
-        }
-
-        /** 对所有分片做重试，包括已经停用的分片 */
-        List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
-
-        /** 开始补偿未完成的任务段 */
-        doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNums));
-
-        retrying = false;
     }
 
     /**
