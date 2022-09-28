@@ -35,21 +35,23 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>${javax-jaxb.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
             <version>${jaxb-core.version}</version>
         </dependency>
+
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
@@ -138,7 +140,6 @@
             <artifactId>grpc-spring-boot-starter</artifactId>
             <version>${grpc.springboot.starter.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>

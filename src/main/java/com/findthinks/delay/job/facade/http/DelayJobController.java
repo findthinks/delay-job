@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
+import java.util.Random;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.*;
 
 @RestController
@@ -24,13 +23,26 @@ public class DelayJobController {
     @Resource
     private JobScheduler jobScheduler;
 
-    @GetMapping(value = "/test/job/{batch}/{triggerTime}")
-    public void test(@PathVariable("batch") int batch, @PathVariable("triggerTime") long triggerTime) {
+    @GetMapping(value = "/test/job")
+    public void test() {
+        for (int j=0; j<10000; j++) {
+            FacadeJob job = new FacadeJob();
+            job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(40));
+            job.setJobInfo("I am a delay job.");
+            job.setOutJobNo(UUIDUtils.randomUUID());
+            job.setCallbackEndpoint("LOG");
+            job.setCallbackProtocol("LOG");
+            jobScheduler.submitJob(job);
+        }
+    }
+
+    @GetMapping(value = "/test/job2/{batch}/{triggerTime}")
+    public void test2(@PathVariable("batch") int batch, @PathVariable("triggerTime") long triggerTime) {
         for (int i=0; i<batch; i++) {
             List<FacadeJob> jobs = new ArrayList<>(100);
             for (int j=0; j<100; j++) {
                 FacadeJob job = new FacadeJob();
-                job.setTriggerTime(triggerTime);
+                job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(55));
                 job.setJobInfo("I am a delay job.");
                 job.setOutJobNo(UUIDUtils.randomUUID());
                 job.setCallbackEndpoint("LOG");
@@ -41,6 +53,22 @@ public class DelayJobController {
         }
     }
 
+    @GetMapping(value = "/test/job3/{batch}/{triggerTime}")
+    public void test3(@PathVariable("batch") int batch, @PathVariable("triggerTime") long triggerTime) {
+        for (int i=0; i<batch; i++) {
+            List<FacadeJob> jobs = new ArrayList<>(100);
+            for (int j=0; j<100; j++) {
+                FacadeJob job = new FacadeJob();
+                job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(300));
+                job.setJobInfo("I am a delay job.");
+                job.setOutJobNo(UUIDUtils.randomUUID());
+                job.setCallbackEndpoint("LOG");
+                job.setCallbackProtocol("LOG");
+                jobs.add(job);
+            }
+            jobScheduler.submitJobs(jobs);
+        }
+    }
 
     @PostMapping("/submit/job")
     public FoxResult submitJob(@RequestBody FacadeJob job) {
