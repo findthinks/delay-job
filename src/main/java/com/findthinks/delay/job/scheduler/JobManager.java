@@ -194,7 +194,7 @@ public class JobManager implements IJobManager {
         // 更新trigger time
         Map<String, Object> parameters = new HashMap<>(4);
         parameters.put("jobShardId", job.getJobShardId());
-        parameters.put("id", job.getId());
+        parameters.put("jobId", job.getId());
         parameters.put("triggerTime", newTriggerTime);
         jobExtMapper.updateJobTriggerTime(parameters);
         return job;
@@ -210,7 +210,7 @@ public class JobManager implements IJobManager {
         //更新暂定计时点
         Map<String, Object> parameters = new HashMap<>(4);
         parameters.put("jobShardId", job.getJobShardId());
-        parameters.put("id", job.getId());
+        parameters.put("jobId", job.getId());
         parameters.put("pauseTime", System.currentTimeMillis());
         return 0 == jobExtMapper.updateJobPauseTime(parameters);
     }

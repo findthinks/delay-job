@@ -27,6 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/logout",
                         "/api/v1/submit/job",
                         "/api/v1/submit/jobs",
+                        "/api/v1/pause/job",
+                        "/api/v1/resume/job",
                         "/api/v1/cancel/job");
     }
 

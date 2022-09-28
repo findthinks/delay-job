@@ -123,25 +123,21 @@
     </update>
 
     <update id="updateJobPauseTime">
-        <![CDATA[
         UPDATE
             job_${jobShardId}
         SET
             pause_time = #{pauseTime}
         WHERE
             id = #{jobId}
-        ]]>
     </update>
 
     <update id="updateJobTriggerTime">
-        <![CDATA[
         UPDATE
             job_${jobShardId}
         SET
             trigger_time = #{triggerTime}
         WHERE
             id = #{jobId}
-        ]]>
     </update>
 
     <update id="updateJobsState">
