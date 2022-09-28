@@ -26,7 +26,7 @@ public class JobProcessor {
 
     private static final int DEFAULT_JOB_RETRY_TIMES = 3;
 
-    private static final int JOB_STATE_UPDATE_BATCH_SIZE = 50;
+    private static final int JOB_STATE_UPDATE_BATCH_SIZE = 500;
 
     private static final int JOB_STATE_UPDATE_TIMEOUT = 1000;
 
@@ -335,7 +335,7 @@ public class JobProcessor {
                 while (success.size() < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
                     long start = System.currentTimeMillis();
                     try {
-                        TriggeredJob trigger = triggeredJobs.poll(500, TimeUnit.MILLISECONDS);
+                        TriggeredJob trigger = triggeredJobs.poll(100, TimeUnit.MILLISECONDS);
                         if (null != trigger) {
                             success.add(trigger.job);
                         }
