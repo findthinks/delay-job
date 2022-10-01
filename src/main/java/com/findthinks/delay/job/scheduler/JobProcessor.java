@@ -50,10 +50,6 @@ public class JobProcessor {
     @Resource
     private volatile ApplicationContext applicationContext;
 
-    /** 重发执行校验，加载任务最前2s内*/
-    @Value("${scheduler.job.repeat-check-delta:2000}")
-    private long repeatCheckDelta;
-
     @Resource
     private IJobManager jobManager;
 
@@ -188,16 +184,6 @@ public class JobProcessor {
 
     private boolean needSyncJobStateFromDB(Job job) {
         return false;
-        // return inRepeatTriggerCheckWindow(job);
-    }
-
-    /**
-     * 暂时不用
-     * @param job
-     * @return
-     */
-    private boolean inRepeatTriggerCheckWindow(Job job) {
-        return job.getTriggerTime() > getCurrentLoadJobTime() && job.getTriggerTime() <= getCurrentLoadJobTime() + repeatCheckDelta * 1000;
     }
 
     private boolean isSubmit(InternalDelayJob internal) {

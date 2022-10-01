@@ -84,7 +84,7 @@ public class JobScheduler {
     @Value("${scheduler.job.cron.load}")
     private CronExpression jobLoadCron;
 
-    @Value("${scheduler.job.load-max-num:5000}")
+    @Value("${scheduler.job.load-max-num:50000}")
     private int loadMaxJobNums;
 
     @Value("${scheduler.job.translate-max-num:100}")

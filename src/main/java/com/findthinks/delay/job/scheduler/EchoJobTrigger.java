@@ -12,7 +12,7 @@ public class EchoJobTrigger implements IJobTrigger {
 
     @Override
     public TriggerResult triggerJob(Job job) {
-        LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000);
+        LOG.info("Job[Shard:{}, Job:{}, , CreateTime: {}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime() / 1000, System.currentTimeMillis() / 1000, job.getGmtCreate().getTime() / 1000);
         return TriggerResult.SUCCESS;
     }
 }
