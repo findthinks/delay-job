@@ -8,32 +8,26 @@ public interface CallbackReqOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string outJobNo = 1;</code>
-   * @return The outJobNo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
-  java.lang.String getOutJobNo();
+  java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> 
+      getJobsList();
   /**
-   * <code>string outJobNo = 1;</code>
-   * @return The bytes for outJobNo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getOutJobNoBytes();
-
+  com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo getJobs(int index);
   /**
-   * <code>int64 triggerTime = 2;</code>
-   * @return The triggerTime.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
-  long getTriggerTime();
-
+  int getJobsCount();
   /**
-   * <code>string jobInfo = 3;</code>
-   * @return The jobInfo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
-  java.lang.String getJobInfo();
+  java.util.List<? extends com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder> 
+      getJobsOrBuilderList();
   /**
-   * <code>string jobInfo = 3;</code>
-   * @return The bytes for jobInfo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
-  com.google.protobuf.ByteString
-      getJobInfoBytes();
+  com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder getJobsOrBuilder(
+      int index);
 }

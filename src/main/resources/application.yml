@@ -31,6 +31,7 @@ scheduler:
       retry: 5,15,25,35,45,55 * * * * ?
       sync-state: 5,15,25,35,45,55 * * * * ?
       translate: 10,25,40,55 * * * * ?
+    batch-trigger-num: 100
     load-max-num: 50000
     translate-max-num: 100
     once-retry-seg-num: 16

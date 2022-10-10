@@ -27,6 +27,8 @@ public interface IJobManager {
 
     Job loadJob(int jobShardId, String outTaskNo);
 
+    Job loadJob(int jobShardId, long jobId);
+
     Job loadJob(String outTaskNo);
 
     boolean pause(String outJobNo);

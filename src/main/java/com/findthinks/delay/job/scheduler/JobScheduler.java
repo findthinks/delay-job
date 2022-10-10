@@ -111,7 +111,7 @@ public class JobScheduler {
         jobManager.createJob(job);
 
         //两次调度间任务直接进入内存调度
-        if (shouldSchedulerImmediately(job.getTriggerTime())) {
+        if (shouldScheduleImmediately(job.getTriggerTime())) {
             jobProcessor.scheduleOneJob(job);
         }
         return job.getId();
@@ -127,19 +127,19 @@ public class JobScheduler {
     /**
      * 批量创建延迟任务，任务提交到指定的分片集合中
      */
-    public void submitJobs(List<FacadeJob> jobs, List<Integer> shardIds) {
-        if (jobs.size() > BATCH_JOBS_SIZE) {
+    public void submitJobs(List<FacadeJob> facadeJobs, List<Integer> shardIds) {
+        if (facadeJobs.size() > BATCH_JOBS_SIZE) {
             throw new ParamsException("Batch jobs size overflow.");
         }
-        int batchSize = jobs.size() / BATCH_THRESHOLD;
+        int batchSize = facadeJobs.size() / BATCH_THRESHOLD;
         int counter = 0;
-        List<GlobalRec> recs = new ArrayList<>(jobs.size());
+        List<GlobalRec> recs = new ArrayList<>(facadeJobs.size());
         List<Job> batchJobs = new ArrayList<>(batchSize);
         List<Job> immediate = new ArrayList<>();
-        Map<Integer, List<Job>> mappedJobs = new HashMap<>();
+        Map<Integer, List<Job>> jobs = new HashMap<>();
         Integer jobShardId = getOneJobShardId(shardIds);
-        for (int idx=0; idx<jobs.size(); idx++) {
-            Job job = createJob(jobs.get(idx));
+        for (int idx=0; idx<facadeJobs.size(); idx++) {
+            Job job = createJob(facadeJobs.get(idx));
             job.setJobShardId(jobShardId);
             batchJobs.add(job);
 
@@ -150,10 +150,10 @@ public class JobScheduler {
             if (counter < batchSize) {
                 counter ++;
             } else {
-                if (CollectionUtils.isEmpty(mappedJobs.get(jobShardId))) {
-                    mappedJobs.put(jobShardId, batchJobs);
+                if (CollectionUtils.isEmpty(jobs.get(jobShardId))) {
+                    jobs.put(jobShardId, batchJobs);
                 } else {
-                    mappedJobs.get(jobShardId).addAll(batchJobs);
+                    jobs.get(jobShardId).addAll(batchJobs);
                 }
                 counter = 0;
                 jobShardId = getOneJobShardId(shardIds);
@@ -161,20 +161,20 @@ public class JobScheduler {
             }
 
             //两次调度间任务直接进入内存调度
-            if (shouldSchedulerImmediately(job.getTriggerTime())) {
+            if (shouldScheduleImmediately(job.getTriggerTime())) {
                 immediate.add(job);
             }
         }
 
         //放入最后批次
-        if (CollectionUtils.isEmpty(mappedJobs.get(jobShardId))) {
-            mappedJobs.put(jobShardId, batchJobs);
+        if (CollectionUtils.isEmpty(jobs.get(jobShardId))) {
+            jobs.put(jobShardId, batchJobs);
         } else {
-            mappedJobs.get(jobShardId).addAll(batchJobs);
+            jobs.get(jobShardId).addAll(batchJobs);
         }
 
         //任务创建
-        jobManager.createJobs(mappedJobs, recs);
+        jobManager.createJobs(jobs, recs);
 
         //已经过期任务，立即执行，若此时任务分片被调度到，则可能导致任务重复触发！！
         jobProcessor.scheduleJobs(immediate);
@@ -194,7 +194,7 @@ public class JobScheduler {
      */
     public void resumeJob(String outJobNo) {
         Job resume = jobManager.resume(outJobNo);
-        if (shouldSchedulerImmediately(resume.getTriggerTime())) {
+        if (shouldScheduleImmediately(resume.getTriggerTime())) {
             jobProcessor.scheduleOneJob(resume);
         }
     }
@@ -242,7 +242,7 @@ public class JobScheduler {
         doRetry();
 
         /** 启动任务状态同步到DB */
-        jobProcessor.startSyncCompletionJobToDB();
+        jobProcessor.startPersistJob();
     }
     
     /**
@@ -332,7 +332,6 @@ public class JobScheduler {
 
         /** 传递调度起始时间到执行器 */
         jobProcessor.setCurrentLoadJobTime(currentScheduleTime);
-        jobProcessor.setNextScheduleTime(nextScheduleTime);
 
         /** 实时获取被分配的分片ID */
         List<Integer> shardIds = fetchJobShardIds(getAssignedJobShard());
@@ -497,7 +496,7 @@ public class JobScheduler {
         }
     }
 
-    private boolean shouldSchedulerImmediately(long planTriggerTime) {
+    private boolean shouldScheduleImmediately(long planTriggerTime) {
         return planTriggerTime <= System.currentTimeMillis() || (planTriggerTime >= currentScheduleTime && planTriggerTime < nextScheduleTime);
     }
 

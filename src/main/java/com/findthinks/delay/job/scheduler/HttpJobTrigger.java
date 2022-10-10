@@ -18,6 +18,8 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component("httpJobTrigger")
 public class HttpJobTrigger implements IJobTrigger {
@@ -28,12 +30,12 @@ public class HttpJobTrigger implements IJobTrigger {
     private RestTemplate restTemplate;
 
     @Override
-    public TriggerResult triggerJob(Job job) {
+    public TriggerResult triggerJobs(List<Job> jobs) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        CallbackInfo cb = new CallbackInfo(job.getOutJobNo(), job.getTriggerTime(), job.getJobInfo());
-        HttpEntity<CallbackInfo> req = new HttpEntity<>(cb, headers);
-        ResponseEntity<JSONObject> ret = restTemplate.postForEntity(job.getCallbackEndpoint(), req, JSONObject.class);
+        List<CallbackInfo> cb = jobs.stream().map(job -> CallbackInfo.create(job)).collect(Collectors.toList());
+        HttpEntity<List<CallbackInfo>> req = new HttpEntity<>(cb, headers);
+        ResponseEntity<JSONObject> ret = restTemplate.postForEntity(jobs.get(0).getCallbackEndpoint(), req, JSONObject.class);
         if (ret.getStatusCode().is2xxSuccessful()) {
             JSONObject body = ret.getBody();
             try {
@@ -46,7 +48,7 @@ public class HttpJobTrigger implements IJobTrigger {
         throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
     }
 
-    private class CallbackInfo {
+    private static class CallbackInfo {
         private String outJobNo;
 
         private Long triggerTime;
@@ -57,6 +59,10 @@ public class HttpJobTrigger implements IJobTrigger {
             this.outJobNo = outJobNo;
             this.triggerTime = triggerTime;
             this.jobInfo = jobInfo;
+        }
+
+        public static CallbackInfo create(Job job) {
+            return new CallbackInfo(job.getOutJobNo(), job.getTriggerTime(), job.getJobInfo());
         }
 
         public String getOutJobNo() {

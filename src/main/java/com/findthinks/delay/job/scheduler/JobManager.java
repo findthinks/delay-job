@@ -179,6 +179,11 @@ public class JobManager implements IJobManager {
     }
 
     @Override
+    public Job loadJob(int jobShardId, long jobId) {
+        return null;
+    }
+
+    @Override
     public Job loadJob(String outJobNo) {
         GlobalRec rec = globalRecExtMapper.selectRecByOutJobNo(outJobNo);
         return null == rec ? null : loadJob(rec.getJobShardId(), outJobNo);

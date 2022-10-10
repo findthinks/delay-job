@@ -16,8 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private CallbackReq() {
-    outJobNo_ = "";
-    jobInfo_ = "";
+    jobs_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -40,6 +39,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -51,20 +51,12 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            outJobNo_ = s;
-            break;
-          }
-          case 16: {
-
-            triggerTime_ = input.readInt64();
-            break;
-          }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            jobInfo_ = s;
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              jobs_ = new java.util.ArrayList<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            jobs_.add(
+                input.readMessage(com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -82,6 +74,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        jobs_ = java.util.Collections.unmodifiableList(jobs_);
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -99,91 +94,44 @@ private static final long serialVersionUID = 0L;
             com.findthinks.delay.job.facade.grpc.cb.CallbackReq.class, com.findthinks.delay.job.facade.grpc.cb.CallbackReq.Builder.class);
   }
 
-  public static final int OUTJOBNO_FIELD_NUMBER = 1;
-  private volatile java.lang.Object outJobNo_;
+  public static final int JOBS_FIELD_NUMBER = 1;
+  private java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> jobs_;
   /**
-   * <code>string outJobNo = 1;</code>
-   * @return The outJobNo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
   @java.lang.Override
-  public java.lang.String getOutJobNo() {
-    java.lang.Object ref = outJobNo_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      outJobNo_ = s;
-      return s;
-    }
+  public java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> getJobsList() {
+    return jobs_;
   }
   /**
-   * <code>string outJobNo = 1;</code>
-   * @return The bytes for outJobNo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getOutJobNoBytes() {
-    java.lang.Object ref = outJobNo_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      outJobNo_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int TRIGGERTIME_FIELD_NUMBER = 2;
-  private long triggerTime_;
-  /**
-   * <code>int64 triggerTime = 2;</code>
-   * @return The triggerTime.
-   */
-  @java.lang.Override
-  public long getTriggerTime() {
-    return triggerTime_;
-  }
-
-  public static final int JOBINFO_FIELD_NUMBER = 3;
-  private volatile java.lang.Object jobInfo_;
-  /**
-   * <code>string jobInfo = 3;</code>
-   * @return The jobInfo.
-   */
-  @java.lang.Override
-  public java.lang.String getJobInfo() {
-    java.lang.Object ref = jobInfo_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      jobInfo_ = s;
-      return s;
-    }
+  public java.util.List<? extends com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder> 
+      getJobsOrBuilderList() {
+    return jobs_;
   }
   /**
-   * <code>string jobInfo = 3;</code>
-   * @return The bytes for jobInfo.
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.ByteString
-      getJobInfoBytes() {
-    java.lang.Object ref = jobInfo_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      jobInfo_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
+  public int getJobsCount() {
+    return jobs_.size();
+  }
+  /**
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+   */
+  @java.lang.Override
+  public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo getJobs(int index) {
+    return jobs_.get(index);
+  }
+  /**
+   * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+   */
+  @java.lang.Override
+  public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder getJobsOrBuilder(
+      int index) {
+    return jobs_.get(index);
   }
 
   private byte memoizedIsInitialized = -1;
@@ -200,14 +148,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getOutJobNoBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, outJobNo_);
-    }
-    if (triggerTime_ != 0L) {
-      output.writeInt64(2, triggerTime_);
-    }
-    if (!getJobInfoBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, jobInfo_);
+    for (int i = 0; i < jobs_.size(); i++) {
+      output.writeMessage(1, jobs_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -218,15 +160,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!getOutJobNoBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, outJobNo_);
-    }
-    if (triggerTime_ != 0L) {
+    for (int i = 0; i < jobs_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, triggerTime_);
-    }
-    if (!getJobInfoBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, jobInfo_);
+        .computeMessageSize(1, jobs_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -243,12 +179,8 @@ private static final long serialVersionUID = 0L;
     }
     com.findthinks.delay.job.facade.grpc.cb.CallbackReq other = (com.findthinks.delay.job.facade.grpc.cb.CallbackReq) obj;
 
-    if (!getOutJobNo()
-        .equals(other.getOutJobNo())) return false;
-    if (getTriggerTime()
-        != other.getTriggerTime()) return false;
-    if (!getJobInfo()
-        .equals(other.getJobInfo())) return false;
+    if (!getJobsList()
+        .equals(other.getJobsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -260,13 +192,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + OUTJOBNO_FIELD_NUMBER;
-    hash = (53 * hash) + getOutJobNo().hashCode();
-    hash = (37 * hash) + TRIGGERTIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getTriggerTime());
-    hash = (37 * hash) + JOBINFO_FIELD_NUMBER;
-    hash = (53 * hash) + getJobInfo().hashCode();
+    if (getJobsCount() > 0) {
+      hash = (37 * hash) + JOBS_FIELD_NUMBER;
+      hash = (53 * hash) + getJobsList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -395,17 +324,18 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getJobsFieldBuilder();
       }
     }
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      outJobNo_ = "";
-
-      triggerTime_ = 0L;
-
-      jobInfo_ = "";
-
+      if (jobsBuilder_ == null) {
+        jobs_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      } else {
+        jobsBuilder_.clear();
+      }
       return this;
     }
 
@@ -432,9 +362,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.findthinks.delay.job.facade.grpc.cb.CallbackReq buildPartial() {
       com.findthinks.delay.job.facade.grpc.cb.CallbackReq result = new com.findthinks.delay.job.facade.grpc.cb.CallbackReq(this);
-      result.outJobNo_ = outJobNo_;
-      result.triggerTime_ = triggerTime_;
-      result.jobInfo_ = jobInfo_;
+      int from_bitField0_ = bitField0_;
+      if (jobsBuilder_ == null) {
+        if (((bitField0_ & 0x00000001) != 0)) {
+          jobs_ = java.util.Collections.unmodifiableList(jobs_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.jobs_ = jobs_;
+      } else {
+        result.jobs_ = jobsBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -483,16 +420,31 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.findthinks.delay.job.facade.grpc.cb.CallbackReq other) {
       if (other == com.findthinks.delay.job.facade.grpc.cb.CallbackReq.getDefaultInstance()) return this;
-      if (!other.getOutJobNo().isEmpty()) {
-        outJobNo_ = other.outJobNo_;
-        onChanged();
-      }
-      if (other.getTriggerTime() != 0L) {
-        setTriggerTime(other.getTriggerTime());
-      }
-      if (!other.getJobInfo().isEmpty()) {
-        jobInfo_ = other.jobInfo_;
-        onChanged();
+      if (jobsBuilder_ == null) {
+        if (!other.jobs_.isEmpty()) {
+          if (jobs_.isEmpty()) {
+            jobs_ = other.jobs_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureJobsIsMutable();
+            jobs_.addAll(other.jobs_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.jobs_.isEmpty()) {
+          if (jobsBuilder_.isEmpty()) {
+            jobsBuilder_.dispose();
+            jobsBuilder_ = null;
+            jobs_ = other.jobs_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            jobsBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getJobsFieldBuilder() : null;
+          } else {
+            jobsBuilder_.addAllMessages(other.jobs_);
+          }
+        }
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -522,188 +474,246 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private java.lang.Object outJobNo_ = "";
-    /**
-     * <code>string outJobNo = 1;</code>
-     * @return The outJobNo.
-     */
-    public java.lang.String getOutJobNo() {
-      java.lang.Object ref = outJobNo_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        outJobNo_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string outJobNo = 1;</code>
-     * @return The bytes for outJobNo.
-     */
-    public com.google.protobuf.ByteString
-        getOutJobNoBytes() {
-      java.lang.Object ref = outJobNo_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        outJobNo_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string outJobNo = 1;</code>
-     * @param value The outJobNo to set.
-     * @return This builder for chaining.
-     */
-    public Builder setOutJobNo(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      outJobNo_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string outJobNo = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearOutJobNo() {
-      
-      outJobNo_ = getDefaultInstance().getOutJobNo();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string outJobNo = 1;</code>
-     * @param value The bytes for outJobNo to set.
-     * @return This builder for chaining.
-     */
-    public Builder setOutJobNoBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      outJobNo_ = value;
-      onChanged();
-      return this;
+    private java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> jobs_ =
+      java.util.Collections.emptyList();
+    private void ensureJobsIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        jobs_ = new java.util.ArrayList<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo>(jobs_);
+        bitField0_ |= 0x00000001;
+       }
     }
 
-    private long triggerTime_ ;
-    /**
-     * <code>int64 triggerTime = 2;</code>
-     * @return The triggerTime.
-     */
-    @java.lang.Override
-    public long getTriggerTime() {
-      return triggerTime_;
-    }
-    /**
-     * <code>int64 triggerTime = 2;</code>
-     * @param value The triggerTime to set.
-     * @return This builder for chaining.
-     */
-    public Builder setTriggerTime(long value) {
-      
-      triggerTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int64 triggerTime = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearTriggerTime() {
-      
-      triggerTime_ = 0L;
-      onChanged();
-      return this;
-    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder> jobsBuilder_;
 
-    private java.lang.Object jobInfo_ = "";
     /**
-     * <code>string jobInfo = 3;</code>
-     * @return The jobInfo.
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
      */
-    public java.lang.String getJobInfo() {
-      java.lang.Object ref = jobInfo_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        jobInfo_ = s;
-        return s;
+    public java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> getJobsList() {
+      if (jobsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(jobs_);
       } else {
-        return (java.lang.String) ref;
+        return jobsBuilder_.getMessageList();
       }
     }
     /**
-     * <code>string jobInfo = 3;</code>
-     * @return The bytes for jobInfo.
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
      */
-    public com.google.protobuf.ByteString
-        getJobInfoBytes() {
-      java.lang.Object ref = jobInfo_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        jobInfo_ = b;
-        return b;
+    public int getJobsCount() {
+      if (jobsBuilder_ == null) {
+        return jobs_.size();
       } else {
-        return (com.google.protobuf.ByteString) ref;
+        return jobsBuilder_.getCount();
       }
     }
     /**
-     * <code>string jobInfo = 3;</code>
-     * @param value The jobInfo to set.
-     * @return This builder for chaining.
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
      */
-    public Builder setJobInfo(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      jobInfo_ = value;
-      onChanged();
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo getJobs(int index) {
+      if (jobsBuilder_ == null) {
+        return jobs_.get(index);
+      } else {
+        return jobsBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder setJobs(
+        int index, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo value) {
+      if (jobsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureJobsIsMutable();
+        jobs_.set(index, value);
+        onChanged();
+      } else {
+        jobsBuilder_.setMessage(index, value);
+      }
       return this;
     }
     /**
-     * <code>string jobInfo = 3;</code>
-     * @return This builder for chaining.
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
      */
-    public Builder clearJobInfo() {
-      
-      jobInfo_ = getDefaultInstance().getJobInfo();
-      onChanged();
+    public Builder setJobs(
+        int index, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder builderForValue) {
+      if (jobsBuilder_ == null) {
+        ensureJobsIsMutable();
+        jobs_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        jobsBuilder_.setMessage(index, builderForValue.build());
+      }
       return this;
     }
     /**
-     * <code>string jobInfo = 3;</code>
-     * @param value The bytes for jobInfo to set.
-     * @return This builder for chaining.
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
      */
-    public Builder setJobInfoBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      jobInfo_ = value;
-      onChanged();
+    public Builder addJobs(com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo value) {
+      if (jobsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureJobsIsMutable();
+        jobs_.add(value);
+        onChanged();
+      } else {
+        jobsBuilder_.addMessage(value);
+      }
       return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder addJobs(
+        int index, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo value) {
+      if (jobsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureJobsIsMutable();
+        jobs_.add(index, value);
+        onChanged();
+      } else {
+        jobsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder addJobs(
+        com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder builderForValue) {
+      if (jobsBuilder_ == null) {
+        ensureJobsIsMutable();
+        jobs_.add(builderForValue.build());
+        onChanged();
+      } else {
+        jobsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder addJobs(
+        int index, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder builderForValue) {
+      if (jobsBuilder_ == null) {
+        ensureJobsIsMutable();
+        jobs_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        jobsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder addAllJobs(
+        java.lang.Iterable<? extends com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo> values) {
+      if (jobsBuilder_ == null) {
+        ensureJobsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, jobs_);
+        onChanged();
+      } else {
+        jobsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder clearJobs() {
+      if (jobsBuilder_ == null) {
+        jobs_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+      } else {
+        jobsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public Builder removeJobs(int index) {
+      if (jobsBuilder_ == null) {
+        ensureJobsIsMutable();
+        jobs_.remove(index);
+        onChanged();
+      } else {
+        jobsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder getJobsBuilder(
+        int index) {
+      return getJobsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder getJobsOrBuilder(
+        int index) {
+      if (jobsBuilder_ == null) {
+        return jobs_.get(index);  } else {
+        return jobsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public java.util.List<? extends com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder> 
+         getJobsOrBuilderList() {
+      if (jobsBuilder_ != null) {
+        return jobsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(jobs_);
+      }
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder addJobsBuilder() {
+      return getJobsFieldBuilder().addBuilder(
+          com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder addJobsBuilder(
+        int index) {
+      return getJobsFieldBuilder().addBuilder(
+          index, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .delay.job.CallbackJobInfo jobs = 1;</code>
+     */
+    public java.util.List<com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder> 
+         getJobsBuilderList() {
+      return getJobsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder> 
+        getJobsFieldBuilder() {
+      if (jobsBuilder_ == null) {
+        jobsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo.Builder, com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfoOrBuilder>(
+                jobs_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
+        jobs_ = null;
+      }
+      return jobsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(
