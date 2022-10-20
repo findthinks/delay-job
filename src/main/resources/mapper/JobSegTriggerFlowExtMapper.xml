@@ -58,7 +58,7 @@
             job_seg_trigger_flow
         WHERE
             <![CDATA[
-                trigger_time_start >= #{timeStart}
+                trigger_time_end >= #{timeStart}
                 AND trigger_time_end <= #{timeEnd}
             ]]>
             AND state != 40
