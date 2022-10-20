@@ -164,11 +164,13 @@ public class JobProcessor {
     }
 
     private void doScheduleJobInternal(Long triggerTime, List<Job> jobs) {
-        /** 任务异步触发 */
-        jobs.forEach(job -> readyQueue.offer(job));
-
-        /** 任务触发后移除分组缓存 */
-        delayingJobs.remove(triggerTime);
+        try {
+            /** 任务异步触发 */
+            jobs.forEach(job -> readyQueue.offer(job));
+        } finally {
+            /** 任务触发后移除分组缓存 */
+            delayingJobs.remove(triggerTime);
+        }
     }
 
     protected boolean supportBatchTriggerJob() {
@@ -195,7 +197,8 @@ public class JobProcessor {
         private void doPersistState() throws InterruptedException {
             List<Job> jobs = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
             long costs = 0L;
-            while (jobs.size() < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
+            while (jobs.size() < JOB_STATE_UPDATE_BATCH_SIZE &&
+                    costs < JOB_STATE_UPDATE_TIMEOUT) {
                 long start = System.currentTimeMillis();
                 Job job = triggeredQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (null != job) {
