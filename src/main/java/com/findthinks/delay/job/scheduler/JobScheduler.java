@@ -316,6 +316,8 @@ public class JobScheduler {
 
         /** 同步任务分片到调度器缓存 */
         reSyncJobShards();
+
+        LOG.info("Monitor info: Ready-Queue-Size: {}, Triggered-Queue-Size: {}", jobProcessor.getReadyJobCount(), jobProcessor.getTriggeredJobCount());
     }
 
     public void doLoadDelayJob() {

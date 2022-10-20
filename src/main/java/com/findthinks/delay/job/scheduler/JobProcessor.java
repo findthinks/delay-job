@@ -111,6 +111,22 @@ public class JobProcessor {
     }
 
     /**
+     * 待触发任务数
+     * @return
+     */
+    public int getReadyJobCount() {
+        return readyQueue.size();
+    }
+
+    /**
+     * 已触发，待同步数据库状态任务数
+     * @return
+     */
+    public int getTriggeredJobCount() {
+        return triggeredQueue.size();
+    }
+
+    /**
      * 批量任务转化为按秒升序的SortedMap结构
      * @param jobs
      * @return
