@@ -12,6 +12,8 @@ public class JobInfoResp {
 
     private Long triggerTime;
 
+    private Integer type;
+
     private Integer state;
 
     private Integer retryTimes;
@@ -54,6 +56,14 @@ public class JobInfoResp {
 
     public void setTriggerTime(Long triggerTime) {
         this.triggerTime = triggerTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getState() {

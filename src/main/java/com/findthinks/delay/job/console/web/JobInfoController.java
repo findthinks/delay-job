@@ -39,6 +39,7 @@ public class JobInfoController {
         resp.setOutJobNo(job.getOutJobNo());
         resp.setRetryTimes(job.getRetryTimes());
         resp.setState(job.getState());
+        resp.setType(job.getType());
         resp.setCallbackEndpoint(job.getCallbackEndpoint());
         resp.setCallbackProtocol(job.getCallbackProtocol());
         resp.setJobInfo(job.getJobInfo());
