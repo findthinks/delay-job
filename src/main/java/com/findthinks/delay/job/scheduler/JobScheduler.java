@@ -241,6 +241,9 @@ public class JobScheduler {
         /** 初始一次任务补偿 */
         doRetry();
 
+        /** 启动任务吹 */
+        jobProcessor.startTriggerJob();
+
         /** 启动任务状态同步到DB */
         jobProcessor.startPersistJob();
     }
@@ -613,6 +616,7 @@ public class JobScheduler {
     private Job createJob(FacadeJob facade) {
         Job job = new Job();
         job.setId(generateJobId());
+        job.setType(facade.getType());
         job.setState(JobState.SUBMIT.getCode());
         job.setTriggerTime(facade.getTriggerTime() * 1000);
         job.setOutJobNo(facade.getOutJobNo());
@@ -628,6 +632,7 @@ public class JobScheduler {
         FacadeJob facadeJob = new FacadeJob();
         facadeJob.setOutJobNo(job.getOutJobNo());
         facadeJob.setJobInfo(job.getJobInfo());
+        facadeJob.setType(job.getType());
         facadeJob.setTriggerTime(job.getTriggerTime() / 1000);
         facadeJob.setCallbackProtocol(job.getCallbackEndpoint());
         facadeJob.setCallbackEndpoint(job.getCallbackEndpoint());

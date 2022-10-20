@@ -15,11 +15,6 @@ public final class JobCallbackOuterClass {
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_delay_job_CallbackJobInfo_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_delay_job_CallbackJobInfo_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_delay_job_CallbackReq_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -38,34 +33,26 @@ public final class JobCallbackOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021JobCallback.proto\022\tdelay.job\"I\n\017Callba" +
-      "ckJobInfo\022\020\n\010outJobNo\030\001 \001(\t\022\023\n\013triggerTi" +
-      "me\030\002 \001(\003\022\017\n\007jobInfo\030\003 \001(\t\"7\n\013CallbackReq" +
-      "\022(\n\004jobs\030\001 \003(\0132\032.delay.job.CallbackJobIn" +
-      "fo\"-\n\014CallbackResp\022\014\n\004code\030\001 \001(\t\022\017\n\007mess" +
-      "age\030\002 \001(\t2K\n\013JobCallback\022<\n\007trigger\022\026.de" +
-      "lay.job.CallbackReq\032\027.delay.job.Callback" +
-      "Resp\"\000B+\n\'com.findthinks.delay.job.facad" +
-      "e.grpc.cbP\001b\006proto3"
+      "\n\021JobCallback.proto\022\tdelay.job\"E\n\013Callba" +
+      "ckReq\022\020\n\010outJobNo\030\001 \001(\t\022\023\n\013triggerTime\030\002" +
+      " \001(\003\022\017\n\007jobInfo\030\003 \001(\t\"-\n\014CallbackResp\022\014\n" +
+      "\004code\030\001 \001(\t\022\017\n\007message\030\002 \001(\t2K\n\013JobCallb" +
+      "ack\022<\n\007trigger\022\026.delay.job.CallbackReq\032\027" +
+      ".delay.job.CallbackResp\"\000B+\n\'com.findthi" +
+      "nks.delay.job.facade.grpc.cbP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         });
-    internal_static_delay_job_CallbackJobInfo_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_delay_job_CallbackJobInfo_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_delay_job_CallbackJobInfo_descriptor,
-        new java.lang.String[] { "OutJobNo", "TriggerTime", "JobInfo", });
     internal_static_delay_job_CallbackReq_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+      getDescriptor().getMessageTypes().get(0);
     internal_static_delay_job_CallbackReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_delay_job_CallbackReq_descriptor,
-        new java.lang.String[] { "Jobs", });
+        new java.lang.String[] { "OutJobNo", "TriggerTime", "JobInfo", });
     internal_static_delay_job_CallbackResp_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(1);
     internal_static_delay_job_CallbackResp_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_delay_job_CallbackResp_descriptor,

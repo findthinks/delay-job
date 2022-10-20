@@ -20,42 +20,48 @@ public interface CreateJobReqOrBuilder extends
       getOutJobNoBytes();
 
   /**
-   * <code>int64 triggerTime = 2;</code>
+   * <code>int32 type = 2;</code>
+   * @return The type.
+   */
+  int getType();
+
+  /**
+   * <code>int64 triggerTime = 3;</code>
    * @return The triggerTime.
    */
   long getTriggerTime();
 
   /**
-   * <code>string callbackProtocol = 3;</code>
+   * <code>string callbackProtocol = 4;</code>
    * @return The callbackProtocol.
    */
   java.lang.String getCallbackProtocol();
   /**
-   * <code>string callbackProtocol = 3;</code>
+   * <code>string callbackProtocol = 4;</code>
    * @return The bytes for callbackProtocol.
    */
   com.google.protobuf.ByteString
       getCallbackProtocolBytes();
 
   /**
-   * <code>string callbackEndpoint = 4;</code>
+   * <code>string callbackEndpoint = 5;</code>
    * @return The callbackEndpoint.
    */
   java.lang.String getCallbackEndpoint();
   /**
-   * <code>string callbackEndpoint = 4;</code>
+   * <code>string callbackEndpoint = 5;</code>
    * @return The bytes for callbackEndpoint.
    */
   com.google.protobuf.ByteString
       getCallbackEndpointBytes();
 
   /**
-   * <code>string jobInfo = 5;</code>
+   * <code>string jobInfo = 6;</code>
    * @return The jobInfo.
    */
   java.lang.String getJobInfo();
   /**
-   * <code>string jobInfo = 5;</code>
+   * <code>string jobInfo = 6;</code>
    * @return The bytes for jobInfo.
    */
   com.google.protobuf.ByteString

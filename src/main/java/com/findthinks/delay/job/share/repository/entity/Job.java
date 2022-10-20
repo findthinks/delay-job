@@ -21,6 +21,8 @@ public class Job {
     @Column(name = "pause_time")
     private Long pauseTime;
 
+    private Integer type;
+
     private Integer state;
 
     @Column(name = "retry_times")
@@ -149,6 +151,14 @@ public class Job {
      */
     public String getCallbackEndpoint() {
         return callbackEndpoint;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**

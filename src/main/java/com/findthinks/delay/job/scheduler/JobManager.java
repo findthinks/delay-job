@@ -152,7 +152,7 @@ public class JobManager implements IJobManager {
             return effect;
         } catch (Exception ex) {
             if (ex instanceof DuplicateKeyException) {
-                throw new DelayJobException(OUT_JOB_NO_IS_EXIST, "OutJobNo:" + job.getOutJobNo());
+                throw new DelayJobException(OUT_JOB_NO_IS_EXIST, "OutJobNo:" + job.getOutJobNo() + " duplicate!");
             }
             throw new RuntimeException(ex);
         }
@@ -180,7 +180,11 @@ public class JobManager implements IJobManager {
 
     @Override
     public Job loadJob(int jobShardId, long jobId) {
-        return null;
+        Map<String, Object> parameters = new HashMap<>(4);
+        parameters.put("jobShardId", jobShardId);
+        parameters.put("jobId", jobId);
+        List<Job> selected = jobExtMapper.loadJobById(parameters);
+        return CollectionUtils.isEmpty(selected)? null : selected.get(0);
     }
 
     @Override

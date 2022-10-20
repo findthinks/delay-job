@@ -60,22 +60,27 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
 
-            triggerTime_ = input.readInt64();
+            type_ = input.readInt32();
             break;
           }
-          case 26: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 24: {
 
-            callbackProtocol_ = s;
+            triggerTime_ = input.readInt64();
             break;
           }
           case 34: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            callbackEndpoint_ = s;
+            callbackProtocol_ = s;
             break;
           }
           case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            callbackEndpoint_ = s;
+            break;
+          }
+          case 50: {
             java.lang.String s = input.readStringRequireUtf8();
 
             jobInfo_ = s;
@@ -151,10 +156,21 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int TRIGGERTIME_FIELD_NUMBER = 2;
+  public static final int TYPE_FIELD_NUMBER = 2;
+  private int type_;
+  /**
+   * <code>int32 type = 2;</code>
+   * @return The type.
+   */
+  @java.lang.Override
+  public int getType() {
+    return type_;
+  }
+
+  public static final int TRIGGERTIME_FIELD_NUMBER = 3;
   private long triggerTime_;
   /**
-   * <code>int64 triggerTime = 2;</code>
+   * <code>int64 triggerTime = 3;</code>
    * @return The triggerTime.
    */
   @java.lang.Override
@@ -162,10 +178,10 @@ private static final long serialVersionUID = 0L;
     return triggerTime_;
   }
 
-  public static final int CALLBACKPROTOCOL_FIELD_NUMBER = 3;
+  public static final int CALLBACKPROTOCOL_FIELD_NUMBER = 4;
   private volatile java.lang.Object callbackProtocol_;
   /**
-   * <code>string callbackProtocol = 3;</code>
+   * <code>string callbackProtocol = 4;</code>
    * @return The callbackProtocol.
    */
   @java.lang.Override
@@ -182,7 +198,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string callbackProtocol = 3;</code>
+   * <code>string callbackProtocol = 4;</code>
    * @return The bytes for callbackProtocol.
    */
   @java.lang.Override
@@ -200,10 +216,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int CALLBACKENDPOINT_FIELD_NUMBER = 4;
+  public static final int CALLBACKENDPOINT_FIELD_NUMBER = 5;
   private volatile java.lang.Object callbackEndpoint_;
   /**
-   * <code>string callbackEndpoint = 4;</code>
+   * <code>string callbackEndpoint = 5;</code>
    * @return The callbackEndpoint.
    */
   @java.lang.Override
@@ -220,7 +236,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string callbackEndpoint = 4;</code>
+   * <code>string callbackEndpoint = 5;</code>
    * @return The bytes for callbackEndpoint.
    */
   @java.lang.Override
@@ -238,10 +254,10 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int JOBINFO_FIELD_NUMBER = 5;
+  public static final int JOBINFO_FIELD_NUMBER = 6;
   private volatile java.lang.Object jobInfo_;
   /**
-   * <code>string jobInfo = 5;</code>
+   * <code>string jobInfo = 6;</code>
    * @return The jobInfo.
    */
   @java.lang.Override
@@ -258,7 +274,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string jobInfo = 5;</code>
+   * <code>string jobInfo = 6;</code>
    * @return The bytes for jobInfo.
    */
   @java.lang.Override
@@ -293,17 +309,20 @@ private static final long serialVersionUID = 0L;
     if (!getOutJobNoBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, outJobNo_);
     }
+    if (type_ != 0) {
+      output.writeInt32(2, type_);
+    }
     if (triggerTime_ != 0L) {
-      output.writeInt64(2, triggerTime_);
+      output.writeInt64(3, triggerTime_);
     }
     if (!getCallbackProtocolBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, callbackProtocol_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, callbackProtocol_);
     }
     if (!getCallbackEndpointBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, callbackEndpoint_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, callbackEndpoint_);
     }
     if (!getJobInfoBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, jobInfo_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, jobInfo_);
     }
     unknownFields.writeTo(output);
   }
@@ -317,18 +336,22 @@ private static final long serialVersionUID = 0L;
     if (!getOutJobNoBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, outJobNo_);
     }
+    if (type_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, type_);
+    }
     if (triggerTime_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, triggerTime_);
+        .computeInt64Size(3, triggerTime_);
     }
     if (!getCallbackProtocolBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, callbackProtocol_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, callbackProtocol_);
     }
     if (!getCallbackEndpointBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, callbackEndpoint_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, callbackEndpoint_);
     }
     if (!getJobInfoBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, jobInfo_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, jobInfo_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -347,6 +370,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getOutJobNo()
         .equals(other.getOutJobNo())) return false;
+    if (getType()
+        != other.getType()) return false;
     if (getTriggerTime()
         != other.getTriggerTime()) return false;
     if (!getCallbackProtocol()
@@ -368,6 +393,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + OUTJOBNO_FIELD_NUMBER;
     hash = (53 * hash) + getOutJobNo().hashCode();
+    hash = (37 * hash) + TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getType();
     hash = (37 * hash) + TRIGGERTIME_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getTriggerTime());
@@ -512,6 +539,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       outJobNo_ = "";
 
+      type_ = 0;
+
       triggerTime_ = 0L;
 
       callbackProtocol_ = "";
@@ -547,6 +576,7 @@ private static final long serialVersionUID = 0L;
     public com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq buildPartial() {
       com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq result = new com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq(this);
       result.outJobNo_ = outJobNo_;
+      result.type_ = type_;
       result.triggerTime_ = triggerTime_;
       result.callbackProtocol_ = callbackProtocol_;
       result.callbackEndpoint_ = callbackEndpoint_;
@@ -602,6 +632,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getOutJobNo().isEmpty()) {
         outJobNo_ = other.outJobNo_;
         onChanged();
+      }
+      if (other.getType() != 0) {
+        setType(other.getType());
       }
       if (other.getTriggerTime() != 0L) {
         setTriggerTime(other.getTriggerTime());
@@ -723,9 +756,40 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int type_ ;
+    /**
+     * <code>int32 type = 2;</code>
+     * @return The type.
+     */
+    @java.lang.Override
+    public int getType() {
+      return type_;
+    }
+    /**
+     * <code>int32 type = 2;</code>
+     * @param value The type to set.
+     * @return This builder for chaining.
+     */
+    public Builder setType(int value) {
+      
+      type_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 type = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearType() {
+      
+      type_ = 0;
+      onChanged();
+      return this;
+    }
+
     private long triggerTime_ ;
     /**
-     * <code>int64 triggerTime = 2;</code>
+     * <code>int64 triggerTime = 3;</code>
      * @return The triggerTime.
      */
     @java.lang.Override
@@ -733,7 +797,7 @@ private static final long serialVersionUID = 0L;
       return triggerTime_;
     }
     /**
-     * <code>int64 triggerTime = 2;</code>
+     * <code>int64 triggerTime = 3;</code>
      * @param value The triggerTime to set.
      * @return This builder for chaining.
      */
@@ -744,7 +808,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 triggerTime = 2;</code>
+     * <code>int64 triggerTime = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearTriggerTime() {
@@ -756,7 +820,7 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object callbackProtocol_ = "";
     /**
-     * <code>string callbackProtocol = 3;</code>
+     * <code>string callbackProtocol = 4;</code>
      * @return The callbackProtocol.
      */
     public java.lang.String getCallbackProtocol() {
@@ -772,7 +836,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string callbackProtocol = 3;</code>
+     * <code>string callbackProtocol = 4;</code>
      * @return The bytes for callbackProtocol.
      */
     public com.google.protobuf.ByteString
@@ -789,7 +853,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string callbackProtocol = 3;</code>
+     * <code>string callbackProtocol = 4;</code>
      * @param value The callbackProtocol to set.
      * @return This builder for chaining.
      */
@@ -804,7 +868,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string callbackProtocol = 3;</code>
+     * <code>string callbackProtocol = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearCallbackProtocol() {
@@ -814,7 +878,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string callbackProtocol = 3;</code>
+     * <code>string callbackProtocol = 4;</code>
      * @param value The bytes for callbackProtocol to set.
      * @return This builder for chaining.
      */
@@ -832,7 +896,7 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object callbackEndpoint_ = "";
     /**
-     * <code>string callbackEndpoint = 4;</code>
+     * <code>string callbackEndpoint = 5;</code>
      * @return The callbackEndpoint.
      */
     public java.lang.String getCallbackEndpoint() {
@@ -848,7 +912,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string callbackEndpoint = 4;</code>
+     * <code>string callbackEndpoint = 5;</code>
      * @return The bytes for callbackEndpoint.
      */
     public com.google.protobuf.ByteString
@@ -865,7 +929,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string callbackEndpoint = 4;</code>
+     * <code>string callbackEndpoint = 5;</code>
      * @param value The callbackEndpoint to set.
      * @return This builder for chaining.
      */
@@ -880,7 +944,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string callbackEndpoint = 4;</code>
+     * <code>string callbackEndpoint = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearCallbackEndpoint() {
@@ -890,7 +954,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string callbackEndpoint = 4;</code>
+     * <code>string callbackEndpoint = 5;</code>
      * @param value The bytes for callbackEndpoint to set.
      * @return This builder for chaining.
      */
@@ -908,7 +972,7 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object jobInfo_ = "";
     /**
-     * <code>string jobInfo = 5;</code>
+     * <code>string jobInfo = 6;</code>
      * @return The jobInfo.
      */
     public java.lang.String getJobInfo() {
@@ -924,7 +988,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string jobInfo = 5;</code>
+     * <code>string jobInfo = 6;</code>
      * @return The bytes for jobInfo.
      */
     public com.google.protobuf.ByteString
@@ -941,7 +1005,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string jobInfo = 5;</code>
+     * <code>string jobInfo = 6;</code>
      * @param value The jobInfo to set.
      * @return This builder for chaining.
      */
@@ -956,7 +1020,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string jobInfo = 5;</code>
+     * <code>string jobInfo = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearJobInfo() {
@@ -966,7 +1030,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string jobInfo = 5;</code>
+     * <code>string jobInfo = 6;</code>
      * @param value The bytes for jobInfo to set.
      * @return This builder for chaining.
      */

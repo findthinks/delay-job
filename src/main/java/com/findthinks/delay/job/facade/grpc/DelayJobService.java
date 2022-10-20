@@ -26,6 +26,7 @@ public class DelayJobService extends JobGrpc.JobImplBase {
         try {
             jobScheduler.submitJob(FacadeJob.create(
                     req.getOutJobNo(),
+                    req.getType(),
                     req.getTriggerTime(),
                     req.getCallbackProtocol(),
                     req.getCallbackEndpoint(),
@@ -44,6 +45,7 @@ public class DelayJobService extends JobGrpc.JobImplBase {
             final List<FacadeJob> jobs = new ArrayList<>();
             request.getJobsList().forEach(job -> jobs.add(FacadeJob.create(
                     job.getOutJobNo(),
+                    job.getType(),
                     job.getTriggerTime(),
                     job.getCallbackProtocol(),
                     job.getCallbackEndpoint(),

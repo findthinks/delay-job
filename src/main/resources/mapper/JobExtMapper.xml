@@ -10,6 +10,7 @@
         <result column="out_job_no" jdbcType="VARCHAR" property="outJobNo" />
         <result column="trigger_time" jdbcType="BIGINT" property="triggerTime" />
         <result column="pause_time" jdbcType="BIGINT" property="pauseTime" />
+        <result column="type" jdbcType="TINYINT" property="type" />
         <result column="state" jdbcType="TINYINT" property="state" />
         <result column="retry_times" jdbcType="BIT" property="retryTimes" />
         <result column="callback_protocol" jdbcType="BIT" property="callbackProtocol" />
@@ -19,15 +20,15 @@
     </resultMap>
 
     <insert id="insertJob">
-        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
-        VALUES (#{id}, #{jobShardId}, #{outJobNo}, #{triggerTime}, #{pauseTime}, #{state}, #{retryTimes}, #{callbackProtocol}, #{callbackEndpoint}, #{jobInfo}, #{gmtCreate})
+        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, type, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
+        VALUES (#{id}, #{jobShardId}, #{outJobNo}, #{triggerTime}, #{pauseTime}, #{type}, #{state}, #{retryTimes}, #{callbackProtocol}, #{callbackEndpoint}, #{jobInfo}, #{gmtCreate})
     </insert>
 
     <insert id="insertBatchJobs">
-        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
+        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, type, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
         VALUES
         <foreach collection="jobs" item="job" index="index" separator=",">
-            (#{job.id}, #{job.jobShardId}, #{job.outJobNo}, #{job.triggerTime}, #{job.pauseTime}, #{job.state}, #{job.retryTimes}, #{job.callbackProtocol}, #{job.callbackEndpoint}, #{job.jobInfo}, #{job.gmtCreate})
+            (#{job.id}, #{job.jobShardId}, #{job.outJobNo}, #{job.triggerTime}, #{job.pauseTime}, #{job.type}, #{job.state}, #{job.retryTimes}, #{job.callbackProtocol}, #{job.callbackEndpoint}, #{job.jobInfo}, #{job.gmtCreate})
         </foreach>
     </insert>
 
@@ -38,6 +39,15 @@
             job_${jobShardId}
         WHERE
             out_job_no = #{outJobNo}
+    </select>
+
+    <select id="loadJobById" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            id = #{jobId}
     </select>
 
     <select id="selectSubmitJobs" parameterType="map" resultMap="BaseResultMap">
@@ -135,7 +145,8 @@
         UPDATE
             job_${jobShardId}
         SET
-            trigger_time = #{triggerTime}
+            trigger_time = #{triggerTime},
+            pause_time = null
         WHERE
             id = #{jobId}
     </update>

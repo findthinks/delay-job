@@ -30,13 +30,16 @@ public class JobProcessor {
     /** 延迟执行处理器 */
     private final ExecutorService executor = Executors.newFixedThreadPool(EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Executor-%d").setDaemon(true).build());
 
+    /** 特别延迟执行处理器-如:处理可暂停计时任务 */
+    private final ExecutorService specialExecutor = Executors.newFixedThreadPool(EXECUTOR_NUM, new ThreadFactoryBuilder().setNameFormat("Job-Special-Executor-%d").setDaemon(true).build());
+
     /** 异步更新数据库任务状态 */
     private final ExecutorService stateExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder().setNameFormat("Job-State-Sync-%d").setDaemon(true).build());
 
-    /** 收集需立即触发的任务*/
+    /** 收集需立即触发的任务 */
     private final BlockingQueue<Job> readyQueue = new LinkedBlockingQueue<>();
 
-    /** 收集已触发成功任务，批量更新数据库*/
+    /** 收集已触发成功任务，批量更新数据库 */
     private final BlockingQueue<Job> triggeredQueue = new LinkedBlockingQueue<>();
 
     @Value("${scheduler.job.batch-trigger-num: 100}")
@@ -122,7 +125,7 @@ public class JobProcessor {
      */
     public void startTriggerJob() {
         for (int idx=0; idx<V_CPU_CORES; idx++) {
-            stateExecutor.submit(new TriggerJob());
+            executor.submit(new TriggerJob());
         }
     }
 
@@ -140,7 +143,7 @@ public class JobProcessor {
      */
     public void retryOneJob(Job job) {
         try {
-            fireJobs(Arrays.asList(job));
+            fireJob(job);
 
             //修改任务状态为成功
             jobManager.modifyJobState(job, JobState.SUCCESS.getCode(), job.getState(), job.getRetryTimes() + 1);
@@ -150,12 +153,10 @@ public class JobProcessor {
         }
     }
 
-    private void fireJobs(List<Job> jobs) {
-        Map<String, List<Job>> group = jobs.stream().collect(Collectors.groupingBy(Job::getCallbackEndpoint));
-        group.entrySet().stream().forEach(entry -> {
-            CallbackProtocol protocol = CallbackProtocol.getByProtocol(entry.getValue().get(0).getCallbackProtocol());
-            ((IJobTrigger) applicationContext.getBean(protocol.getTrigger())).triggerJobs(entry.getValue());
-        });
+    private void fireJob(Job job) {
+        CallbackProtocol protocol = CallbackProtocol.getByProtocol(job.getCallbackProtocol());
+        IJobTrigger fire = (IJobTrigger) applicationContext.getBean(protocol.getTrigger());
+        fire.trigger(job);
     }
 
     private boolean isSubmit(Job job) {
@@ -220,62 +221,70 @@ public class JobProcessor {
         @Override
         public void run() {
             try {
-                if (supportBatchTriggerJob()) {
-                    doTriggerJobs();
-                } else {
-                    doTriggerJob();
-                }
-            } catch (InterruptedException ignore) {
-                LOG.warn("Get job interrupted.", ignore);
+                doTriggerJob();
+            } catch (Exception ex) {
+                LOG.warn("Get job error.", ex);
             } finally {
                 stateExecutor.submit(new TriggerJob());
             }
         }
 
         private void doTriggerJob() throws InterruptedException {
-            Job job = null;
-            while (null != (job = readyQueue.poll(100, TimeUnit.MILLISECONDS))) {
-                /** 触发单条任务*/
-                doTriggerJobsInternal(Arrays.asList(job));
+            for (;;) {
+                final Job job = readyQueue.poll(1000, TimeUnit.MILLISECONDS);
 
-                /** 收集成功触发任务*/
-                triggeredQueue.offer(job);
-            }
-        }
-
-        private void doTriggerJobs() throws InterruptedException {
-            List<Job> jobs = new ArrayList<>(batchTriggerNum);
-            long costs = 0L;
-            while (jobs.size() < batchTriggerNum && costs < JOB_TRIGGER_TIMEOUT) {
-                long start = System.currentTimeMillis();
-                Job job = readyQueue.poll(100, TimeUnit.MILLISECONDS);
-                if (null != job) {
-                    jobs.add(job);
+                if (null == job) {
+                    continue;
                 }
-                costs = costs + System.currentTimeMillis() - start;
-            }
-            if (jobs.size() > 0) {
-                doTriggerJobsInternal(jobs);
-            }
 
-            /** 收集成功触发任务*/
-            jobs.forEach(job -> triggeredQueue.offer(job));
+                if (needTriggerBySpecialExecutor(job)) {
+                    specialExecutor.execute(() -> doTriggerJobInternal(job));
+                    continue;
+                }
+
+                doTriggerJobInternal(job);
+            }
+        }
+    }
+
+    private void doTriggerJobInternal(Job job) {
+        /** 从db同步最新状态 */
+        syncJobStateFromDB(job);
+
+        /** 判断是否需要丢弃当次触发 */
+        if (needDiscardTrigger(job)) {
+            return;
         }
 
-        private void doTriggerJobsInternal(List<Job> jobs) {
-            /** Load new state from DB */
-            syncJobStateFromDB(jobs);
+        /** 执行任务触发 */
+        fireJob(job);
 
-            /** 触发任务 */
-            fireJobs(jobs);
-        }
+        /** 收集成功触发任务 */
+        triggeredQueue.offer(job);
+    }
+
+    protected boolean needTriggerBySpecialExecutor(Job job) {
+        /** 可暂停任务使用特殊触发器处理 */
+        return JobType.getTypeByCode(job.getType()) == JobType.PAUSABLE;
+    }
+
+    protected boolean needDiscardTrigger(Job job) {
+        /** 暂停中的任务，丢弃本次触发 */
+        return null != job.getPauseTime();
     }
 
     /**
      * 暂未使用，处理重数据库同步任务的最新状态
      * @param jobs
      */
-    protected void syncJobStateFromDB(List<Job> jobs) {
+    protected void syncJobStateFromDB(Job job) {
+        if (job.getType().equals(JobType.PAUSABLE.getCode())) {
+            Job persist = jobManager.loadJob(job.getJobShardId(), job.getId());
+            job.setState(persist.getState());
+            job.setTriggerTime(persist.getTriggerTime());
+            job.setPauseTime(persist.getPauseTime());
+            job.setRetryTimes(persist.getRetryTimes());
+        }
     }
 
     public void setCurrentLoadJobTime(long currentLoadJobTime) {

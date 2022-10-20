@@ -1,6 +1,5 @@
 package com.findthinks.delay.job.scheduler;
 
-import com.findthinks.delay.job.facade.grpc.cb.CallbackJobInfo;
 import com.findthinks.delay.job.facade.grpc.cb.CallbackReq;
 import com.findthinks.delay.job.facade.grpc.cb.CallbackResp;
 import com.findthinks.delay.job.facade.grpc.cb.JobCallbackGrpc;
@@ -8,7 +7,6 @@ import com.findthinks.delay.job.share.repository.entity.Job;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.stereotype.Component;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,14 +20,12 @@ public class GrpcJobTrigger implements IJobTrigger {
     private final ConcurrentMap<String, JobCallbackGrpc.JobCallbackBlockingStub> stubs = new ConcurrentHashMap();
 
     @Override
-    public TriggerResult triggerJobs(List<Job> jobs) {
-        CallbackReq.Builder builder = CallbackReq.newBuilder();
-        jobs.forEach(job -> builder.addJobs(CallbackJobInfo.newBuilder()
+    public TriggerResult trigger(Job job) {
+        CallbackReq req = CallbackReq.newBuilder()
+                .setJobInfo(job.getJobInfo())
                 .setOutJobNo(job.getOutJobNo())
-                .setTriggerTime(job.getTriggerTime())
-                .setJobInfo(job.getJobInfo()).build()));
-        CallbackReq req = builder.build();
-        final CallbackResp resp = getTriggerStub(jobs.get(0).getCallbackEndpoint()).trigger(req);
+                .setTriggerTime(job.getTriggerTime()).build();
+        final CallbackResp resp = getTriggerStub(job.getCallbackEndpoint()).trigger(req);
         return new TriggerResult(resp.getCode(), resp.getMessage());
     }
 

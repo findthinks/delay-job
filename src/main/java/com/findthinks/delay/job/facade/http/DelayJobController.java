@@ -30,6 +30,7 @@ public class DelayJobController {
             job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(40));
             job.setJobInfo("I am a delay job.");
             job.setOutJobNo(UUIDUtils.randomUUID());
+            job.setType(5);
             job.setCallbackEndpoint("LOG");
             job.setCallbackProtocol("LOG");
             jobScheduler.submitJob(job);
@@ -45,6 +46,7 @@ public class DelayJobController {
                 job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(55));
                 job.setJobInfo("I am a delay job.");
                 job.setOutJobNo(UUIDUtils.randomUUID());
+                job.setType(5);
                 job.setCallbackEndpoint("LOG");
                 job.setCallbackProtocol("LOG");
                 jobs.add(job);
@@ -61,6 +63,7 @@ public class DelayJobController {
                 FacadeJob job = new FacadeJob();
                 job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(300));
                 job.setJobInfo("I am a delay job.");
+                job.setType(5);
                 job.setOutJobNo(UUIDUtils.randomUUID());
                 job.setCallbackEndpoint("LOG");
                 job.setCallbackProtocol("LOG");

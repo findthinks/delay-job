@@ -30,4 +30,6 @@ public interface JobExtMapper {
     int insertBatchJobs(@Param("jobShardId") Integer jobShardId,@Param("jobs") List<Job> jobs);
 
     List<Job> loadJob(Map<String, Object> parameters);
+
+    List<Job> loadJobById(Map<String, Object> parameters);
 }

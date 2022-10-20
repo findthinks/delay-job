@@ -18,8 +18,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component("httpJobTrigger")
 public class HttpJobTrigger implements IJobTrigger {
@@ -30,12 +28,11 @@ public class HttpJobTrigger implements IJobTrigger {
     private RestTemplate restTemplate;
 
     @Override
-    public TriggerResult triggerJobs(List<Job> jobs) {
+    public TriggerResult trigger(Job job) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        List<CallbackInfo> cb = jobs.stream().map(job -> CallbackInfo.create(job)).collect(Collectors.toList());
-        HttpEntity<List<CallbackInfo>> req = new HttpEntity<>(cb, headers);
-        ResponseEntity<JSONObject> ret = restTemplate.postForEntity(jobs.get(0).getCallbackEndpoint(), req, JSONObject.class);
+        HttpEntity<CallbackInfo> req = new HttpEntity<>(CallbackInfo.create(job), headers);
+        ResponseEntity<JSONObject> ret = restTemplate.postForEntity(job.getCallbackEndpoint(), req, JSONObject.class);
         if (ret.getStatusCode().is2xxSuccessful()) {
             JSONObject body = ret.getBody();
             try {

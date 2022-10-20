@@ -174,11 +174,11 @@
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.5.1</version>
                 <configuration>
+                    <pluginId>grpc-java</pluginId>
                     <protoSourceRoot>src/main/resources/pb</protoSourceRoot>
                     <outputDirectory>${project.basedir}/src/main/java</outputDirectory>
                     <clearOutputDirectory>false</clearOutputDirectory>
                     <protocArtifact>com.google.protobuf:protoc:4.0.0-rc-2:exe:${os.detected.classifier}</protocArtifact>
-                    <pluginId>grpc-java</pluginId>
                     <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
                 </configuration>
             </plugin>

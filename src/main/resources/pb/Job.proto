@@ -6,10 +6,11 @@ option java_multiple_files = true;
 
 message CreateJobReq {
     string outJobNo = 1;
-    int64 triggerTime = 2;
-    string callbackProtocol = 3;
-    string callbackEndpoint = 4;
-    string jobInfo = 5;
+    int32 type = 2;
+    int64 triggerTime = 3;
+    string callbackProtocol = 4;
+    string callbackEndpoint = 5;
+    string jobInfo = 6;
 }
 
 message CreateJobsReq {

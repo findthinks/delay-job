@@ -3,6 +3,8 @@ package com.findthinks.delay.job.scheduler;
 public class FacadeJob {
     private String outJobNo;
 
+    private Integer type;
+
     private Long triggerTime;
 
     private String callbackProtocol;
@@ -14,16 +16,17 @@ public class FacadeJob {
     public FacadeJob() {
     }
 
-    public FacadeJob(String outJobNo, Long triggerTime, String callbackProtocol, String callbackEndpoint, String jobInfo) {
+    public FacadeJob(String outJobNo, Integer type, Long triggerTime, String callbackProtocol, String callbackEndpoint, String jobInfo) {
         this.outJobNo = outJobNo;
         this.triggerTime = triggerTime;
         this.callbackProtocol = callbackProtocol;
         this.callbackEndpoint = callbackEndpoint;
         this.jobInfo = jobInfo;
+        this.type = type;
     }
 
-    public static FacadeJob create(String outJobNo, Long triggerTime, String callbackProtocol, String callbackEndpoint, String jobInfo) {
-        return new FacadeJob(outJobNo, triggerTime, callbackProtocol, callbackEndpoint, jobInfo);
+    public static FacadeJob create(String outJobNo, Integer type, Long triggerTime, String callbackProtocol, String callbackEndpoint, String jobInfo) {
+        return new FacadeJob(outJobNo, type, triggerTime, callbackProtocol, callbackEndpoint, jobInfo);
     }
 
     public String getOutJobNo() {
@@ -64,5 +67,13 @@ public class FacadeJob {
 
     public void setJobInfo(String jobInfo) {
         this.jobInfo = jobInfo;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }
