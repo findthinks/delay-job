@@ -476,27 +476,27 @@ public class JobScheduler {
     }
 
     private void refreshScheduler() {
-        //节点存活，由于网络、GC等原因，导致心跳更新不及时，节点被清理
+        /** 节点存活，由于网络、GC等原因，导致心跳更新不及时，节点被清理 */
         if (isSchedulerPersistenceExpired()) {
             reRegister(createSchedulerInfo());
             return;
         }
 
-        //更新心跳信息
+        /** 更新心跳信息 */
         updateSchedulerHeartbeat();
 
-        //清理超时调度器
+        /** 清理超时调度器 */
         clearExpiredScheduler();
 
-        //释放游离任务项，并重新分配任务项
+        /** 释放游离任务项，并重新分配任务项 */
         List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
         if (isLeader(getSchedulerInfo().getId(), schedulers)) {
             LOG.info("Lead-scheduler[id={}] is assigning job shards.", getSchedulerInfo().getId());
 
-            //释放游离任务项
+            /** 释放游离任务项 */
             releaseJobShardOutOfControl(schedulers);
 
-            //重分配任务项
+            /** 重分配任务项 */
             reAssignJobShard(schedulers, jobShardManager.loadEnabledJobShards());
         }
     }
