@@ -81,7 +81,7 @@ public class JobScheduler {
     @Value("${scheduler.job.state-check-seg-num:3}")
     private int stateCheckSegNums;
 
-    @Value("${scheduler.job.cron.load}")
+    @Value("${scheduler.job.cron.load:0 0/1 * * * ?}")
     private CronExpression jobLoadCron;
 
     @Value("${scheduler.job.load-max-num:50000}")

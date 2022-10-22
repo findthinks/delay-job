@@ -1,6 +1,8 @@
 spring:
   application:
     name: delay-job
+  main:
+    allow-circular-references: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -24,13 +26,13 @@ grpc:
 scheduler:
   judge-dead: 15
   cron:
-    heartbeat: 2,7,12,17,22,27,32,37,42,47,52,57 * * * * ?
+#    heartbeat: 2,7,12,17,22,27,32,37,42,47,52,57 * * * * ?
   job:
     cron:
-      load: 0 0/1 * * * ?
-      retry: 5,15,25,35,45,55 * * * * ?
-      sync-state: 5,15,25,35,45,55 * * * * ?
-      translate: 10,25,40,55 * * * * ?
+#      load: 0 0/1 * * * ?
+#      retry: 5,15,25,35,45,55 * * * * ?
+#      sync-state: 5,15,25,35,45,55 * * * * ?
+#      translate: 10,25,40,55 * * * * ?
     batch-trigger-num: 100
     load-max-num: 50000
     translate-max-num: 100
