@@ -69,26 +69,26 @@ public class JobScheduler {
     @Value("${scheduler.judge-dead:15}")
     private int judgeDeadInternal;
 
-    @Value("${scheduler.job.retry-max-num:10000}")
-    private int retryMaxJobNums;
+    @Value("${scheduler.job.retry-max-job-num:1000}")
+    private int retryMaxJobNum;
 
-    @Value("${scheduler.job.once-retry-seg-num:10}")
-    private int onceRetrySegNums;
+    @Value("${scheduler.job.once-retry-seg-num:8}")
+    private int onceRetrySegNum;
 
-    @Value("${scheduler.job.retry-seg-num:1440}")
-    private int retrySegNums;
+    @Value("${scheduler.job.retry-seg-num:32}")
+    private int retrySegNum;
 
-    @Value("${scheduler.job.state-check-seg-num:3}")
-    private int stateCheckSegNums;
+    @Value("${scheduler.job.state-check-seg-num:8}")
+    private int stateCheckSegNum;
 
-    @Value("${scheduler.job.cron.load:0 0/1 * * * ?}")
+    @Value("${scheduler.job.cron.load}")
     private CronExpression jobLoadCron;
 
-    @Value("${scheduler.job.load-max-num:50000}")
-    private int loadMaxJobNums;
+    @Value("${scheduler.job.load-max-job-num:50000}")
+    private int loadMaxJobNum;
 
-    @Value("${scheduler.job.translate-max-num:100}")
-    private int translateMaxNums;
+    @Value("${scheduler.job.translate-max-job-num:100}")
+    private int translateMaxJobNum;
 
     private volatile List<Integer> jobShardIds;
 
@@ -342,7 +342,7 @@ public class JobScheduler {
         List<Integer> shardIds = fetchJobShardIds(getAssignedJobShard());
         if (!CollectionUtils.isEmpty(shardIds)) {
             /** 加载延迟任务 */
-            scheduleDelayJob(nextScheduleTime, loadMaxJobNums, shardIds);
+            scheduleDelayJob(nextScheduleTime, loadMaxJobNum, shardIds);
 
             /** 释放被其它节点申请的任务 */
             releaseJobShardReqByOther(shardIds);
@@ -372,7 +372,7 @@ public class JobScheduler {
                 List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
 
                 /** 开始补偿未完成的任务段 */
-                doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNums));
+                doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNum));
             }
         } catch (InterruptedException ie) {
             LOG.warn("Enter retry lock fail, has interrupted", ie);
@@ -408,7 +408,7 @@ public class JobScheduler {
                 .collect(Collectors.toMap(JobSegTrigger::getJobShardId, JobSegTrigger::getTriggerTimeEnd));
 
         /** 逐步转移分片任务 */
-        translatingShardIds.forEach(shardId -> translateShardJobToOtherShard(shardId, mappedSegTriggers.get(shardId), translateMaxNums));
+        translatingShardIds.forEach(shardId -> translateShardJobToOtherShard(shardId, mappedSegTriggers.get(shardId), translateMaxJobNum));
     }
 
     public SchedulerInfo getSchedulerInfo() {
@@ -695,7 +695,7 @@ public class JobScheduler {
 
     /** 暂未使用 */
     public void doLoadDelayJobInternal() {
-        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNums, null);
+        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNum, null);
     }
 
     private long getNextValidTimeAfter(Date current) {
@@ -703,11 +703,11 @@ public class JobScheduler {
     }
 
     private long getRetryStartTime() {
-        return currentScheduleTime - retrySegNums * (nextScheduleTime - currentScheduleTime);
+        return currentScheduleTime - retrySegNum * (nextScheduleTime - currentScheduleTime);
     }
 
     private Long getSegmentStateCheckStartTime() {
-        return currentScheduleTime - stateCheckSegNums * (nextScheduleTime - currentScheduleTime);
+        return currentScheduleTime - stateCheckSegNum * (nextScheduleTime - currentScheduleTime);
     }
 
     private void doSegmentsRetry(List<JobSegTriggerFlow> segments) {
@@ -717,7 +717,7 @@ public class JobScheduler {
                         segment.getJobShardId(),
                         segment.getTriggerTimeStart(),
                         segment.getTriggerTimeEnd(),
-                        retryMaxJobNums);
+                        retryMaxJobNum);
                 if (!CollectionUtils.isEmpty(jobs)) {
                     jobs.forEach(job -> jobProcessor.retryOneJob(job));
                 } else {

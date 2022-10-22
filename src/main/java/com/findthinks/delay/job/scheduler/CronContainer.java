@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class CronManager {
+public class CronContainer {
 
     @Resource
     private JobScheduler jobScheduler;
