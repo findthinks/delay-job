@@ -67,8 +67,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = DuplicateKeyException.class)
     public FoxResult error(DuplicateKeyException duplicateKeyException){
-        LOG.error("duplicate keyException",duplicateKeyException);
-        return FoxResult.fail(ExceptionEnum.DUPLICATE_KEY_EXCEPTION,ExceptionEnum.DUPLICATE_KEY_EXCEPTION.getDesc());
+        LOG.error("Duplicate keyException", duplicateKeyException);
+        return FoxResult.fail(ExceptionEnum.DUPLICATE_KEY_EXCEPTION, ExceptionEnum.DUPLICATE_KEY_EXCEPTION.getDesc());
+    }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public FoxResult error(IllegalArgumentException illegalArgumentException){
+        LOG.error("Illegal argument keyException", illegalArgumentException);
+        return FoxResult.fail(ExceptionEnum.INVALID_PARAMS, illegalArgumentException.getMessage());
     }
 
     /**

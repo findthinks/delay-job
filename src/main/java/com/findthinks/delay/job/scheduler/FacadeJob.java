@@ -1,14 +1,24 @@
 package com.findthinks.delay.job.scheduler;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class FacadeJob {
+
+    @Size(max = 32, min = 1, message = ":所含字符数在[1,32]的范围内")
     private String outJobNo;
 
+    @NotNull(message = ":不能为空，取值为:5,10")
     private Integer type;
 
+    @NotNull(message = ":不能为空，秒级时间搓")
     private Long triggerTime;
 
+    @NotNull(message = ":不能为空，取值范围:LOG,HTTP,GRPC")
     private String callbackProtocol;
 
+    @NotNull(message = ":不能为空")
+    @Size(max = 64, min = 1, message = ":所含字符数在[1,64]的范围内")
     private String callbackEndpoint;
 
     private String jobInfo;

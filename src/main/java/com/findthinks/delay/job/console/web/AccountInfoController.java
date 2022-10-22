@@ -6,16 +6,19 @@ import com.findthinks.delay.job.console.core.utils.CookieUtils;
 import com.findthinks.delay.job.console.web.rr.AccountInfo;
 import io.jsonwebtoken.Claims;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.API_PREFIX;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.JWT_COOKIE_NAME;
 
 @RestController
 @RequestMapping(value = API_PREFIX)
+@Validated
 public class AccountInfoController {
 
     @Resource
@@ -32,7 +35,7 @@ public class AccountInfoController {
     }
 
     @PostMapping(value = "/login")
-    public boolean login(@RequestBody AccountInfo account, HttpServletResponse response) {
+    public boolean login(@RequestBody @Valid AccountInfo account, HttpServletResponse response) {
         accountService.authentication(account);
         Cookie cookie = new Cookie(JWT_COOKIE_NAME, AuthenticationUtils.createJWT(account));
         cookie.setPath("/");
@@ -44,7 +47,7 @@ public class AccountInfoController {
     @PostMapping(value = "/logout")
     public boolean logout(HttpServletRequest request, HttpServletResponse response) {
         String jwt = CookieUtils.getCookieValue(request.getCookies(), JWT_COOKIE_NAME);
-        if (StringUtils.isEmpty(jwt)) {
+        if (!StringUtils.hasLength(jwt)) {
             return true;
         }
 

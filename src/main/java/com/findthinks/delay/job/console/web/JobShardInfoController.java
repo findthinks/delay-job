@@ -3,14 +3,18 @@ package com.findthinks.delay.job.console.web;
 import com.findthinks.delay.job.console.web.rr.JobShardInfoResp;
 import com.findthinks.delay.job.scheduler.JobScheduler;
 import com.findthinks.delay.job.scheduler.JobShardManager;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.API_PREFIX;
 
 @RestController
 @RequestMapping(value = API_PREFIX)
+@Validated
 public class JobShardInfoController {
 
     @Resource
@@ -32,7 +36,10 @@ public class JobShardInfoController {
      * @param shardId: 分片ID
      */
     @PutMapping(value = "/job/shard/{shardId}/enable")
-    public void enableJobShard(@PathVariable("shardId") Integer shardId) {
+    public void enableJobShard(
+            @PathVariable("shardId")
+            @Max(value = 255, message = "分片号范围[1,255]")
+            @Min(value = 1, message = "分片号范围[1,255]") Integer shardId) {
         jobScheduler.startJobShard(shardId);
     }
 
@@ -41,7 +48,10 @@ public class JobShardInfoController {
      * @param shardId: 分片ID
      */
     @PutMapping(value = "/job/shard/{shardId}/disable")
-    public void disableJobShard(@PathVariable("shardId") Integer shardId) {
+    public void disableJobShard(
+            @PathVariable("shardId")
+            @Max(value = 255, message = "分片号范围[1,255]")
+            @Min(value = 1, message = "分片号范围[1,255]") Integer shardId) {
         jobScheduler.stopJobShard(shardId);
     }
 
