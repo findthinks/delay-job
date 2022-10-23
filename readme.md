@@ -19,7 +19,7 @@ Delay-job是一个开源分布式、轻量级的延迟任务调度实现。
 使用如下命令下载最新发布的系统的部署包。
 ```
 wget https://github.com/**********/download/delay-job-bin-v0.8.1.zip
-unzip delay-job-bin-v0.8.1.zip
+unzip delay-job-bin-v0.6.1.zip
 ```
 #### 2. 创建数据库
 提取docs/db/schema_init.sql执行建库,建表，数据初始化。
@@ -31,5 +31,5 @@ cd delay-job
 ```
 
 ### 版本
-#### 2022/10/22 - version 0.8.1
+#### 2022/10/22 - version 0.6.1
 第一个稳定版本。
