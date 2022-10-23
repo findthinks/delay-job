@@ -37,6 +37,15 @@
         </foreach>
     </insert>
 
+    <update id="updateGlobalRecTriggerTime">
+        UPDATE
+            global_rec
+        SET
+            trigger_time = #{triggerTime}
+        WHERE
+            id = #{recId}
+    </update>
+
     <delete id="deleteGlobalRecords">
         DELETE FROM global_rec
         WHERE

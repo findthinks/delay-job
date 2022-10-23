@@ -41,6 +41,9 @@ public class JobManager implements IJobManager {
     @Resource
     private GlobalRecExtMapper globalRecExtMapper;
 
+    @Resource
+    private IGlobalRecManager globalRecManager;
+
     @Override
     public List<List<Job>> loadRecentlyJobs(List<Integer> jobShardIds, Long nextTriggerTime, Integer maxJobNums) {
         final List<List<Job>> delayJobs = new ArrayList<>(jobShardIds.size());
@@ -194,7 +197,8 @@ public class JobManager implements IJobManager {
 
     @Override
     public Job resume(String outJobNo) {
-        Job job = loadJob(outJobNo);
+        GlobalRec rec = globalRecExtMapper.selectRecByOutJobNo(outJobNo);
+        Job job = loadJob(rec.getJobShardId(), outJobNo);
         if (null == job) {
             throw new DelayJobException(JOB_NOT_EXIST);
         }
@@ -203,9 +207,13 @@ public class JobManager implements IJobManager {
             throw new DelayJobException(INVALID_PARAMS, "Cannot resume normal job.");
         }
 
+        // 计算最新触发时间
         long newTriggerTime = job.getTriggerTime() + (System.currentTimeMillis() - job.getPauseTime());
         job.setTriggerTime(newTriggerTime);
         job.setPauseTime(null);
+
+        // 更新全局表trigger time
+        globalRecManager.updateGlobalRecTriggerTime(rec.getId(), newTriggerTime);
 
         // 更新trigger time
         Map<String, Object> parameters = new HashMap<>(4);
