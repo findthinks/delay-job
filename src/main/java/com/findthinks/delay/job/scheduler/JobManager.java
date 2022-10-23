@@ -20,8 +20,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import static com.findthinks.delay.job.share.lib.constants.SystemConstants.V_CPU_CORES;
-import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.JOB_IS_TRIGGERED;
-import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.OUT_JOB_NO_IS_EXIST;
+import static com.findthinks.delay.job.share.lib.enums.ExceptionEnum.*;
 
 @Service
 public class JobManager implements IJobManager {
@@ -196,6 +195,14 @@ public class JobManager implements IJobManager {
     @Override
     public Job resume(String outJobNo) {
         Job job = loadJob(outJobNo);
+        if (null == job) {
+            throw new DelayJobException(JOB_NOT_EXIST);
+        }
+
+        if (JobType.NORMAL.getCode() == job.getType().intValue()) {
+            throw new DelayJobException(INVALID_PARAMS, "Cannot resume normal job.");
+        }
+
         long newTriggerTime = job.getTriggerTime() + (System.currentTimeMillis() - job.getPauseTime());
         job.setTriggerTime(newTriggerTime);
         job.setPauseTime(null);
@@ -212,6 +219,14 @@ public class JobManager implements IJobManager {
     @Override
     public boolean pause(String outJobNo) {
         Job job = loadJob(outJobNo);
+        if (null == job) {
+            throw new DelayJobException(JOB_NOT_EXIST);
+        }
+
+        if (JobType.NORMAL.getCode() == job.getType().intValue()) {
+            throw new DelayJobException(INVALID_PARAMS, "Cannot pause normal job.");
+        }
+
         if (job.getTriggerTime() <= System.currentTimeMillis()) {
             throw new DelayJobException(JOB_IS_TRIGGERED);
         }
