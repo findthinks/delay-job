@@ -22,7 +22,7 @@ wget https://github.com/**********/download/delay-job-bin-v0.6.1.zip
 unzip delay-job-bin-v0.6.1.zip
 ```
 #### 2. 创建数据库
-提取docs/db/schema_init.sql执行建库,建表，数据初始化。
+提取docs/db/schema_init.sql执行建库，建表，数据初始化。
 #### 3. 启动调度服务端
 进入解压目录config目录，按实修改application.yml数据库相关配置。进入解压目录bin目录，使用startup.sh脚本启动服务。观察log/delay-job.log服务是否启动成功。
 ```
