@@ -491,7 +491,7 @@ public class JobScheduler {
         /** 释放游离任务项，并重新分配任务项 */
         List<Integer> schedulers = schedulerManager.loadAllSchedulerIds();
         if (isLeader(getSchedulerInfo().getId(), schedulers)) {
-            LOG.info("Lead-scheduler[id={}] is assigning job shards.", getSchedulerInfo().getId());
+            LOG.info("Master-scheduler[id={}] is assigning job shards.", getSchedulerInfo().getId());
 
             /** 释放游离任务项 */
             releaseJobShardOutOfControl(schedulers);
@@ -547,7 +547,7 @@ public class JobScheduler {
         // delete from scheduler_info where last_heartbeat_time < getSystemTime() - judgeDeadInternal;
         try {
             int effect = schedulerManager.deleteExpiredSchedulerInfo(getSystemTime() - judgeDeadInternal * 1000);
-            LOG.debug("{} schedulers was cleaned.", effect);
+            LOG.info("{} schedulers was cleaned.", effect);
         } catch (Exception ignore) {
             //do nothing
         }
