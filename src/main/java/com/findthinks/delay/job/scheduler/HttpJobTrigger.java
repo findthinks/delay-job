@@ -3,11 +3,11 @@ package com.findthinks.delay.job.scheduler;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
@@ -37,8 +37,8 @@ public class HttpJobTrigger implements IJobTrigger {
             JSONObject body = ret.getBody();
             try {
                 return new TriggerResult(body.getString("code"), body.getString("msg"));
-            } catch (JSONException e) {
-                LOG.error("Parse callback result error.", e);
+            } catch (JSONException ex) {
+                LOG.error("Parse callback result error.", ex);
                 throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
             }
         }

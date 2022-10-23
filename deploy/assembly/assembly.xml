@@ -1,7 +1,7 @@
 <assembly>
-    <id>assembly</id>
+    <id>bin</id>
     <formats>
-        <format>tar.gz</format>
+        <format>zip</format>
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
@@ -12,17 +12,29 @@
             <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
-            <directory>src/main/resources/static</directory>
-            <outputDirectory>static</outputDirectory>
-            <fileMode>0755</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/resources/config</directory>
+            <directory>src/main/resources</directory>
             <outputDirectory>config</outputDirectory>
-            <fileMode>0755</fileMode>
+            <includes>
+                <include>*.yml</include>
+            </includes>
         </fileSet>
         <fileSet>
-            <directory>assembly</directory>
+            <directory>target</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>deploy</directory>
+            <outputDirectory>log</outputDirectory>
+            <fileMode>0755</fileMode>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>deploy</directory>
             <outputDirectory>temp</outputDirectory>
             <fileMode>0755</fileMode>
             <excludes>
@@ -30,9 +42,4 @@
             </excludes>
         </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>lib</outputDirectory>
-        </dependencySet>
-    </dependencySets>
 </assembly>
