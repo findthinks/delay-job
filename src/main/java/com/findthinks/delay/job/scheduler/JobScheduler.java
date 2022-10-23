@@ -719,7 +719,10 @@ public class JobScheduler {
                         segment.getTriggerTimeEnd(),
                         retryMaxJobNum);
                 if (!CollectionUtils.isEmpty(jobs)) {
-                    jobs.forEach(job -> jobProcessor.retryOneJob(job));
+                    jobs.forEach(job -> {
+                        if (!jobProcessor.needDiscardTrigger(job)) {
+                            jobProcessor.retryOneJob(job);
+                        }});
                 } else {
                     jobSegTriggerFlowManager.updateSegmentState(segment, TriggerFLowState.COMPLETE);
                 }
