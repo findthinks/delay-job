@@ -4,15 +4,15 @@ import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 
 public class TriggerResult {
 
-    public static final TriggerResult SUCCESS = new TriggerResult("ok", "Success");
+    public static final TriggerResult SUCCESS = new TriggerResult("ok", "success");
 
     private String code;
 
-    private String msg;
+    private String message;
 
-    public TriggerResult(String code, String msg) {
+    public TriggerResult(String code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     public boolean isSuccessful() {
@@ -23,7 +23,7 @@ public class TriggerResult {
         return code;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 }

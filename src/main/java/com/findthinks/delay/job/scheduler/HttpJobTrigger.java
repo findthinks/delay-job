@@ -3,8 +3,6 @@ package com.findthinks.delay.job.scheduler;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 import com.findthinks.delay.job.share.lib.exception.DelayJobException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,13 +29,13 @@ public class HttpJobTrigger implements IJobTrigger {
     public TriggerResult trigger(Job job) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CallbackInfo> req = new HttpEntity<>(CallbackInfo.create(job), headers);
-        ResponseEntity<JSONObject> ret = restTemplate.postForEntity(job.getCallbackEndpoint(), req, JSONObject.class);
+        HttpEntity<CallbackReq> req = new HttpEntity<>(CallbackReq.create(job), headers);
+        ResponseEntity<CallbackResp> ret = restTemplate.postForEntity(job.getCallbackEndpoint(), req, CallbackResp.class);
         if (ret.getStatusCode().is2xxSuccessful()) {
-            JSONObject body = ret.getBody();
+            CallbackResp body = ret.getBody();
             try {
-                return new TriggerResult(body.getString("code"), body.getString("msg"));
-            } catch (JSONException ex) {
+                return new TriggerResult(body.code, body.message);
+            } catch (Exception ex) {
                 LOG.error("Parse callback result error.", ex);
                 throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
             }
@@ -45,21 +43,21 @@ public class HttpJobTrigger implements IJobTrigger {
         throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, "Callback response error, http_status: " + ret.getStatusCodeValue());
     }
 
-    private static class CallbackInfo {
+    private static class CallbackReq {
         private String outJobNo;
 
         private Long triggerTime;
 
         private String jobInfo;
 
-        public CallbackInfo(String outJobNo, Long triggerTime, String jobInfo) {
+        public CallbackReq(String outJobNo, Long triggerTime, String jobInfo) {
             this.outJobNo = outJobNo;
             this.triggerTime = triggerTime;
             this.jobInfo = jobInfo;
         }
 
-        public static CallbackInfo create(Job job) {
-            return new CallbackInfo(job.getOutJobNo(), job.getTriggerTime(), job.getJobInfo());
+        public static CallbackReq create(Job job) {
+            return new CallbackReq(job.getOutJobNo(), job.getTriggerTime(), job.getJobInfo());
         }
 
         public String getOutJobNo() {
@@ -84,6 +82,28 @@ public class HttpJobTrigger implements IJobTrigger {
 
         public void setJobInfo(String jobInfo) {
             this.jobInfo = jobInfo;
+        }
+    }
+
+    private static class CallbackResp {
+        private String code;
+
+        private String message;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 

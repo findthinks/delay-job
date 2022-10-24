@@ -169,10 +169,15 @@ public class JobProcessor {
         }
     }
 
-    private void fireJob(Job job) {
+    private TriggerResult fireJob(Job job) {
         CallbackProtocol protocol = CallbackProtocol.getByProtocol(job.getCallbackProtocol());
         IJobTrigger fire = (IJobTrigger) applicationContext.getBean(protocol.getTrigger());
-        fire.trigger(job);
+        try {
+            return fire.trigger(job);
+        } catch (Exception ex) {
+            LOG.error("Callback error. callback_endpoint: {}.", job.getCallbackEndpoint(), ex);
+            return new TriggerResult("fail", ex.getMessage());
+        }
     }
 
     private boolean isSubmit(Job job) {
@@ -275,11 +280,11 @@ public class JobProcessor {
             return;
         }
 
-        /** 执行任务触发 */
-        fireJob(job);
-
-        /** 收集成功触发任务 */
-        triggeredQueue.offer(job);
+        /** 执行任务触发，收集成功触发任务 */
+        TriggerResult ret = fireJob(job);
+        if (ret.isSuccessful()) {
+            triggeredQueue.offer(job);
+        }
     }
 
     protected boolean needTriggerBySpecialExecutor(Job job) {

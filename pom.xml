@@ -31,7 +31,6 @@
         <servlet.api.version>3.1.0</servlet.api.version>
         <jwt.version>0.9.1</jwt.version>
         <grpc.version>1.42.2</grpc.version>
-        <json.version>20220924</json.version>
         <grpc.springboot.starter.version>2.13.1.RELEASE</grpc.springboot.starter.version>
         <mybatis.spring.boot.starter.version>2.2.2</mybatis.spring.boot.starter.version>
     </properties>
@@ -57,12 +56,6 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${mybatis.spring.boot.starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20220924</version>
         </dependency>
 
         <dependency>
