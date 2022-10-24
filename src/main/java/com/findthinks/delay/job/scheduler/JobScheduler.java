@@ -84,8 +84,8 @@ public class JobScheduler {
     @Value("${scheduler.job.cron.load:0 0/1 * * * ?}")
     private CronExpression jobLoadCron;
 
-    @Value("${scheduler.job.load-max-job-num:50000}")
-    private int loadMaxJobNum;
+    @Value("${scheduler.job.shard-load-max-job-num:50000}")
+    private int shardLoadMaxJobNum;
 
     @Value("${scheduler.job.translate-max-job-num:100}")
     private int translateMaxJobNum;
@@ -342,7 +342,7 @@ public class JobScheduler {
         List<Integer> shardIds = fetchJobShardIds(getAssignedJobShard());
         if (!CollectionUtils.isEmpty(shardIds)) {
             /** 加载延迟任务 */
-            scheduleDelayJob(nextScheduleTime, loadMaxJobNum, shardIds);
+            scheduleDelayJob(nextScheduleTime, shardLoadMaxJobNum, shardIds);
 
             /** 释放被其它节点申请的任务 */
             releaseJobShardReqByOther(shardIds);
@@ -695,7 +695,7 @@ public class JobScheduler {
 
     /** 暂未使用 */
     public void doLoadDelayJobInternal() {
-        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), loadMaxJobNum, null);
+        scheduleDelayJob(getNextValidTimeAfter(new Date(nextScheduleTime)), shardLoadMaxJobNum, null);
     }
 
     private long getNextValidTimeAfter(Date current) {

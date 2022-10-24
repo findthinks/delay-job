@@ -23,7 +23,7 @@ grpc:
     port: 1990
 scheduler:
   job:
-    load-max-job-num: 50000
+    shard-load-max-job-num: 50000
     translate-max-job-num: 100
     once-retry-seg-num: 8
     retry-max-job-num: 1000
