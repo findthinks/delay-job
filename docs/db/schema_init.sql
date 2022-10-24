@@ -12,7 +12,7 @@ PRIMARY KEY (`id`)
 CREATE TABLE `global_rec` (
 `id` int unsigned NOT NULL AUTO_INCREMENT,
 `out_job_no` varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '外部任务编号',
-`job_shard_id` tinyint unsigned NOT NULL COMMENT '任务分片ID',
+`job_shard_id` int unsigned NOT NULL COMMENT '任务分片ID',
 `job_id` bigint NOT NULL COMMENT '内部任务ID',
 `trigger_time` bigint NOT NULL COMMENT '触发时间',
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -23,21 +23,21 @@ KEY `idx_global_trigger_time` (`trigger_time`) USING BTREE
 
 CREATE TABLE `job_seg_trigger_flow` (
 `id` int unsigned NOT NULL AUTO_INCREMENT,
-`job_shard_id` tinyint unsigned NOT NULL COMMENT '任务分片ID',
+`job_shard_id` int unsigned NOT NULL COMMENT '任务分片ID',
 `trigger_time_start` bigint NOT NULL COMMENT '任务段触发起始时间',
 `trigger_time_end` bigint NOT NULL COMMENT '任务段截止时间',
-`state` tinyint NOT NULL COMMENT '任务段处理状态:20-执行中 30-补偿中 40-完成',
-`retry_times` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '重试次数',
+`state` int NOT NULL COMMENT '任务段处理状态:20-执行中 30-补偿中 40-完成',
+`retry_times` int unsigned NOT NULL DEFAULT '0' COMMENT '重试次数',
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 PRIMARY KEY (`id`),
 KEY `idx_sgf_shard_trigger_time` (`job_shard_id`,`trigger_time_start`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `job_shard` (
- `id` tinyint unsigned NOT NULL AUTO_INCREMENT COMMENT '分片ID',
+ `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '分片ID',
  `cur_server` int NOT NULL COMMENT '当前分片持有者',
  `req_server` int NOT NULL DEFAULT '0' COMMENT '分片申请者',
- `state` tinyint unsigned NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
+ `state` int unsigned NOT NULL COMMENT '5-正常，10-任务转移中，15-停用',
  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
