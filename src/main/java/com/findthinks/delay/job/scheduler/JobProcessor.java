@@ -221,9 +221,17 @@ public class JobProcessor {
                 long start = System.currentTimeMillis();
                 Job job = triggeredQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (null != job) {
+                    /**
+                     * 搜集触发成功任务
+                     */
                     if (isSuccessful(job)) {
                         success.add(job);
-                    } else {
+                    }
+
+                    /**
+                     * 搜集触发失败任务
+                     */
+                    if (isRetry(job)) {
                         fail.add(job);
                     }
                 }
@@ -244,6 +252,10 @@ public class JobProcessor {
         }
 
         private boolean isSuccessful(Job job) {
+            return JobState.SUCCESS == JobState.getStateByCode(job.getState());
+        }
+
+        private boolean isRetry(Job job) {
             return JobState.SUCCESS == JobState.getStateByCode(job.getState());
         }
     }
@@ -297,6 +309,8 @@ public class JobProcessor {
         } else {
             job.setState(JobState.RETRY.getCode());
         }
+
+        /** 完成触发的任务放入已触发队列*/
         triggeredQueue.offer(job);
     }
 
