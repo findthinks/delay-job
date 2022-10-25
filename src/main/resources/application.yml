@@ -29,8 +29,6 @@ scheduler:
     retry-max-job-num: 1000
     retry-seg-num: 32
     state-check-seg-num: 8
-    http-trigger-connect-timeout: 1
-    http-trigger-read-timeout: 1
 logging:
   file:
     name: classpath:logback.xml
