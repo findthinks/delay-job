@@ -309,6 +309,8 @@ public class JobProcessor {
         } else {
             job.setState(JobState.RETRY.getCode());
         }
+
+        /** 完成触发的任务放入已触发队列*/
         triggeredQueue.offer(job);
     }
 
