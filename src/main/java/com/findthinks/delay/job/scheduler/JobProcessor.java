@@ -158,14 +158,12 @@ public class JobProcessor {
      * 补偿失败任务
      */
     public void retryOneJob(Job job) {
-        try {
-            fireJob(job);
-
+        TriggerResult ret = fireJob(job);
+        if (ret.isSuccessful()) {
             //修改任务状态为成功
             jobManager.modifyJobState(job, JobState.SUCCESS.getCode(), job.getState(), job.getRetryTimes() + 1);
-        } catch (Exception ex) {
-            // 状态不变，修改重试次数
-            jobManager.modifyJobState(job, job.getState(), job.getState(), job.getRetryTimes() + 1);
+        } else {
+            jobManager.modifyJobState(job, JobState.FAIL.getCode(), job.getState(), job.getRetryTimes() + 1);
         }
     }
 
@@ -216,25 +214,37 @@ public class JobProcessor {
         }
 
         private void doPersistState() throws InterruptedException {
-            List<Job> jobs = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
+            List<Job> success = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
+            List<Job> fail = new ArrayList<>(JOB_STATE_UPDATE_BATCH_SIZE);
             long costs = 0L;
-            while (jobs.size() < JOB_STATE_UPDATE_BATCH_SIZE &&
-                    costs < JOB_STATE_UPDATE_TIMEOUT) {
+            while ((success.size() + fail.size()) < JOB_STATE_UPDATE_BATCH_SIZE && costs < JOB_STATE_UPDATE_TIMEOUT) {
                 long start = System.currentTimeMillis();
                 Job job = triggeredQueue.poll(100, TimeUnit.MILLISECONDS);
                 if (null != job) {
-                    jobs.add(job);
+                    if (isSuccessful(job)) {
+                        success.add(job);
+                    } else {
+                        fail.add(job);
+                    }
                 }
                 costs = costs + System.currentTimeMillis() - start;
             }
-            if (jobs.size() > 0) {
-                modifyJobsState(jobs);
+
+            if (success.size() > 0) {
+                modifyJobsState(success, JobState.SUCCESS);
+            }
+            if (fail.size() > 0) {
+                modifyJobsState(fail, JobState.RETRY);
             }
         }
 
-        private void modifyJobsState(List<Job> jobs) {
+        private void modifyJobsState(List<Job> jobs, JobState destState) {
             Map<Integer, List<Job>> shardJobs = jobs.stream().collect(Collectors.groupingBy(Job::getJobShardId));
-            shardJobs.entrySet().forEach(item -> jobManager.modifyJobState(item.getKey(), jobs, JobState.SUCCESS.getCode()));
+            shardJobs.entrySet().forEach(item -> jobManager.modifyJobState(item.getKey(), jobs, destState.getCode()));
+        }
+
+        private boolean isSuccessful(Job job) {
+            return JobState.SUCCESS == JobState.getStateByCode(job.getState());
         }
     }
 
@@ -283,8 +293,11 @@ public class JobProcessor {
         /** 执行任务触发，收集成功触发任务 */
         TriggerResult ret = fireJob(job);
         if (ret.isSuccessful()) {
-            triggeredQueue.offer(job);
+            job.setState(JobState.SUCCESS.getCode());
+        } else {
+            job.setState(JobState.RETRY.getCode());
         }
+        triggeredQueue.offer(job);
     }
 
     protected boolean needTriggerBySpecialExecutor(Job job) {
