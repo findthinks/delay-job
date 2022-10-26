@@ -16,7 +16,7 @@ public class TriggerResult {
     }
 
     public boolean isSuccessful() {
-        return ExceptionEnum.SUCCESS.getCode().equals(code);
+        return ExceptionEnum.SUCCESS.getCode().equals(code.toLowerCase());
     }
 
     public String getCode() {
