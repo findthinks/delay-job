@@ -207,10 +207,6 @@ public class JobManager implements IJobManager {
             throw new DelayJobException(INVALID_PARAMS, "Cannot resume normal job.");
         }
 
-        if (job.getTriggerTime() <= System.currentTimeMillis()) {
-            throw new DelayJobException(JOB_IS_TRIGGERED);
-        }
-
         // 计算最新触发时间
         long newTriggerTime = job.getTriggerTime() + (System.currentTimeMillis() - job.getPauseTime());
         job.setTriggerTime(newTriggerTime);
