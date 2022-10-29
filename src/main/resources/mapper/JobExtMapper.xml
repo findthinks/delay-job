@@ -85,8 +85,8 @@
         FROM
             job_${jobShardId}
         WHERE
-            trigger_time > #{triggerTimeStart}
-            AND trigger_time <= #{triggerTimeEnd}
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
             AND state in (10, 20)
         LIMIT #{maxJobs}
         ]]>
@@ -99,9 +99,9 @@
         FROM
             job_${jobShardId}
         WHERE
-            trigger_time > #{triggerTimeStart}
-          AND trigger_time <= #{triggerTimeEnd}
-          AND state in (10, 20, 40)
+            trigger_time >= #{triggerTimeStart}
+          AND trigger_time < #{triggerTimeEnd}
+          AND state in (10, 20)
             LIMIT 1
         ]]>
     </select>
@@ -113,9 +113,9 @@
         FROM
             job_${jobShardId}
         WHERE
-            trigger_time > #{triggerTimeStart}
-            AND trigger_time <= #{triggerTimeEnd}
-            AND state in (10, 20, 40)
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
+            AND state in (10, 20)
         ]]>
     </select>
 
