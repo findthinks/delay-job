@@ -72,7 +72,7 @@
         FROM
             job_${jobShardId}
         WHERE
-            trigger_time > #{timeStart}
+            trigger_time >= #{timeStart}
         ORDER BY trigger_time
             LIMIT #{maxJobs}
         ]]>
