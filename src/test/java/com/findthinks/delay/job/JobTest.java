@@ -18,9 +18,9 @@ public class JobTest {
 
     @Test
     public void testJob() {
-        for (int j=0; j<10000; j++) {
+        for (int j=0; j<1000; j++) {
             FacadeJob job = new FacadeJob();
-            job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(40));
+            job.setTriggerTime(System.currentTimeMillis()/1000 + new Random().nextInt(1200));
             job.setJobInfo("I am a delay job.");
             job.setOutJobNo(UUIDUtils.randomUUID());
             job.setType(5);

@@ -256,7 +256,7 @@ public class JobProcessor {
         }
 
         private boolean isRetry(Job job) {
-            return JobState.SUCCESS == JobState.getStateByCode(job.getState());
+            return JobState.RETRY == JobState.getStateByCode(job.getState());
         }
     }
 
