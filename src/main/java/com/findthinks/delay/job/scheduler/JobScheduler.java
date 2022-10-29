@@ -98,6 +98,8 @@ public class JobScheduler {
 
     private final Lock retryLocker = new ReentrantLock();
 
+    private final Lock translateLocker = new ReentrantLock();
+
     /** 暂未使用 */
     private volatile List<JobShard> assignedJobShard = null;
 
@@ -387,28 +389,40 @@ public class JobScheduler {
      * 转移停用分片的任务到其它分片
      */
     public void doTranslateDisabledShardJobToOther() {
-        if (!isSchedulerReady()) {
-            return;
+        boolean ret = false;
+        try {
+            ret = translateLocker.tryLock(5, TimeUnit.SECONDS);
+            if (ret) {
+                if (!isSchedulerReady()) {
+                    return;
+                }
+
+                if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
+                    return;
+                }
+
+                /** 获取所有待迁移的任务分片 */
+                List<Integer> translatingShardIds = fetchJobShardIds(jobShardManager.loadTranslatingJobShards());
+                if (CollectionUtils.isEmpty(translatingShardIds)) {
+                    return;
+                }
+
+                /** 获取转移分片最新加载任务的截止时间点 */
+                Map<Integer, Long> mappedSegTriggers = jobSegTriggerManager
+                        .loadSegTriggers(translatingShardIds)
+                        .stream()
+                        .collect(Collectors.toMap(JobSegTrigger::getJobShardId, JobSegTrigger::getTriggerTimeEnd));
+
+                /** 逐步转移分片任务 */
+                translatingShardIds.forEach(shardId -> translateShardJobToOtherShard(shardId, mappedSegTriggers.get(shardId), translateMaxJobNum));
+            }
+        } catch (InterruptedException ex) {
+            LOG.warn("Enter translate lock fail, has interrupted", ex);
+        } finally {
+            if (ret) {
+                translateLocker.unlock();
+            }
         }
-
-        if (!isLeader(getSchedulerInfo().getId(), schedulerManager.loadAllSchedulerIds())) {
-            return;
-        }
-
-        /** 获取所有待迁移的任务分片 */
-        List<Integer> translatingShardIds = fetchJobShardIds(jobShardManager.loadTranslatingJobShards());
-        if (CollectionUtils.isEmpty(translatingShardIds)) {
-            return;
-        }
-
-        /** 获取转移分片最新加载任务的截止时间点 */
-        Map<Integer, Long> mappedSegTriggers = jobSegTriggerManager
-                .loadSegTriggers(translatingShardIds)
-                .stream()
-                .collect(Collectors.toMap(JobSegTrigger::getJobShardId, JobSegTrigger::getTriggerTimeEnd));
-
-        /** 逐步转移分片任务 */
-        translatingShardIds.forEach(shardId -> translateShardJobToOtherShard(shardId, mappedSegTriggers.get(shardId), translateMaxJobNum));
     }
 
     public SchedulerInfo getSchedulerInfo() {
