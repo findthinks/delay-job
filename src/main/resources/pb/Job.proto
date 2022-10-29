@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package delay.job;
+option java_package = "com.findthinks.delay.job.facade.grpc.mgr";
+option java_multiple_files = true;
+
+message CreateJobReq {
+    string outJobNo = 1;
+    int32 type = 2;
+    int64 triggerTime = 3;
+    string callbackProtocol = 4;
+    string callbackEndpoint = 5;
+    string jobInfo = 6;
+}
+
+message CreateJobsReq {
+    repeated CreateJobReq jobs = 1;
+}
+
+message OperateJobReq {
+    string outJobNo = 1;
+}
+
+message JobResp {
+    string code = 1;
+    string message = 2;
+}
+
+service Job {
+    rpc submitJob (CreateJobReq) returns (JobResp) {
+    }
+
+    rpc submitJobs (CreateJobsReq) returns (JobResp) {
+    }
+
+    rpc pauseJob (OperateJobReq) returns (JobResp) {
+    }
+
+    rpc resumeJob (OperateJobReq) returns (JobResp) {
+    }
+
+    rpc cancelJob (OperateJobReq) returns (JobResp) {
+    }
+}
