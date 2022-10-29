@@ -374,7 +374,9 @@ public class JobScheduler {
                 List<Integer> shardIds = jobShardManager.loadAllJobShards().stream().map(shard -> shard.getId()).collect(Collectors.toList());
 
                 /** 开始补偿未完成的任务段 */
-                doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, getRetryStartTime(), currentScheduleTime, onceRetrySegNum));
+                long retryStartTime = getRetryStartTime();
+                LOG.info("Current retry segment: [{} - {}].", retryStartTime, currentScheduleTime);
+                doSegmentsRetry(jobSegTriggerFlowManager.loadRetrySegments(shardIds, retryStartTime, currentScheduleTime, onceRetrySegNum));
             }
         } catch (InterruptedException ie) {
             LOG.warn("Enter retry lock fail, has interrupted", ie);

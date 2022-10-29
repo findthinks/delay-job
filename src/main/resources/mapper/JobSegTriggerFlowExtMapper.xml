@@ -44,10 +44,11 @@
                     #{shardId}
                 </foreach>
             <![CDATA[
-                AND trigger_time_start >= #{timeStart}
-                AND trigger_time_end< #{timeEnd}
+                AND trigger_time_end >= #{timeStart}
+                AND trigger_time_end<= #{timeEnd}
             ]]>
                 AND state != 40
+            ORDER BY trigger_time_end DESC
         LIMIT #{maxSegments}
     </select>
 
