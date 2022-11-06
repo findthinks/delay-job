@@ -23,18 +23,4 @@
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_bin
         ]]>
     </update>
-
-    <update id="addJobTablePartition">
-        <![CDATA[
-            ALTER TABLE `job_${jobShardId}` ADD PARTITION (
-                PARTITION p_${dayOfSeconds} VALUES LESS THAN (${dayOfSeconds})
-            )
-        ]]>
-    </update>
-
-    <update id="delJobTablePartition">
-        <![CDATA[
-            ALTER TABLE `job_${jobShardId}` DROP PARTITION p_${dayOfSeconds}
-        ]]>
-    </update>
 </mapper>
