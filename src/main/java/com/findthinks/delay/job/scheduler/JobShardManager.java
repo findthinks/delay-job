@@ -34,8 +34,9 @@ public class JobShardManager implements IJobShardManager {
         shard.setState(JobShardState.DISABLED.getCode());
         jobShardExtMapper.insertJobShard(shard);
 
+
         /** 创建任务分片表 */
-        tableExtMapper.createJobShardTable(shard.getId());
+        tableExtMapper.createJobTable(shard.getId());
     }
 
     @Override

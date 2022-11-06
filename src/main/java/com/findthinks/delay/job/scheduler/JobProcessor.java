@@ -173,7 +173,7 @@ public class JobProcessor {
         try {
             return fire.trigger(job);
         } catch (Exception ex) {
-            LOG.error("Callback error. callback_endpoint: {}.", job.getCallbackEndpoint(), ex);
+            LOG.error("Callback error, callback_endpoint: {}.", job.getCallbackEndpoint(), ex);
             return new TriggerResult("fail", ex.getMessage());
         }
     }

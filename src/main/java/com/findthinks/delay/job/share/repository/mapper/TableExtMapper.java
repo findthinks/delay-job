@@ -4,5 +4,9 @@ import org.apache.ibatis.annotations.Param;
 
 public interface TableExtMapper {
 
-    void createJobShardTable(@Param("jobShardId") Integer jobShardId);
+    void createJobTable(@Param("jobShardId") Integer jobShardId);
+
+    void addJobTablePartition(@Param("jobShardId") Integer jobShardId, @Param("dayOfSeconds") Long dayOfSeconds);
+
+    void delJobTablePartition(@Param("jobShardId") Integer jobShardId, @Param("dayOfSeconds") Long dayOfSeconds);
 }
