@@ -8,11 +8,19 @@ public interface CallbackRespOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * 响应业务编码：ok(成功)，其它为失败
+   * </pre>
+   *
    * <code>string code = 1;</code>
    * @return The code.
    */
   java.lang.String getCode();
   /**
+   * <pre>
+   * 响应业务编码：ok(成功)，其它为失败
+   * </pre>
+   *
    * <code>string code = 1;</code>
    * @return The bytes for code.
    */
@@ -20,11 +28,19 @@ public interface CallbackRespOrBuilder extends
       getCodeBytes();
 
   /**
+   * <pre>
+   * 响应描述
+   * </pre>
+   *
    * <code>string message = 2;</code>
    * @return The message.
    */
   java.lang.String getMessage();
   /**
+   * <pre>
+   * 响应描述
+   * </pre>
+   *
    * <code>string message = 2;</code>
    * @return The bytes for message.
    */

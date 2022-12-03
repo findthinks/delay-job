@@ -102,6 +102,10 @@ private static final long serialVersionUID = 0L;
   public static final int OUTJOBNO_FIELD_NUMBER = 1;
   private volatile java.lang.Object outJobNo_;
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The outJobNo.
    */
@@ -119,6 +123,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The bytes for outJobNo.
    */
@@ -140,6 +148,10 @@ private static final long serialVersionUID = 0L;
   public static final int TRIGGERTIME_FIELD_NUMBER = 2;
   private long triggerTime_;
   /**
+   * <pre>
+   * 触发时间（秒）
+   * </pre>
+   *
    * <code>int64 triggerTime = 2;</code>
    * @return The triggerTime.
    */
@@ -151,6 +163,10 @@ private static final long serialVersionUID = 0L;
   public static final int JOBINFO_FIELD_NUMBER = 3;
   private volatile java.lang.Object jobInfo_;
   /**
+   * <pre>
+   * 透传参数
+   * </pre>
+   *
    * <code>string jobInfo = 3;</code>
    * @return The jobInfo.
    */
@@ -168,6 +184,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 透传参数
+   * </pre>
+   *
    * <code>string jobInfo = 3;</code>
    * @return The bytes for jobInfo.
    */
@@ -525,6 +545,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object outJobNo_ = "";
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return The outJobNo.
      */
@@ -541,6 +565,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return The bytes for outJobNo.
      */
@@ -558,6 +586,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @param value The outJobNo to set.
      * @return This builder for chaining.
@@ -573,6 +605,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return This builder for chaining.
      */
@@ -583,6 +619,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @param value The bytes for outJobNo to set.
      * @return This builder for chaining.
@@ -601,6 +641,10 @@ private static final long serialVersionUID = 0L;
 
     private long triggerTime_ ;
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 2;</code>
      * @return The triggerTime.
      */
@@ -609,6 +653,10 @@ private static final long serialVersionUID = 0L;
       return triggerTime_;
     }
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 2;</code>
      * @param value The triggerTime to set.
      * @return This builder for chaining.
@@ -620,6 +668,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 2;</code>
      * @return This builder for chaining.
      */
@@ -632,6 +684,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object jobInfo_ = "";
     /**
+     * <pre>
+     * 透传参数
+     * </pre>
+     *
      * <code>string jobInfo = 3;</code>
      * @return The jobInfo.
      */
@@ -648,6 +704,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 透传参数
+     * </pre>
+     *
      * <code>string jobInfo = 3;</code>
      * @return The bytes for jobInfo.
      */
@@ -665,6 +725,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 透传参数
+     * </pre>
+     *
      * <code>string jobInfo = 3;</code>
      * @param value The jobInfo to set.
      * @return This builder for chaining.
@@ -680,6 +744,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 透传参数
+     * </pre>
+     *
      * <code>string jobInfo = 3;</code>
      * @return This builder for chaining.
      */
@@ -690,6 +758,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 透传参数
+     * </pre>
+     *
      * <code>string jobInfo = 3;</code>
      * @param value The bytes for jobInfo to set.
      * @return This builder for chaining.

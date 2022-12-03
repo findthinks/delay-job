@@ -219,6 +219,9 @@ public final class JobGrpc {
   public static abstract class JobImplBase implements io.grpc.BindableService {
 
     /**
+     * <pre>
+     * 注册延迟任务
+     * </pre>
      */
     public void submitJob(com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -226,6 +229,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 批量注册延迟任务
+     * </pre>
      */
     public void submitJobs(com.findthinks.delay.job.facade.grpc.mgr.CreateJobsReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -233,6 +239,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 暂停任务计时
+     * </pre>
      */
     public void pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -240,6 +249,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 恢复任务计时
+     * </pre>
      */
     public void resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -247,6 +259,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 取消任务
+     * </pre>
      */
     public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -309,6 +324,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 注册延迟任务
+     * </pre>
      */
     public void submitJob(com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -317,6 +335,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 批量注册延迟任务
+     * </pre>
      */
     public void submitJobs(com.findthinks.delay.job.facade.grpc.mgr.CreateJobsReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -325,6 +346,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 暂停任务计时
+     * </pre>
      */
     public void pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -333,6 +357,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 恢复任务计时
+     * </pre>
      */
     public void resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -341,6 +368,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 取消任务
+     * </pre>
      */
     public void cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.mgr.JobResp> responseObserver) {
@@ -364,6 +394,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 注册延迟任务
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.mgr.JobResp submitJob(com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -371,6 +404,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 批量注册延迟任务
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.mgr.JobResp submitJobs(com.findthinks.delay.job.facade.grpc.mgr.CreateJobsReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -378,6 +414,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 暂停任务计时
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.mgr.JobResp pauseJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -385,6 +424,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 恢复任务计时
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.mgr.JobResp resumeJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -392,6 +434,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 取消任务
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.mgr.JobResp cancelJob(com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -414,6 +459,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 注册延迟任务
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> submitJob(
         com.findthinks.delay.job.facade.grpc.mgr.CreateJobReq request) {
@@ -422,6 +470,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 批量注册延迟任务
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> submitJobs(
         com.findthinks.delay.job.facade.grpc.mgr.CreateJobsReq request) {
@@ -430,6 +481,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 暂停任务计时
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> pauseJob(
         com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
@@ -438,6 +492,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 恢复任务计时
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> resumeJob(
         com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {
@@ -446,6 +503,9 @@ public final class JobGrpc {
     }
 
     /**
+     * <pre>
+     * 取消任务
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.mgr.JobResp> cancelJob(
         com.findthinks.delay.job.facade.grpc.mgr.OperateJobReq request) {

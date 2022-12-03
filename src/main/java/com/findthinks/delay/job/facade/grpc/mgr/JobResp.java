@@ -97,6 +97,10 @@ private static final long serialVersionUID = 0L;
   public static final int CODE_FIELD_NUMBER = 1;
   private volatile java.lang.Object code_;
   /**
+   * <pre>
+   * 响应业务编码：ok(成功)，其它为失败
+   * </pre>
+   *
    * <code>string code = 1;</code>
    * @return The code.
    */
@@ -114,6 +118,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 响应业务编码：ok(成功)，其它为失败
+   * </pre>
+   *
    * <code>string code = 1;</code>
    * @return The bytes for code.
    */
@@ -135,6 +143,10 @@ private static final long serialVersionUID = 0L;
   public static final int MESSAGE_FIELD_NUMBER = 2;
   private volatile java.lang.Object message_;
   /**
+   * <pre>
+   * 响应描述
+   * </pre>
+   *
    * <code>string message = 2;</code>
    * @return The message.
    */
@@ -152,6 +164,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 响应描述
+   * </pre>
+   *
    * <code>string message = 2;</code>
    * @return The bytes for message.
    */
@@ -491,6 +507,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object code_ = "";
     /**
+     * <pre>
+     * 响应业务编码：ok(成功)，其它为失败
+     * </pre>
+     *
      * <code>string code = 1;</code>
      * @return The code.
      */
@@ -507,6 +527,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 响应业务编码：ok(成功)，其它为失败
+     * </pre>
+     *
      * <code>string code = 1;</code>
      * @return The bytes for code.
      */
@@ -524,6 +548,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 响应业务编码：ok(成功)，其它为失败
+     * </pre>
+     *
      * <code>string code = 1;</code>
      * @param value The code to set.
      * @return This builder for chaining.
@@ -539,6 +567,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 响应业务编码：ok(成功)，其它为失败
+     * </pre>
+     *
      * <code>string code = 1;</code>
      * @return This builder for chaining.
      */
@@ -549,6 +581,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 响应业务编码：ok(成功)，其它为失败
+     * </pre>
+     *
      * <code>string code = 1;</code>
      * @param value The bytes for code to set.
      * @return This builder for chaining.
@@ -567,6 +603,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object message_ = "";
     /**
+     * <pre>
+     * 响应描述
+     * </pre>
+     *
      * <code>string message = 2;</code>
      * @return The message.
      */
@@ -583,6 +623,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 响应描述
+     * </pre>
+     *
      * <code>string message = 2;</code>
      * @return The bytes for message.
      */
@@ -600,6 +644,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 响应描述
+     * </pre>
+     *
      * <code>string message = 2;</code>
      * @param value The message to set.
      * @return This builder for chaining.
@@ -615,6 +663,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 响应描述
+     * </pre>
+     *
      * <code>string message = 2;</code>
      * @return This builder for chaining.
      */
@@ -625,6 +677,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 响应描述
+     * </pre>
+     *
      * <code>string message = 2;</code>
      * @param value The bytes for message to set.
      * @return This builder for chaining.

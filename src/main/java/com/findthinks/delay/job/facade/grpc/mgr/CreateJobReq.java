@@ -121,6 +121,10 @@ private static final long serialVersionUID = 0L;
   public static final int OUTJOBNO_FIELD_NUMBER = 1;
   private volatile java.lang.Object outJobNo_;
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The outJobNo.
    */
@@ -138,6 +142,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The bytes for outJobNo.
    */
@@ -159,6 +167,10 @@ private static final long serialVersionUID = 0L;
   public static final int TYPE_FIELD_NUMBER = 2;
   private int type_;
   /**
+   * <pre>
+   * 任务类型：5(普通任务)、10（可暂停计时任务）
+   * </pre>
+   *
    * <code>int32 type = 2;</code>
    * @return The type.
    */
@@ -170,6 +182,10 @@ private static final long serialVersionUID = 0L;
   public static final int TRIGGERTIME_FIELD_NUMBER = 3;
   private long triggerTime_;
   /**
+   * <pre>
+   * 触发时间（秒）
+   * </pre>
+   *
    * <code>int64 triggerTime = 3;</code>
    * @return The triggerTime.
    */
@@ -181,6 +197,10 @@ private static final long serialVersionUID = 0L;
   public static final int CALLBACKPROTOCOL_FIELD_NUMBER = 4;
   private volatile java.lang.Object callbackProtocol_;
   /**
+   * <pre>
+   * 回调协议：HTTP、GRPC
+   * </pre>
+   *
    * <code>string callbackProtocol = 4;</code>
    * @return The callbackProtocol.
    */
@@ -198,6 +218,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 回调协议：HTTP、GRPC
+   * </pre>
+   *
    * <code>string callbackProtocol = 4;</code>
    * @return The bytes for callbackProtocol.
    */
@@ -219,6 +243,10 @@ private static final long serialVersionUID = 0L;
   public static final int CALLBACKENDPOINT_FIELD_NUMBER = 5;
   private volatile java.lang.Object callbackEndpoint_;
   /**
+   * <pre>
+   * 回调地址
+   * </pre>
+   *
    * <code>string callbackEndpoint = 5;</code>
    * @return The callbackEndpoint.
    */
@@ -236,6 +264,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 回调地址
+   * </pre>
+   *
    * <code>string callbackEndpoint = 5;</code>
    * @return The bytes for callbackEndpoint.
    */
@@ -257,6 +289,10 @@ private static final long serialVersionUID = 0L;
   public static final int JOBINFO_FIELD_NUMBER = 6;
   private volatile java.lang.Object jobInfo_;
   /**
+   * <pre>
+   * 透传参数（128位）
+   * </pre>
+   *
    * <code>string jobInfo = 6;</code>
    * @return The jobInfo.
    */
@@ -274,6 +310,10 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
+   * <pre>
+   * 透传参数（128位）
+   * </pre>
+   *
    * <code>string jobInfo = 6;</code>
    * @return The bytes for jobInfo.
    */
@@ -682,6 +722,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object outJobNo_ = "";
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return The outJobNo.
      */
@@ -698,6 +742,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return The bytes for outJobNo.
      */
@@ -715,6 +763,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @param value The outJobNo to set.
      * @return This builder for chaining.
@@ -730,6 +782,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @return This builder for chaining.
      */
@@ -740,6 +796,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 外部任务编号（长度32位内字符串）
+     * </pre>
+     *
      * <code>string outJobNo = 1;</code>
      * @param value The bytes for outJobNo to set.
      * @return This builder for chaining.
@@ -758,6 +818,10 @@ private static final long serialVersionUID = 0L;
 
     private int type_ ;
     /**
+     * <pre>
+     * 任务类型：5(普通任务)、10（可暂停计时任务）
+     * </pre>
+     *
      * <code>int32 type = 2;</code>
      * @return The type.
      */
@@ -766,6 +830,10 @@ private static final long serialVersionUID = 0L;
       return type_;
     }
     /**
+     * <pre>
+     * 任务类型：5(普通任务)、10（可暂停计时任务）
+     * </pre>
+     *
      * <code>int32 type = 2;</code>
      * @param value The type to set.
      * @return This builder for chaining.
@@ -777,6 +845,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 任务类型：5(普通任务)、10（可暂停计时任务）
+     * </pre>
+     *
      * <code>int32 type = 2;</code>
      * @return This builder for chaining.
      */
@@ -789,6 +861,10 @@ private static final long serialVersionUID = 0L;
 
     private long triggerTime_ ;
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 3;</code>
      * @return The triggerTime.
      */
@@ -797,6 +873,10 @@ private static final long serialVersionUID = 0L;
       return triggerTime_;
     }
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 3;</code>
      * @param value The triggerTime to set.
      * @return This builder for chaining.
@@ -808,6 +888,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 触发时间（秒）
+     * </pre>
+     *
      * <code>int64 triggerTime = 3;</code>
      * @return This builder for chaining.
      */
@@ -820,6 +904,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object callbackProtocol_ = "";
     /**
+     * <pre>
+     * 回调协议：HTTP、GRPC
+     * </pre>
+     *
      * <code>string callbackProtocol = 4;</code>
      * @return The callbackProtocol.
      */
@@ -836,6 +924,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 回调协议：HTTP、GRPC
+     * </pre>
+     *
      * <code>string callbackProtocol = 4;</code>
      * @return The bytes for callbackProtocol.
      */
@@ -853,6 +945,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 回调协议：HTTP、GRPC
+     * </pre>
+     *
      * <code>string callbackProtocol = 4;</code>
      * @param value The callbackProtocol to set.
      * @return This builder for chaining.
@@ -868,6 +964,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 回调协议：HTTP、GRPC
+     * </pre>
+     *
      * <code>string callbackProtocol = 4;</code>
      * @return This builder for chaining.
      */
@@ -878,6 +978,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 回调协议：HTTP、GRPC
+     * </pre>
+     *
      * <code>string callbackProtocol = 4;</code>
      * @param value The bytes for callbackProtocol to set.
      * @return This builder for chaining.
@@ -896,6 +1000,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object callbackEndpoint_ = "";
     /**
+     * <pre>
+     * 回调地址
+     * </pre>
+     *
      * <code>string callbackEndpoint = 5;</code>
      * @return The callbackEndpoint.
      */
@@ -912,6 +1020,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 回调地址
+     * </pre>
+     *
      * <code>string callbackEndpoint = 5;</code>
      * @return The bytes for callbackEndpoint.
      */
@@ -929,6 +1041,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 回调地址
+     * </pre>
+     *
      * <code>string callbackEndpoint = 5;</code>
      * @param value The callbackEndpoint to set.
      * @return This builder for chaining.
@@ -944,6 +1060,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 回调地址
+     * </pre>
+     *
      * <code>string callbackEndpoint = 5;</code>
      * @return This builder for chaining.
      */
@@ -954,6 +1074,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 回调地址
+     * </pre>
+     *
      * <code>string callbackEndpoint = 5;</code>
      * @param value The bytes for callbackEndpoint to set.
      * @return This builder for chaining.
@@ -972,6 +1096,10 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object jobInfo_ = "";
     /**
+     * <pre>
+     * 透传参数（128位）
+     * </pre>
+     *
      * <code>string jobInfo = 6;</code>
      * @return The jobInfo.
      */
@@ -988,6 +1116,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 透传参数（128位）
+     * </pre>
+     *
      * <code>string jobInfo = 6;</code>
      * @return The bytes for jobInfo.
      */
@@ -1005,6 +1137,10 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     * <pre>
+     * 透传参数（128位）
+     * </pre>
+     *
      * <code>string jobInfo = 6;</code>
      * @param value The jobInfo to set.
      * @return This builder for chaining.
@@ -1020,6 +1156,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 透传参数（128位）
+     * </pre>
+     *
      * <code>string jobInfo = 6;</code>
      * @return This builder for chaining.
      */
@@ -1030,6 +1170,10 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     * <pre>
+     * 透传参数（128位）
+     * </pre>
+     *
      * <code>string jobInfo = 6;</code>
      * @param value The bytes for jobInfo to set.
      * @return This builder for chaining.
