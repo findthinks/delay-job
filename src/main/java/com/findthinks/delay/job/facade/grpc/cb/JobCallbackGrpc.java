@@ -95,6 +95,9 @@ public final class JobCallbackGrpc {
   public static abstract class JobCallbackImplBase implements io.grpc.BindableService {
 
     /**
+     * <pre>
+     * 任务回调
+     * </pre>
      */
     public void trigger(com.findthinks.delay.job.facade.grpc.cb.CallbackReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> responseObserver) {
@@ -129,6 +132,9 @@ public final class JobCallbackGrpc {
     }
 
     /**
+     * <pre>
+     * 任务回调
+     * </pre>
      */
     public void trigger(com.findthinks.delay.job.facade.grpc.cb.CallbackReq request,
         io.grpc.stub.StreamObserver<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> responseObserver) {
@@ -152,6 +158,9 @@ public final class JobCallbackGrpc {
     }
 
     /**
+     * <pre>
+     * 任务回调
+     * </pre>
      */
     public com.findthinks.delay.job.facade.grpc.cb.CallbackResp trigger(com.findthinks.delay.job.facade.grpc.cb.CallbackReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -174,6 +183,9 @@ public final class JobCallbackGrpc {
     }
 
     /**
+     * <pre>
+     * 任务回调
+     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<com.findthinks.delay.job.facade.grpc.cb.CallbackResp> trigger(
         com.findthinks.delay.job.facade.grpc.cb.CallbackReq request) {

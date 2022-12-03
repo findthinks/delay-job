@@ -31,7 +31,12 @@ cd delay-job
 ```
 
 ### 客户端接入
-#### [1. HTTP客户端接入](docs/http_client.md)
+#### 1. HTTP客户端接入
+* [任务注册](docs/http_job_register.md)
+* [任务回调](docs/http_job_callback.md)，客户端提供POST回调接口，接收服务端回调请求。
+#### 2. GRPC客户端接入
+* [任务注册](src/main/resources/pb/Job.proto)，客户端提取Job.proto文件生成任务注册代码，注册延迟任务。
+* [任务回调](src/main/resources/pb/JobCallback.proto)，客户端提取JobCallback.proto文件，发布回调GRPC接口，接收服务端回调请求。
 ### 版本
 #### 2022/10/22 - version 0.6.1
 第一个试用版本。

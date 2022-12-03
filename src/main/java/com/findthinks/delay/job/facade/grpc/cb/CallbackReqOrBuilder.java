@@ -8,11 +8,19 @@ public interface CallbackReqOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The outJobNo.
    */
   java.lang.String getOutJobNo();
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The bytes for outJobNo.
    */
@@ -20,17 +28,29 @@ public interface CallbackReqOrBuilder extends
       getOutJobNoBytes();
 
   /**
+   * <pre>
+   * 触发时间（秒）
+   * </pre>
+   *
    * <code>int64 triggerTime = 2;</code>
    * @return The triggerTime.
    */
   long getTriggerTime();
 
   /**
+   * <pre>
+   * 透传参数
+   * </pre>
+   *
    * <code>string jobInfo = 3;</code>
    * @return The jobInfo.
    */
   java.lang.String getJobInfo();
   /**
+   * <pre>
+   * 透传参数
+   * </pre>
+   *
    * <code>string jobInfo = 3;</code>
    * @return The bytes for jobInfo.
    */

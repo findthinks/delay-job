@@ -8,11 +8,19 @@ public interface CreateJobReqOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The outJobNo.
    */
   java.lang.String getOutJobNo();
   /**
+   * <pre>
+   * 外部任务编号（长度32位内字符串）
+   * </pre>
+   *
    * <code>string outJobNo = 1;</code>
    * @return The bytes for outJobNo.
    */
@@ -20,23 +28,39 @@ public interface CreateJobReqOrBuilder extends
       getOutJobNoBytes();
 
   /**
+   * <pre>
+   * 任务类型：5(普通任务)、10（可暂停计时任务）
+   * </pre>
+   *
    * <code>int32 type = 2;</code>
    * @return The type.
    */
   int getType();
 
   /**
+   * <pre>
+   * 触发时间（秒）
+   * </pre>
+   *
    * <code>int64 triggerTime = 3;</code>
    * @return The triggerTime.
    */
   long getTriggerTime();
 
   /**
+   * <pre>
+   * 回调协议：HTTP、GRPC
+   * </pre>
+   *
    * <code>string callbackProtocol = 4;</code>
    * @return The callbackProtocol.
    */
   java.lang.String getCallbackProtocol();
   /**
+   * <pre>
+   * 回调协议：HTTP、GRPC
+   * </pre>
+   *
    * <code>string callbackProtocol = 4;</code>
    * @return The bytes for callbackProtocol.
    */
@@ -44,11 +68,19 @@ public interface CreateJobReqOrBuilder extends
       getCallbackProtocolBytes();
 
   /**
+   * <pre>
+   * 回调地址
+   * </pre>
+   *
    * <code>string callbackEndpoint = 5;</code>
    * @return The callbackEndpoint.
    */
   java.lang.String getCallbackEndpoint();
   /**
+   * <pre>
+   * 回调地址
+   * </pre>
+   *
    * <code>string callbackEndpoint = 5;</code>
    * @return The bytes for callbackEndpoint.
    */
@@ -56,11 +88,19 @@ public interface CreateJobReqOrBuilder extends
       getCallbackEndpointBytes();
 
   /**
+   * <pre>
+   * 透传参数（128位）
+   * </pre>
+   *
    * <code>string jobInfo = 6;</code>
    * @return The jobInfo.
    */
   java.lang.String getJobInfo();
   /**
+   * <pre>
+   * 透传参数（128位）
+   * </pre>
+   *
    * <code>string jobInfo = 6;</code>
    * @return The bytes for jobInfo.
    */
