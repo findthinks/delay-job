@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ${namespace}
+  name: ${micro_service_name}-${version_switch}
+  labels:
+    app: ${micro_service_name}
+    version: ${version_switch}
+spec:
+  replicas: ${replicas_count}
+  selector:
+    matchLabels:
+      app: ${micro_service_name}
+      version: ${version_switch}
+  template:
+    metadata:
+      labels:
+        app: ${micro_service_name}
+        version: ${version_switch}
+    spec:
+      containers:
+        - env:
+            - name: aliyun_logs_log-${micro_service_name}-${version_switch}_logstore
+              value: ${log_store}
+            - name: aliyun_logs_log-${micro_service_name}-${version_switch}
+              value: stdout
+            - name: aliyun_logs_${micro_service_name}-${version_switch}_tags
+              value: applog=${micro_service_name}-${version_switch}
+            - name: version_switch
+              value: ${version_switch}
+          name: ${micro_service_name}-${version_switch}
+          image: ${image_repo}
+          ports:
+            - containerPort: 8000
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: ${requests_cpu}
+              memory: ${requests_memory}
+              ephemeral-storage: 2Gi
+            limits:
+              cpu: ${limits_cpu}
+              memory: ${limits_memory}
+              ephemeral-storage: 2Gi
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: localtime
+            - mountPath: /app/config
+              name: ${micro_service_name}-config
+      volumes:
+        - hostPath:
+            path: /etc/localtime
+          name: localtime
+        - name: ${micro_service_name}-config
+          configMap:
+            defaultMode: 420
+            name: ${configmap_name}
+            items:
+              - key: config.yaml
+                path: application.yml
+              - key: logback.xml
+                path: logback.xml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${micro_service_name}-svc
+  namespace: ${namespace}
+  labels:
+    app: ${micro_service_name}-svc
+spec:
+  selector:
+    app: ${micro_service_name}
+  ports:
+    - name: http-8000
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    - name: grpc-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${micro_service_name}-${version_switch}-hpa
+  namespace: ${namespace}
+  labels:
+    app: ${micro_service_name}-${version_switch}-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${micro_service_name}-${version_switch}
+  minReplicas: ${min_replica}
+  maxReplicas: ${max_replica}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 80
