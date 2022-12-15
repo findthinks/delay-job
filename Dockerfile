@@ -4,6 +4,8 @@ USER root
 WORKDIR /app
 COPY target/delay-job.jar app.jar
 
+ENV TZ Asia/Shanghai
+
 EXPOSE 8000
 EXPOSE 8080
 
