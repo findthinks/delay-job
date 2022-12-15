@@ -175,7 +175,7 @@ public class JobProcessor {
         try {
             TriggerResult result = fire.trigger(job);
             if (!result.isSuccessful()) {
-                throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, result.getMessage());
+                throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, result.getCode());
             }
             LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime(), System.currentTimeMillis() / 1000);
             return result;
