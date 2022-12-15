@@ -1,5 +1,7 @@
 package com.findthinks.delay.job.scheduler;
 
+import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
+import com.findthinks.delay.job.share.lib.exception.DelayJobException;
 import com.findthinks.delay.job.share.lib.utils.CollectionUtils;
 import com.findthinks.delay.job.share.repository.entity.Job;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -171,9 +173,14 @@ public class JobProcessor {
         CallbackProtocol protocol = CallbackProtocol.getByProtocol(job.getCallbackProtocol());
         IJobTrigger fire = (IJobTrigger) applicationContext.getBean(protocol.getTrigger());
         try {
-            return fire.trigger(job);
+            TriggerResult result = fire.trigger(job);
+            if (!result.isSuccessful()) {
+                throw new DelayJobException(ExceptionEnum.UNKNOWN_ERROR, result.getMessage());
+            }
+            LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger success.", job.getJobShardId(), job.getId(), job.getTriggerTime(), System.currentTimeMillis() / 1000);
+            return result;
         } catch (Exception ex) {
-            LOG.error("Callback error, callback_endpoint: {}.", job.getCallbackEndpoint(), ex);
+            LOG.error("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger error, callback_endpoint: {}.", job.getJobShardId(), job.getId(), job.getTriggerTime(), System.currentTimeMillis() / 1000, job.getCallbackEndpoint(), ex);
             return new TriggerResult("fail", ex.getMessage());
         }
     }
