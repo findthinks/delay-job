@@ -4,7 +4,7 @@ import com.findthinks.delay.job.share.lib.enums.ExceptionEnum;
 
 public class TriggerResult {
 
-    public static final TriggerResult SUCCESS = new TriggerResult("0", "success");
+    public static final TriggerResult SUCCESS = new TriggerResult("ok", "success");
 
     private String code;
 
