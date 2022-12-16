@@ -13,8 +13,6 @@ import java.util.concurrent.ConcurrentMap;
 @Component("grpcJobTrigger")
 public class GrpcJobTrigger implements IJobTrigger {
 
-    private static final String SUCCESS = "0";
-
     /** double check*/
     private Object locker = new Object();
 
@@ -28,9 +26,6 @@ public class GrpcJobTrigger implements IJobTrigger {
                 .setOutJobNo(job.getOutJobNo())
                 .setTriggerTime(job.getTriggerTime()).build();
         final CallbackResp resp = getTriggerStub(job.getCallbackEndpoint()).trigger(req);
-        if (SUCCESS.equals(resp.getCode())) {
-            return TriggerResult.SUCCESS;
-        }
         return new TriggerResult(resp.getCode(), resp.getMessage());
     }
 
