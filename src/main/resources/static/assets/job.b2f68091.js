@@ -1,0 +1,1 @@
+import{d_ as e}from"./index.c6cd9d59.js";const t=o=>o.outJobNo?e.get({url:"/api/v1/job/"+o.outJobNo,headers:{ignoreCancelToken:!0}}):[],n=o=>e.put({url:"/api/v1/job/"+o.outJobNo+"/cancel",headers:{ignoreCancelToken:!0}});export{n as c,t as g};

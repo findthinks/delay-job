@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.JobSegTriggerExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.JobSegTrigger">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="job_shard_id" jdbcType="TINYINT" property="jobShardId" />
+        <result column="trigger_time_start" jdbcType="BIGINT" property="triggerTimeStart" />
+        <result column="trigger_time_end" jdbcType="BIGINT" property="triggerTimeEnd" />
+        <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+    </resultMap>
+
+    <insert id="insertSegTrigger" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO job_seg_trigger (job_shard_id, trigger_time_start, trigger_time_end, gmt_modify)
+        VALUES (#{jobShardId}, #{triggerTimeStart}, #{triggerTimeEnd}, #{gmtModify})
+    </insert>
+
+    <select id="selectOneSegTrigger" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+        ORDER BY
+            trigger_time_start
+        LIMIT 1
+    </select>
+
+    <select id="selectAllSegTriggers" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+    </select>
+
+    <select id="selectJobSegTriggerByShardId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+        WHERE
+            job_shard_id = #{jobShardId}
+        LIMIT 1
+    </select>
+
+    <select id="selectJobSegTriggers" parameterType="list" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, gmt_modify
+        FROM
+            job_seg_trigger
+        WHERE
+            job_shard_id
+                in
+                <foreach collection="jobShardIds" item="shardId" index="index" open="(" close=")" separator=",">
+                    #{shardId}
+                </foreach>
+    </select>
+
+    <update id="compareAndSet" parameterType="map">
+        UPDATE
+            job_seg_trigger
+        SET
+            trigger_time_start = #{timeEnd},
+            trigger_time_end = #{newTimeEnd},
+            gmt_modify = #{gmtModify}
+        WHERE
+            job_shard_id = #{jobShardId}
+            AND trigger_time_start = #{timeStart}
+            AND trigger_time_end = #{timeEnd}
+    </update>
+
+    <delete id="deleteSegTrigger">
+        DELETE FROM job_seg_trigger WHERE job_shard_id = #{jobShardId}
+    </delete>
+</mapper>

@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package delay.job;
+option java_package = "com.findthinks.delay.job.facade.grpc.mgr";
+option java_multiple_files = true;
+
+message CreateJobReq {
+    string outJobNo = 1;                // 外部任务编号（长度32位内字符串）
+    int32 type = 2;                     // 任务类型：5(普通任务)、10（可暂停计时任务）
+    int64 triggerTime = 3;              // 触发时间（秒）
+    string callbackProtocol = 4;        // 回调协议：HTTP、GRPC、KAFKA
+    string callbackEndpoint = 5;        // 回调地址
+    string jobInfo = 6;                 // 透传参数（128字符）
+}
+
+message CreateJobsReq {
+    repeated CreateJobReq jobs = 1;
+}
+
+message OperateJobReq {
+    string outJobNo = 1;
+}
+
+message JobResp {
+    string code = 1;                    // 响应业务编码：ok(成功)，其它为失败
+    string message = 2;                 // 响应描述
+}
+
+service Job {
+    // 注册延迟任务
+    rpc submitJob (CreateJobReq) returns (JobResp) {
+    }
+
+    // 批量注册延迟任务
+    rpc submitJobs (CreateJobsReq) returns (JobResp) {
+    }
+
+    // 暂停任务计时
+    rpc pauseJob (OperateJobReq) returns (JobResp) {
+    }
+
+    // 恢复任务计时
+    rpc resumeJob (OperateJobReq) returns (JobResp) {
+    }
+
+    // 取消任务
+    rpc cancelJob (OperateJobReq) returns (JobResp) {
+    }
+}

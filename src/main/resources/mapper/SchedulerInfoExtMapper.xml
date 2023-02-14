@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.SchedulerInfoExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.SchedulerInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+        <result column="last_heartbeat_time" jdbcType="BIGINT" property="lastHeartbeatTime" />
+        <result column="register" jdbcType="VARCHAR" property="register" />
+        <result column="ip" jdbcType="VARCHAR" property="ip" />
+    </resultMap>
+
+    <insert id="insertSchedulerInfo" useGeneratedKeys="true" keyProperty="id">
+        <![CDATA[
+            INSERT INTO scheduler_info (uuid, last_heartbeat_time, register, ip) VALUES
+            (#{uuid}, #{lastHeartbeatTime}, #{register}, #{ip})
+        ]]>
+    </insert>
+
+    <delete id="deleteByLastHeartbeatTime">
+        <![CDATA[
+            DELETE
+            FROM
+              scheduler_info
+            WHERE
+              last_heartbeat_time <= #{threshold}
+        ]]>
+    </delete>
+
+    <update id="updateSchedulerHeartbeatTime">
+        <![CDATA[
+            UPDATE
+                scheduler_info
+            SET
+                last_heartbeat_time = #{lastHeartbeatTime}
+            WHERE
+                id = #{schedulerId}
+        ]]>
+    </update>
+
+    <select id="selectAllSchedulers" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            id, uuid, last_heartbeat_time, register, ip
+        FROM
+            scheduler_info
+        ORDER BY id
+        ]]>
+    </select>
+
+    <select id="selectAllSchedulerIds" resultType="int">
+        <![CDATA[
+            SELECT
+                id
+            FROM
+                scheduler_info
+            ORDER BY id
+        ]]>
+    </select>
+
+    <select id="selectSchedulerById" resultMap="BaseResultMap">
+        <![CDATA[
+            SELECT
+                id,uuid,last_heartbeat_time,register,ip
+            FROM
+                scheduler_info
+            WHERE
+                id = #{schedulerId}
+        ]]>
+    </select>
+</mapper>

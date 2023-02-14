@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: delay-job
+  main:
+    allow-circular-references: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: delay
+    password: delay#2023
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 100
+      pool-name: DelayJobPool
+      connection-test-query: SELECT 1
+  jackson:
+    default-property-inclusion: non_null
+server:
+  port: 1989
+grpc:
+  server:
+    port: 1990
+scheduler:
+  job:
+    shard-load-max-job-num: 50000
+    translate-max-job-num: 100
+    once-retry-seg-num: 8
+    retry-max-job-num: 1000
+    retry-seg-num: 32
+    state-check-seg-num: 8
+logging:
+  file:
+    name: classpath:logback.xml
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml

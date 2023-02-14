@@ -1,0 +1,1 @@
+import{a as o,w as s,o as t,i as n,n as a}from"./index.c6cd9d59.js";const c={class:"p-4"},_=a("h1",{style:{"font-size":"30px"}},"Comming soon!",-1),i=[_],p=o({__name:"index",setup(r){const e=s(!0);return setTimeout(()=>{e.value=!1},1500),(d,l)=>(t(),n("div",c,i))}});export{p as default};

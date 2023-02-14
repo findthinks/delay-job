@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package delay.job;
+option java_package = "com.findthinks.delay.job.facade.grpc.cb";
+option java_multiple_files = true;
+
+message CallbackReq {
+    string outJobNo = 1;                // 外部任务编号（长度32位内字符串）
+    int64 triggerTime = 2;              // 触发时间（秒）
+    string jobInfo = 3;                 // 透传参数
+}
+
+message CallbackResp {
+    string code = 1;                    // 响应业务编码：ok(成功)，其它为失败
+    string message = 2;                 // 响应描述
+}
+
+service JobCallback {
+    // 任务回调
+    rpc trigger(CallbackReq) returns (CallbackResp) {
+    }
+}

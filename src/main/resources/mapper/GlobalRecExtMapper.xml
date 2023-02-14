@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.GlobalRecExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.GlobalRec">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="out_job_no" jdbcType="VARCHAR" property="outJobNo" />
+        <result column="job_shard_id" jdbcType="TINYINT" property="jobShardId" />
+        <result column="job_id" jdbcType="BIGINT" property="jobId" />
+        <result column="trigger_time" jdbcType="BIGINT" property="triggerTime" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    </resultMap>
+
+    <select id="selectRecByOutJobNo" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            id, out_job_no, job_shard_id, job_id, trigger_time, gmt_create
+        FROM
+            global_rec
+        WHERE
+            out_job_no = #{outJobNo}
+        ]]>
+    </select>
+
+    <insert id="insertRec">
+        INSERT INTO global_rec (out_job_no, job_shard_id, job_id, trigger_time, gmt_create)
+        VALUES (#{outJobNo}, #{jobShardId}, #{jobId}, #{triggerTime}, #{gmtCreate})
+    </insert>
+
+    <insert id="insertRecs">
+        INSERT INTO global_rec (out_job_no, job_shard_id, job_id, trigger_time, gmt_create)
+        VALUES
+        <foreach collection="grcs" item="g" index="index" separator=",">
+          (#{g.outJobNo}, #{g.jobShardId}, #{g.jobId}, #{g.triggerTime}, #{g.gmtCreate})
+        </foreach>
+    </insert>
+
+    <update id="updateGlobalRecTriggerTime">
+        UPDATE
+            global_rec
+        SET
+            trigger_time = #{triggerTime}
+        WHERE
+            id = #{recId}
+    </update>
+
+    <delete id="deleteGlobalRecords">
+        DELETE FROM global_rec
+        WHERE
+            out_job_no
+                IN
+                <foreach collection="outJobNos" item="outJobNo" index="index" open="(" close=")" separator=",">
+                    #{outJobNo}
+                </foreach>
+    </delete>
+</mapper>

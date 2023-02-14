@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.JobExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.Job">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="job_shard_id" jdbcType="TINYINT" property="jobShardId" />
+        <result column="out_job_no" jdbcType="VARCHAR" property="outJobNo" />
+        <result column="trigger_time" jdbcType="BIGINT" property="triggerTime" />
+        <result column="pause_time" jdbcType="BIGINT" property="pauseTime" />
+        <result column="type" jdbcType="TINYINT" property="type" />
+        <result column="state" jdbcType="TINYINT" property="state" />
+        <result column="retry_times" jdbcType="BIT" property="retryTimes" />
+        <result column="callback_protocol" jdbcType="BIT" property="callbackProtocol" />
+        <result column="callback_endpoint" jdbcType="VARCHAR" property="callbackEndpoint" />
+        <result column="job_info" jdbcType="VARCHAR" property="jobInfo" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    </resultMap>
+
+    <insert id="insertJob">
+        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, type, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
+        VALUES (#{id}, #{jobShardId}, #{outJobNo}, #{triggerTime}, #{pauseTime}, #{type}, #{state}, #{retryTimes}, #{callbackProtocol}, #{callbackEndpoint}, #{jobInfo}, #{gmtCreate})
+    </insert>
+
+    <insert id="insertBatchJobs">
+        INSERT INTO job_${jobShardId} (id, job_shard_id, out_job_no, trigger_time, pause_time, type, state, retry_times, callback_protocol, callback_endpoint, job_info,gmt_create)
+        VALUES
+        <foreach collection="jobs" item="job" index="index" separator=",">
+            (#{job.id}, #{job.jobShardId}, #{job.outJobNo}, #{job.triggerTime}, #{job.pauseTime}, #{job.type}, #{job.state}, #{job.retryTimes}, #{job.callbackProtocol}, #{job.callbackEndpoint}, #{job.jobInfo}, #{job.gmtCreate})
+        </foreach>
+    </insert>
+
+    <select id="loadJob" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            out_job_no = #{outJobNo}
+    </select>
+
+    <select id="loadJobById" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            id = #{jobId}
+    </select>
+
+    <select id="selectSubmitJobs" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
+            AND state = 10
+        ORDER BY trigger_time
+        LIMIT #{maxJobs}
+        ]]>
+    </select>
+
+    <select id="selectShardJobs" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time >= #{timeStart}
+        ORDER BY trigger_time
+            LIMIT #{maxJobs}
+        ]]>
+    </select>
+
+    <select id="selectNoneSuccessJobs" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
+            AND state in (10, 20)
+        LIMIT #{maxJobs}
+        ]]>
+    </select>
+
+    <select id="selectOneUnSuccessJob" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT
+            *
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time >= #{triggerTimeStart}
+          AND trigger_time < #{triggerTimeEnd}
+          AND state in (10, 20)
+            LIMIT 1
+        ]]>
+    </select>
+
+    <select id="selectNoneSuccessJobsCount" parameterType="map" resultType="int">
+        <![CDATA[
+        SELECT
+            count(*)
+        FROM
+            job_${jobShardId}
+        WHERE
+            trigger_time >= #{triggerTimeStart}
+            AND trigger_time < #{triggerTimeEnd}
+            AND state in (10, 20)
+        ]]>
+    </select>
+
+    <update id="updateJobState">
+        <![CDATA[
+        UPDATE
+            job_${jobShardId}
+        SET
+            state = #{newState},
+            retry_times = #{retryTimes}
+        WHERE
+            id = #{id}
+            AND state = #{oldState}
+        ]]>
+    </update>
+
+    <update id="updateJobPauseTime">
+        UPDATE
+            job_${jobShardId}
+        SET
+            pause_time = #{pauseTime}
+        WHERE
+            id = #{jobId}
+    </update>
+
+    <update id="updateJobTriggerTime">
+        UPDATE
+            job_${jobShardId}
+        SET
+            trigger_time = #{triggerTime},
+            pause_time = null
+        WHERE
+            id = #{jobId}
+    </update>
+
+    <update id="updateJobsState">
+        UPDATE
+            job_${jobShardId}
+        SET
+            state = #{newState}
+        WHERE
+            id in
+                <foreach collection="ids" item="jobId" index="index" open="(" close=")" separator=",">
+                    #{jobId}
+                </foreach>
+    </update>
+
+    <delete id="deleteJobs">
+        DELETE FROM job_${jobShardId}
+        WHERE id in
+                    <foreach collection="ids" item="jobId" index="index" open="(" close=")" separator=",">
+                        #{jobId}
+                    </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.TableExtMapper">
+
+    <update id="createJobTable">
+        <![CDATA[
+            CREATE TABLE `job_${jobShardId}` (
+                `id` bigint(20) unsigned NOT NULL,
+                `job_shard_id` tinyint(3) unsigned NOT NULL COMMENT '任务分片ID',
+                `out_job_no` varchar(32) NOT NULL COMMENT '外部任务编号',
+                `trigger_time` bigint(21) NOT NULL COMMENT '计划触发时间',
+                `pause_time` bigint(21) COMMENT '暂停计时时间点',
+                `type` tinyint(3) unsigned NOT NULL COMMENT '任务类型 5-普通任务，10-可暂停计时任务',
+                `state` tinyint(2) unsigned NOT NULL DEFAULT '0' COMMENT '任务状态:10-提交 20-重试中 30-成功 40-失败 50-取消',
+                `retry_times` tinyint(1) unsigned zerofill NOT NULL COMMENT '重试次数',
+                `callback_protocol` tinyint(1) NOT NULL COMMENT '回调协议:0-HTTP 5-GRPC 20-LOG',
+                `callback_endpoint` varchar(64) NOT NULL COMMENT '回调地址',
+                `job_info` varchar(256) DEFAULT NULL COMMENT 'JOB附加参数',
+                `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `idx_job${jobShardId}_out_job_no` (`out_job_no`) USING BTREE,
+                KEY `idx_job${jobShardId}_trigger_time` (`trigger_time`) USING BTREE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_bin
+        ]]>
+    </update>
+</mapper>

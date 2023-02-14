@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.JobSegTriggerFlowExtMapper">
+    <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.JobSegTriggerFlow">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="job_shard_id" jdbcType="TINYINT" property="jobShardId" />
+        <result column="trigger_time_start" jdbcType="BIGINT" property="triggerTimeStart" />
+        <result column="trigger_time_end" jdbcType="BIGINT" property="triggerTimeEnd" />
+        <result column="state" jdbcType="TINYINT" property="state" />
+        <result column="retry_times" jdbcType="TINYINT" property="retryTimes" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    </resultMap>
+
+    <insert id="insertSegTriggerFlow" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO job_seg_trigger_flow (job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create)
+        VALUES (#{jobShardId}, #{triggerTimeStart}, #{triggerTimeEnd}, #{state}, #{retryTimes}, #{gmtCreate})
+    </insert>
+
+    <select id="loadRecentlyFlows" parameterType="map" resultMap="BaseResultMap">
+        <![CDATA[
+            SELECT
+                id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
+            FROM
+                job_seg_trigger_flow
+            WHERE
+                trigger_time_end <= #{minTriggerTime}
+                AND state != 40
+            ORDER BY trigger_time_start DESC
+            LIMIT #{flows}
+         ]]>
+    </select>
+
+    <select id="loadRetryFlows" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
+        FROM
+            job_seg_trigger_flow
+        WHERE
+            job_shard_id IN
+                <foreach collection="shardIds" item="shardId" index="index" open="(" close=")" separator=",">
+                    #{shardId}
+                </foreach>
+            <![CDATA[
+                AND trigger_time_end >= #{timeStart}
+                AND trigger_time_end<= #{timeEnd}
+            ]]>
+                AND state != 40
+            ORDER BY trigger_time_end DESC
+        LIMIT #{maxSegments}
+    </select>
+
+    <select id="loadUnCompleteFlows" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+            id, job_shard_id, trigger_time_start, trigger_time_end, state, retry_times, gmt_create
+        FROM
+            job_seg_trigger_flow
+        WHERE
+            <![CDATA[
+                trigger_time_end >= #{timeStart}
+                AND trigger_time_end <= #{timeEnd}
+            ]]>
+            AND state != 40
+    </select>
+
+    <update id="compareAndSet" parameterType="map">
+        UPDATE
+            job_seg_trigger_flow
+        SET
+            state = #{newState}
+        WHERE
+            state = #{state}
+            AND id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.findthinks.delay.job.share.repository.mapper.AccountExtMapper" >
+  <resultMap id="BaseResultMap" type="com.findthinks.delay.job.share.repository.entity.Account" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="passwd" property="passwd" jdbcType="VARCHAR" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="loadAccount" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+      account
+    WHERE
+      account = #{account}
+  </select>
+</mapper>

@@ -1,0 +1,1 @@
+import{d_ as e}from"./index.c6cd9d59.js";const s=()=>e.get({url:"/api/v1/job/shards",headers:{ignoreCancelToken:!0}}),o=()=>e.post({url:"/api/v1/job/shard",headers:{ignoreCancelToken:!0}}),d=a=>e.put({url:"/api/v1/job/shard/"+a+"/disable",headers:{ignoreCancelToken:!0}}),n=a=>e.put({url:"/api/v1/job/shard/"+a+"/enable",headers:{ignoreCancelToken:!0}});export{o as a,d,n as e,s};
