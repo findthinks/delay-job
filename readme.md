@@ -40,7 +40,9 @@ cd delay-job/bin
 * [HTTP客户端接入](docs/http_job_register.md)
 * [GRPC客户端接入](src/main/resources/pb/Job.proto)，客户端提取Job.proto文件生成任务注册代码，注册延迟任务。
 
-> 注：回调通知可以自由选择，如使用HTTP或者GRPC接口注册任务时，可以选择HTTP、GRPC、KAFKA中的任一种作为回调通知的方式。
+> 注：<br/>
+> 1、回调通知可以自由选择，如使用HTTP或者GRPC接口注册任务时，可以选择HTTP、GRPC、KAFKA中的任一种作为回调通知的方式。<br/>
+> 2、默认本地GRPC任务管理接口发布地址为：localhost:1990
 
 ### 触发通知
 到达任务触发时间，调度服务端会触发一个通知，支持HTTP接口回调，GRPC接口回调，KAFKA消息通知三种方式。
