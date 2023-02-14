@@ -6,9 +6,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: delay
-    password: delay#2023
+    url: jdbc:mysql://162.14.114.83:3306/delay_job?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Findthinks@2022
     hikari:
       minimum-idle: 10
       maximum-pool-size: 100
