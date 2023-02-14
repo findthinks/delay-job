@@ -45,3 +45,6 @@ cd delay-job/bin
 ### 版本
 #### 2022/10/22 - version 0.6.1
 第一个试用版本。
+
+### 微信交流
+![alt 属性文本](docs/other/wechat_grp.png)
