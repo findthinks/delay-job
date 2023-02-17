@@ -3,6 +3,7 @@ package com.findthinks.delay.job.facade.grpc;
 import com.findthinks.delay.job.scheduler.FacadeJob;
 import com.findthinks.delay.job.scheduler.JobScheduler;
 import com.findthinks.delay.job.facade.grpc.mgr.*;
+import com.findthinks.delay.job.scheduler.JobType;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class DelayJobService extends JobGrpc.JobImplBase {
         try {
             jobScheduler.submitJob(FacadeJob.create(
                     req.getOutJobNo(),
-                    req.getType(),
+                    0 == req.getType() ? JobType.NORMAL.getCode() : req.getType(), // 设置类型默认值为5，即普通延迟任务
                     req.getTriggerTime(),
                     req.getCallbackProtocol(),
                     req.getCallbackEndpoint(),
@@ -45,7 +46,7 @@ public class DelayJobService extends JobGrpc.JobImplBase {
             final List<FacadeJob> jobs = new ArrayList<>();
             request.getJobsList().forEach(job -> jobs.add(FacadeJob.create(
                     job.getOutJobNo(),
-                    job.getType(),
+                    0 == job.getType() ? JobType.NORMAL.getCode() : job.getType(), // 设置类型默认值为5，即普通延迟任务
                     job.getTriggerTime(),
                     job.getCallbackProtocol(),
                     job.getCallbackEndpoint(),

@@ -44,8 +44,7 @@ curl -X 'POST' 'http://localhost:1989/api/v1/submit/job' \
       "triggerTime":1676608523,
       "callbackProtocol":"LOG",
       "callbackEndpoint":"LOG",
-      "jobInfo":"I am a delay job.",
-      "type":5
+      "jobInfo":"I am a delay job."
     }'
 ```
 > 注：callbackProtocol、callbackEndpoint同时配置为LOG，可用于调试使用，任务触发后会在调度控制台输出触发信息。

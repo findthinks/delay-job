@@ -5,7 +5,7 @@ POST /api/v1/submit/job
 |名称|类型|必选|说明|
 |---|---|---|---|
 |outJobNo|string| 是 |外部任务编号（长度32位内字符串）|
-|type|integer| 是 |任务类型：5(普通任务)、10（可暂停计时任务）|
+|type|integer| 否 |任务类型：5(普通任务)、10（可暂停计时任务），默认为5|
 |triggerTime|number| 是 |触发时间（秒）|
 |callbackProtocol|string| 是 |回调协议：HTTP、GRPC、KAFKA|
 |callbackEndpoint|string| 是 |回调地址|
@@ -24,8 +24,7 @@ curl -X 'POST' 'http://localhost:1989/api/v1/submit/job' \
       "triggerTime":1666621588,
       "callbackProtocol":"HTTP",
       "callbackEndpoint":"http://localhost:9092/callback",
-      "jobInfo":"I am a delay job.",
-      "type":5
+      "jobInfo":"I am a delay job."
     }'
 ```
 ```
@@ -41,7 +40,7 @@ POST /api/v1/submit/jobs
 |---|---|---|---|---|
 |body|none|array| 是 |json数组|
 |outJobNo|body|string| 是 |外部任务编号（长度32位内字符串）|
-|type|body|integer| 是 |任务类型：5(普通任务)、10（可暂停计时任务）|
+|type|body|integer| 否 |任务类型：5(普通任务)、10（可暂停计时任务），默认为5|
 |triggerTime|body|number| 是 |触发时间（秒）|
 |callbackProtocol|body|string| 是 |回调协议：HTTP、GRPC、KAFKA|
 |callbackEndpoint|body|string| 是 |回调地址|

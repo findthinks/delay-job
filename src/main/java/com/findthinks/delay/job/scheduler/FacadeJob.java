@@ -8,8 +8,7 @@ public class FacadeJob {
     @Size(max = 32, min = 1, message = ":所含字符数在[1,32]的范围内")
     private String outJobNo;
 
-    @NotNull(message = ":不能为空，取值为:5,10")
-    private Integer type;
+    private Integer type = 5;
 
     @NotNull(message = ":不能为空，秒级时间搓")
     private Long triggerTime;
@@ -84,6 +83,10 @@ public class FacadeJob {
     }
 
     public void setType(Integer type) {
-        this.type = type;
+        if (null == type) {
+            this.type = JobType.NORMAL.getCode();
+        } else {
+            this.type = type;
+        }
     }
 }
