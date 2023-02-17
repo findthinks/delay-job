@@ -22,9 +22,11 @@ Delay-job是一个开源分布式、轻量级的延迟任务调度实现。
 
 ### 快速开始
 #### 1. 下载部署包
-使用如下命令下载最新发布的系统的部署包。部署依赖：
+安装部署依赖。
 * Java 1.8+
-* Mysql 5.7+
+* Mysql 5.7+ 
+  
+使用如下命令下载最新发布的系统的部署包。
 ```
 wget https://github.com/findthinks/delay-job/releases/download/0.6.1/delay-job-bin-0.6.1.zip
 unzip delay-job-bin-v0.6.1.zip
