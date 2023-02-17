@@ -174,8 +174,6 @@ public class JobProcessor {
             LOG.error("Trigger job error.", ex);
             result = TriggerResult.FAIL;
         }
-
-        LOG.info("Job[Shard:{}, Job:{}, TriggerTime:{}, CurrentTime:{}] trigger {}.", job.getJobShardId(), job.getId(), job.getTriggerTime(), System.currentTimeMillis() / 1000, result.isSuccessful() ? "success" : "fail");
         return result;
     }
 
@@ -209,14 +207,10 @@ public class JobProcessor {
             long costs = 0L;
             while (success.size() < persistThreshold && costs < gatherTimeout) {
                 long start = System.currentTimeMillis();
-
                 Job job = triggeredQueue.poll(WAIT_ONE_JOB_TIMEOUT, TimeUnit.MILLISECONDS);
-                if (null == job) {
-                    continue;
+                if (null != job) {
+                    success.add(job);
                 }
-
-                success.add(job);
-
                 costs = costs + System.currentTimeMillis() - start;
             }
 
