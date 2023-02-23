@@ -13,7 +13,6 @@
     <img src="https://img.shields.io/badge/License-Apache%202.0-blueviolet" />
 </p>
 
-# Delay-Job:分布式轻量级高性能延迟调度中间件
 ### 背景
 * 订单创建一段时间后未支付，如何及时的关闭订单？
 * 用户注册一段时间后未完善资料，如何及时提醒？
