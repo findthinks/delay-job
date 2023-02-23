@@ -1,4 +1,12 @@
-## Delay-job 延迟任务调度系统
+<img src="docs/other/logo.png" />
+
+![](https://img.shields.io/badge/build-passing-Green?style=float&logo=openjdk)
+![](https://img.shields.io/badge/Maven-3.0+-Green?style=float&logo=apachemaven)
+![](https://img.shields.io/badge/Mysql-5.0+-Green?style=float&logo=mysql)
+![](https://img.shields.io/badge/Docker-Support-yellow?style=float&logo=docker)
+![](https://img.shields.io/badge/License-Apache%202.0-blueviolet)
+
+## Delay-job
 Delay-job是一个开源分布式、轻量级的延迟任务调度实现。
 
 ### 背景
