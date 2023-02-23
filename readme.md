@@ -2,7 +2,7 @@
 <img src="docs/other/logo.png"  width="400" />
 </h1>
 <h1 align="center">
-    Delay-Job,高性能分布式轻量级延迟调度中间件
+    Delay-Job，高性能分布式轻量级延迟调度中间件
 </h1>
 <p align="center">
     <img src="https://img.shields.io/badge/build-passing-Green?style=float" />
