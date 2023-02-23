@@ -1,11 +1,14 @@
 <h1 align="center">
 <img src="docs/other/logo.png"  width="400" />
 </h1>
+<p align="center">
+    Delay-Job,开箱即用的高性能分布式轻量级延迟调度中间件
+</p>
 
 ![](https://img.shields.io/badge/build-passing-Green?style=float)
 ![](https://img.shields.io/badge/JDK-1.8+-Green?style=float&logo=openjdk)
 ![](https://img.shields.io/badge/Maven-3.0+-Green?style=float&logo=apachemaven)
-![](https://img.shields.io/badge/Mysql-5.0+-Green?style=float&logo=mysql)
+![](https://img.shields.io/badge/Mysql-5.7+-Green?style=float&logo=mysql)
 ![](https://img.shields.io/badge/Docker-Support-yellow?style=float&logo=docker)
 ![](https://img.shields.io/badge/License-Apache%202.0-blueviolet)
 # Delay-Job:分布式轻量级高性能延迟调度服务
