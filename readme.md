@@ -1,4 +1,4 @@
-<img src="docs/other/logo.png"  width="400" />
+<img src="docs/other/logo.png"  width="400" text-align="center" />
 
 ![](https://img.shields.io/badge/build-passing-Green?style=float)
 ![](https://img.shields.io/badge/JDK-1.8+-Green?style=float&logo=openjdk)
