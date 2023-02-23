@@ -1,4 +1,4 @@
-<img src="docs/other/logo.png" />
+<img src="docs/other/logo.png"  width="400" />
 
 ![](https://img.shields.io/badge/build-passing-Green?style=float&logo=openjdk)
 ![](https://img.shields.io/badge/Maven-3.0+-Green?style=float&logo=apachemaven)
