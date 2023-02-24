@@ -1,9 +1,9 @@
 <h1 align="center">
 <img src="docs/other/logo.png"  width="400" />
 </h1>
-<h1 align="center">
+<h3 align="center">
     Delay-Job,high-performance distributed lightweight delay scheduling middleware
-</h1>
+</h3>
 <p align="center">
     <img src="https://img.shields.io/badge/build-passing-Green?style=float" />
     <img src="https://img.shields.io/badge/JDK-1.8+-Green?style=float&logo=openjdk" />
