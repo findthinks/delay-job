@@ -85,24 +85,25 @@ Sharding information can be configured on the management interface to add, enabl
 The registered task information can be queried through the management interface, and the precise query of the task number is currently supported.
 ![img.png](docs/other/console_job.png)
 
-### 技术对接
-#### 1. 任务接入
-任务管理包括任务注册，任务批量注册，任务取消，暂停任务计时，恢复任务计时接口。
-* [HTTP客户端接入](docs/http_job_register.md)
-* [GRPC客户端接入](src/main/resources/pb/Job.proto)，客户端提取Job.proto文件生成任务注册代码，注册延迟任务。
+### Technical Integration
 
-> 注：<br/>
-> 1、回调通知可以自由选择，如使用HTTP或者GRPC接口注册任务时，可以选择HTTP、GRPC、KAFKA中的任一种作为回调通知的方式。<br/>
-> 2、默认本地GRPC任务管理接口发布地址为：localhost:1990
+#### 1. Task
+Task management includes task registration, task batch registration, task cancellation, task timing pause, and task timing interface.
+* [HTTP](docs/http_job_register.md)
+* [GRPC](src/main/resources/pb/Job.proto)，The client extracts the Job.proto file to generate task registration code and registers the delayed job.
 
-#### 2. 触发通知
-到达任务触发时间，调度服务端会触发一个通知，支持HTTP接口回调，GRPC接口回调，KAFKA消息通知三种方式。
-* [HTTP通知](docs/http_job_callback.md)，客户端提供POST回调接口，接收服务端回调请求。
-* [GRPC通知](src/main/resources/pb/JobCallback.proto)，客户端提取JobCallback.proto文件，发布回调GRPC接口，接收服务端回调请求。
-* [KAFKA通知](docs/kafka_job_callback.md)，服务端将任务触发事件消息投递到Kafka，业务端消费消息，处理延迟任务。
-### 版本
+> Tips：<br/>
+> 1. Callback notifications can be freely selected, such as when registering tasks using HTTP or GRPC interfaces, any of HTTP, GRPC, or KAFKA can be selected as the callback notification method.
+<br/>
+> 2. The default port for GRPC calls is 1990.
+
+#### 2. Callback
+When the task trigger time is reached, the scheduling server will trigger a notification, which supports HTTP interface callback, GRPC interface callback, and KAFKA message notification.
+* [HTTP](docs/http_job_callback.md): The client provides a POST callback interface to receive the callback request from the server.
+* [GRPC](src/main/resources/pb/JobCallback.proto): The client extracts the JobCallback.proto file, publishes the callback GRPC interface, and receives the server callback request
+* [KAFKA](docs/kafka_job_callback.md): The server sends the task trigger event message to Kafka, and the business end consumes the message and processes the delayed task.
+### Version
 #### 20223/2/14 - version 0.6.1
-第一个可用版本。
 
-### 微信交流
-![alt 属性文本](docs/other/wechat_grp.png)
+### Community
+![img](docs/other/wechat_grp.png)
