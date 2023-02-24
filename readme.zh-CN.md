@@ -104,4 +104,4 @@ Delay-job采用任务分片调度架构，通过管理界面调度器视图，�
 第一个可用版本。
 
 ### 交流
-![alt 属性文本](docs/other/qq_grp.jpg)
+<img src="docs/other/qq_grp.jpg"  width="200" />
