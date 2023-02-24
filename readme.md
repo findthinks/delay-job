@@ -105,4 +105,4 @@ When the task trigger time is reached, the scheduling server will trigger a noti
 #### 20223/2/14 - version 0.6.1
 
 ### Community
-![img](docs/other/wechat_grp.png)
+<img src="docs/other/qq_grp.png"  width="400" />
