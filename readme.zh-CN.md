@@ -1,9 +1,9 @@
 <h1 align="center">
 <img src="docs/other/logo.png"  width="400" />
 </h1>
-<h1 align="center">
+<h3 align="center">
     Delay-Job,高性能分布式轻量级延迟调度中间件
-</h1>
+</h3>
 <p align="center">
     <img src="https://img.shields.io/badge/build-passing-Green?style=float" />
     <img src="https://img.shields.io/badge/JDK-1.8+-Green?style=float&logo=openjdk" />
@@ -12,6 +12,8 @@
     <img src="https://img.shields.io/badge/Docker-Support-yellow?style=float&logo=docker" />
     <img src="https://img.shields.io/badge/License-Apache%202.0-blueviolet" />
 </p>
+
+[English](./readme.md) | 简体中文
 
 ### 背景
 * 订单创建一段时间后未支付，如何及时的关闭订单？
@@ -101,5 +103,5 @@ Delay-job采用任务分片调度架构，通过管理界面调度器视图，�
 #### 20223/2/14 - version 0.6.1
 第一个可用版本。
 
-### 微信交流
-![alt 属性文本](docs/other/wechat_grp.png)
+### 交流
+![alt 属性文本](docs/other/qq_grp.jpg)
