@@ -73,7 +73,7 @@ curl -X 'POST' 'http://localhost:1989/api/v1/submit/job' \
 ```
 
 ### Management UI
-After the service starts successfully, visit：http://localhost:1989，The default username and password are delay/delay.
+After the service starts successfully, visit：http://localhost:1988 ,The default username and password are delay/delay.
 
 #### 1. Scheduler management
 Delay-job adopts the task sharding scheduling architecture. Through the scheduler view of the management ui, you can query the currently deployed scheduler information.
