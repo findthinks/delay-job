@@ -94,7 +94,6 @@ Task management includes task registration, task batch registration, task cancel
 
 > Tips：<br/>
 > 1. Callback notifications can be freely selected, such as when registering tasks using HTTP or GRPC interfaces, any of HTTP, GRPC, or KAFKA can be selected as the callback notification method.
-<br/>
 > 2. The default port for GRPC calls is 1990.
 
 #### 2. Callback
