@@ -16,8 +16,8 @@
 English | [简体中文](./readme.zh-CN.md)
 
 ### Use Cases
-* 🐯How to close the order in time if the order has not been paid after a period of time?
-* 🦁️How to remind the user that the information has not been completed after a period of time after registration?
+* 🐯 How to close the order in time if the order has not been paid after a period of time?
+* 🦁️ How to remind the user that the information has not been completed after a period of time after registration?
 
 The scene where the user triggers a specific event and expects to deal with it after a period of delay is the place to delay the task scheduling application
 
