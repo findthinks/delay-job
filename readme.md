@@ -22,12 +22,12 @@ English | [简体中文](./readme.zh-CN.md)
 The scene where the user triggers a specific event and expects to deal with it after a period of delay is the place to delay the task scheduling application
 
 ### Feature
-* 🚀Custom delay scheduling time
-* 🔔Task pause
-* 🔥Task Sharding
-* ⚡Visual management task sharding
-* ✨Visual management of delayed tasks
-* 🔧Rapid deployment
+* 🚀 Custom delay scheduling time
+* 🔔 Task pause
+* 🔥 Task Sharding
+* ⚡ Visual management task sharding
+* ✨ Visual management of delayed tasks
+* 🔧 Rapid deployment
 
 ### Architecture
 ![img.png](docs/arch/arch_v1.0.png)
