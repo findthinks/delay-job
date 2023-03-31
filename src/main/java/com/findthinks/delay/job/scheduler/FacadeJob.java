@@ -10,7 +10,7 @@ public class FacadeJob {
 
     private Integer type = 5;
 
-    @NotNull(message = ":不能为空，秒级时间搓")
+    @NotNull(message = ":不能为空，秒级时间戳")
     private Long triggerTime;
 
     @NotNull(message = ":不能为空，取值范围:LOG,HTTP,GRPC")
