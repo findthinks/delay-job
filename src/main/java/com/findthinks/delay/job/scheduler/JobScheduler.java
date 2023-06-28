@@ -167,7 +167,11 @@ public class JobScheduler {
         }
 
         //放入最后批次
-        jobs.put(jobShardId, batchJobs);
+        if (null == jobs.get(jobShardId)) {
+            jobs.put(jobShardId, batchJobs);
+        } else {
+            jobs.get(jobShardId).addAll(batchJobs);
+        }
 
         //任务创建
         jobManager.createJobs(jobs, grs);
