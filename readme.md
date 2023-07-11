@@ -42,7 +42,7 @@
   
 使用如下命令下载最新发布的系统的部署包。
 ```
-wget https://github.com/findthinks/delay-job/releases/download/0.6.1/delay-job-bin-0.6.1.zip
+wget https://github.com/findthinks/delay-job/releases/download/0.6.2/delay-job-bin-0.6.2.zip
 unzip delay-job-bin-v0.6.1.zip
 ```
 #### 2. 创建数据库
@@ -100,6 +100,8 @@ Delay-job采用任务分片调度架构，通过管理界面调度器视图，�
 * [GRPC通知](src/main/resources/pb/JobCallback.proto)，客户端提取JobCallback.proto文件，发布回调GRPC接口，接收服务端回调请求。
 * [KAFKA通知](docs/kafka_job_callback.md)，服务端将任务触发事件消息投递到Kafka，业务端消费消息，处理延迟任务。
 ### 版本
+#### 20223/7/10 - version 0.6.2
+修复批量任务提交出现遗漏的问题。
 #### 20223/2/14 - version 0.6.1
 第一个可用版本。
 
